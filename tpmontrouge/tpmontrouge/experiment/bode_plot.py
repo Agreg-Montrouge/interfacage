@@ -1,14 +1,19 @@
+from time import sleep
+
 import numpy as np
 
 from ..analyse.Bode import BodePoint, BodePlot
 
 class BodeExperiment(object):
-    def __init__(self, gbf, scope, input_channel, reference_channel, disp=True):
+    _wait_time = 1.5
+    def __init__(self, gbf, scope, input_channel, reference_channel, disp=True, wait_time=None):
         self.gbf = gbf
         self.scope = scope
         self.input_channel = input_channel
         self.reference_channel = reference_channel
         self._disp = disp
+        if wait_time is not None:
+           self._wait_time = wait_time 
         self.configure_default_gbf()
         
 
@@ -23,6 +28,8 @@ class BodeExperiment(object):
         self.display('Frequency : {}'.format(freq))
         self.gbf.frequency = freq
         self.scope.autoset()
+        if self._wait_time>0:
+            sleep(self._wait_time)
         self.scope.stop_acquisition()
         input_wfm = self.input_channel.get_waveform()
         ref_wfm = self.reference_channel.get_waveform()

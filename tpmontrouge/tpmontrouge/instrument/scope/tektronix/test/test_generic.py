@@ -27,3 +27,6 @@ class FakeSCPITektronix(FakeSCPI):
 
 class TestTektonix(GenericTest, unittest.TestCase):
     scope = Tektronix(FakeSCPITektronix())
+
+    def test_base(self):
+        pass

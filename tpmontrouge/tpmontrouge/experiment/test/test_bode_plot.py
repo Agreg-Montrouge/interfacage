@@ -54,7 +54,7 @@ class Test(unittest.TestCase):
         gbf = GBF(RootGBF())
         scope = Scope(RootScope())
 
-        bode_experiment = BodeExperiment(gbf, scope, scope.channel1, scope.channel2, disp=False)
+        bode_experiment = BodeExperiment(gbf, scope, scope.channel1, scope.channel2, disp=False, wait_time=0)
 
         bode_plot = bode_experiment.record_bode_diagramm(start=3, stop=3000, step=20)
         fig = figure()
