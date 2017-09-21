@@ -14,20 +14,57 @@ Instrument
 
 L'idée est d'avoir une interface commune à chaque type d'instrument, ce qui necessite d'adapter ou d'écrire un driver specifique. Cette interface sera indépendante de la marque et de la connection utilisée. 
 
-    * Oscilloscope (scope)
-    * Générateur basse fréquence (gbf)
+* Oscilloscope (scope)
+* Générateur basse fréquence (gbf)
+
+Exemple :: 
+    
+    from tpmontrouge.instrument import scope_factory
+
+    scope = scope_factory('GPIB0::1::INSTR')
+
+    scope.autoset()
+    wfm = scope.get_waveform(channel=1)
+    wfm.plot()
+
+    scope.channel[1].scale = .2
+
+Et en bas niveau ::
+
+    import visa
+
+    rm = visa.ResourceManager()
+    conn = rm.open_resource('GPIB0::1::INSTR')
+
+    from tpmontrouge.instrument.scope.tektronix import Tektronix 
+    
+    scope = Tektronix(conn)
+
 
 Analyse 
 -------
 
-Librairie permettant d'enregistrer et analyser des donnée dans un but précis. 
+Librairie permettant d'enregistrer et analyser des données dans un but précis. 
+
+Exemple ::
+
+    from tpmontrouge.experiment.bode_plot import BodePoint # point sur le diagramme de Bode
+
+    t = np.linspace(0, 1, 10001)
+    ref = np.sin(2*np.pi*freq*t)
+    signal = .2*np.sin(2*np.pi*freq*t+1.54)
+    point = BodePoint(t, ref, signal, freq=freq)
+    print(point.delta_phi)
+    print(point.gain)
+
+
 
 Experiment
 ----------
 
 L'objectif de ce sous package est de fournir des fonctions simplifiée pour réaliser une expérience. 
 
-Par exemple : 
+Par exemple :: 
 
     from tpmontrouge.instrument import scope_factory, gbf_factory
     from tpmontrouge.experiment import BodeExperiment
