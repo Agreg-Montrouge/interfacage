@@ -6,13 +6,13 @@ Ce package contient les librairies python pour le matériel de Montrouge
 Il est partagé en plusieurs sous package : 
 
 * Instrument : qui contient les drivers des differents instruments
-* Analyse : package permettant d'analyser des donner
-* Experiment : dépent de analyse et instrument : permet de réaliser une experience, comme un diagramme de Bode
+* Analyse : package permettant d'analyser des données
+* Experiment : dépend de analyse et instrument : permet de réaliser une experience, comme un diagramme de Bode
 
 Instrument
 ----------
 
-L'idée est d'avoir une interface commune à chaque type d'instrument, ce qui necessite d'adapter ou d'écrire un driver specifique. Cette interface sera indépendante de la marque et de la connection utilisée. 
+L'idée est d'avoir une interface commune à chaque type d'instrument, ce qui nécessite d'adapter ou d'écrire un driver specifique. Cette interface sera indépendante de la marque de l'instrument et de la connection utilisée. 
 
 * Oscilloscope (scope)
 * Générateur basse fréquence (gbf)
@@ -24,21 +24,10 @@ Exemple ::
     scope = scope_factory('GPIB0::1::INSTR')
 
     scope.autoset()
-    wfm = scope.get_waveform(channel=1)
+    wfm = scope.channel1.get_waveform()
     wfm.plot()
 
     scope.channel[1].scale = .2
-
-Et en bas niveau ::
-
-    import visa
-
-    rm = visa.ResourceManager()
-    conn = rm.open_resource('GPIB0::1::INSTR')
-
-    from tpmontrouge.instrument.scope.tektronix import Tektronix 
-    
-    scope = Tektronix(conn)
 
 
 Analyse 
@@ -62,7 +51,7 @@ Exemple ::
 Experiment
 ----------
 
-L'objectif de ce sous package est de fournir des fonctions simplifiée pour réaliser une expérience. 
+L'objectif de ce sous package est de fournir des fonctions simplifiées pour réaliser une expérience. 
 
 Par exemple :: 
 

@@ -28,19 +28,19 @@ Grace à cette connection, on va pouvoir communiquer avec l'oscilloscope. Par ex
     conn.ask('CH1:SCALE 1')
     conn.ask('CH1:SCALE?')
 
-Le driver de bas niveau va réaliser l'interface entre une fonction Python et ces chaînes de caractères. Par exemple : 
+Le driver de bas niveau va réaliser l'interface entre une fonction Python et ces chaînes de caractères. Par exemple :: 
 
     def get_channel_scale(conn, channel):
         scale = conn.ask('CH{}:SCALE?'.format(channel))
         return float(scale)
 
-Le tout se fait avec des méthode d'objet et on dispose de méthode pour simplifier. Par exemple ::
+Le tout se fait avec des méthode d'objet.  Il existe des méthode pour simplifier faire des conversion automatiquement. Par exemple ::
 
     def get_horizontal_scale(com):
         return self.scpi_ask_for_float("HORizontal:SCAle")
 
 
-Enfin, l'objet de haut niveau va fournir l'interface commune à tout le monde. Elle offre un arbre de commande simple a utilisé, basé sur des ``property`` : 
+Enfin, l'objet de haut niveau va fournir l'interface commune à tout le monde. Elle offre un arbre de commande simple a utilisé, basé sur des ``property`` :: 
 
     scope.horizontal.scale = .5 # call scope.set_horizontal_scale(.5)
 
@@ -55,7 +55,7 @@ Test unitaire
 
 Il existe un test unitaire effectué sur un instrument fictif. Il fait parti de la suite de test du package. On peut créer un test spécifique pour un instrument. Il faut simplement éviter de lui donner un nom commençant par ``test``, afin qu'il ne soit pas exécuté automatiquement. 
 
-On exectute alors directement le module : 
+On exectute alors directement le module :: 
 
     python -m tpmontrouge.instrument.scope.test.tektronix 'GPIB0::1::INSTR'
 

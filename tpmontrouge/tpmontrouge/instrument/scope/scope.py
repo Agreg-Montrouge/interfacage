@@ -25,6 +25,8 @@ class ChannelNode(Node):
 
     coupling = IndexableProperty('channel_coupling')
     impedance = IndexableProperty('channel_impedance')
+    offset = IndexableProperty('channel_vertical_offset')
+    scale = IndexableProperty('channel_vertical_scale')
 
     def get_waveform(self, **kwd):
         return self.root.get_channel_waveform(self.channel_name, **kwd)
@@ -67,6 +69,14 @@ class Scope(RootNode):
     @property
     def channel2(self):
         return self.channel[2]
+
+    @property
+    def channel1(self):
+        return self.channel[3]
+
+    @property
+    def channel2(self):
+        return self.channel[4]
 
 
     @property

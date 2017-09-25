@@ -22,6 +22,10 @@ class GenericTest(object):
         self.assertEqual(str(self.scope.channel1.impedance), 'FiftyOhm')
         self.scope.channel[1].coupling = 'AC'
         self.assertEqual(str(self.scope.channel[1].coupling), 'AC')
+        self.scope.channel[2].offset = 0.1
+        self.assertEqual(self.scope.channel[2].offset, 0.1)
+        self.scope.channel[2].scale = 0.1
+        self.assertEqual(self.scope.channel[2].scale, 0.1)
 
     def test_trigger(self):
         self.scope.trigger.slope = 'positiveedge'
@@ -41,7 +45,7 @@ class GenericTest(object):
         waveform = self.scope.channel1.get_waveform()
         waveform.plot(fig=fig)
         file = os.path.join(tempfile.gettempdir(), 'scope_test.pdf')
-        print('Figure saved to ', file)
+#        print('Figure saved to ', file)
         fig.savefig(file)
 
 class ScopeTest(GenericTest, unittest.TestCase):

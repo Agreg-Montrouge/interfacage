@@ -3,8 +3,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Documentation du package pour le TP de Montrouge
-================================================
+Documentation du package pour les TP de Montrouge
+=================================================
+
 
 
 
@@ -13,6 +14,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   connexion
+   creer_un_instrument
 
 
 Indices and tables

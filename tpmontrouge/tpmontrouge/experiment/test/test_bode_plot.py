@@ -60,7 +60,7 @@ class Test(unittest.TestCase):
         fig = figure()
         bode_plot.plot(fig=fig)
         filename = os.path.join(tempfile.gettempdir(), 'bode_test_with_instrument.pdf')
-        print('File writte to ', filename)
+#        print('File written to ', filename)
         fig.savefig(filename)
 
         

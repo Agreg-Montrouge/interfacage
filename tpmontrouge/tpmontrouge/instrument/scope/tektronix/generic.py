@@ -1,3 +1,10 @@
+""" This is the generic module for Tektronix scope
+
+It seams that the commands are the same for all the instrument
+
+Instrument specific commands should be in a specific module
+"""
+
 import numbers
 
 import numpy as np
@@ -71,10 +78,17 @@ class Tektronix(Scope, Instrument):
         return coupling.convert(out)
 
     def set_channel_vertical_offset(self, val, channel=None):
-        self.scpi_channel_write(channel, 'OFFS', val)
+        self.scpi_channel_write(channel, 'POSITION', val)
 
     def get_channel_vertical_offset(self, channel=None):
-        return self.scpi_channel_ask_for_float(channel, 'OFFS')
+        return self.scpi_channel_ask_for_float(channel, 'POSITION')
+
+    def set_channel_vertical_scale(self, val, channel=None):
+        self.scpi_channel_write(channel, 'SCALE', val)
+
+    def get_channel_vertical_scale(self, channel=None):
+        return self.scpi_channel_ask_for_float(channel, 'SCALE')
+
 
 
     def get_out_waveform_horizontal_sampling_interval(self):

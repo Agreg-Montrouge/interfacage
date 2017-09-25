@@ -56,7 +56,7 @@ class FakeSCPI(object):
     def ask(self, val):
         assert val[-1]=='?'
         out = self._record.get(val[:-1], '')
-#        print('ASK', val, out)
+#        print('ASK', val,'...', out)
         return out
 
 

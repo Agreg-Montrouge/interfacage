@@ -15,7 +15,7 @@ ymult = .5 / 2**8
 yoff = 5*2**8
 int_array_for_test = np.array(yoff + array_for_test/ymult, dtype=np.dtype('int16').newbyteorder('>'))
 buf = int_array_for_test.data.tobytes()
-print(int_array_for_test[:10])
+#print(int_array_for_test[:10])
 buf = b'#' + str(len(str(len(buf)))).encode() + str(len(buf)).encode() + buf
 
 class FakeSCPITektronix(FakeSCPI):

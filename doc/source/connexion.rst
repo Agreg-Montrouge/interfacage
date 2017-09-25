@@ -7,9 +7,13 @@ Il existe plusieurs type de connexion : GPIB, RS232 (série), USB ou ethernet. S
 Je ne me casse pas la tête
 ==========================
 
-Chaque instrument est défini par une chaine de caractère. A partir de cette chaîne, on peut déterminer automatiquement le typd de connexion (voir la suite) et l'ouvrir. Cette fonction se trouve dans le module :mod:`tpmontrouge.instrument.connection.auto_connect``. 
+Chaque instrument est défini par une chaine de caractère. A partir de cette chaîne, on peut déterminer automatiquement le type de connexion (voir la suite) et l'ouvrir. Cette fonction se trouve dans le module :mod:`tpmontrouge.instrument.connection.auto_connect`. 
 
 Cette fonction est appellée par les fonctions du type ``scope_factory``.
+
+Par exemple ::
+
+    conn = auto_connect("GPIB0::1::INSTR")
 
 VISA
 ====

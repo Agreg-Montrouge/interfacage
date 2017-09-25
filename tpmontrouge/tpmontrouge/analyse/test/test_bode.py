@@ -38,8 +38,8 @@ class Test(unittest.TestCase):
         for freq in np.logspace(0.5, 3.5, 51):
             t, ref, out = generate_signal(freq)
             bode_plot.append(BodePoint(t, out, ref, freq=freq))
-        print(bode_plot.delta_phi)
-        print(bode_plot.gain)
+#        print(bode_plot.delta_phi)
+#        print(bode_plot.gain)
 
         fig = figure()
         bode_plot.plot(fig=fig)
