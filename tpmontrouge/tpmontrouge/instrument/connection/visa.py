@@ -7,7 +7,7 @@ except ImportError:
 
 
 if visa is not None:
-    rm = visa.resource_manager()
+    rm = visa.ResourceManager()
     open_resource = rm.open_resource
 else:
     def open_resource(*args, **kwd):

@@ -31,6 +31,7 @@ class Waveform(object):
         if fig is not None:
             assert axes is None
             axes = fig.add_subplot(1,1,1)
+        assert axes is not None, 'Please set either fig or axes'
         axes.plot(self.x_data, self.y_data, **kwd)
         axes.set_xlabel(self.x_label)
         axes.set_ylabel(self.y_label)     

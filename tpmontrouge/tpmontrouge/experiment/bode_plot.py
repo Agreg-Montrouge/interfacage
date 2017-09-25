@@ -24,12 +24,16 @@ class BodeExperiment(object):
     def configure_default_gbf(self):
         self.set_gbf_property(amplitude=1, function='Sinusoid', offset=0)
 
-    def record_point(self, freq):
+    def record_point(self, freq, auto_set=False):
         self.display('Frequency : {}'.format(freq))
         self.gbf.frequency = freq
-        self.scope.autoset()
-        if self._wait_time>0:
-            sleep(self._wait_time)
+        if auto_set:
+            self.scope.autoset()
+            if self._wait_time>0:
+                sleep(self._wait_time)
+        else:
+            self.scope.horizontal.scale = 1/freq
+            sleep(20/freq)
         self.scope.stop_acquisition()
         input_wfm = self.input_channel.get_waveform()
         ref_wfm = self.reference_channel.get_waveform()
@@ -39,16 +43,15 @@ class BodeExperiment(object):
         ref = ref_wfm.y_data
         return BodePoint(t, y, ref, freq=freq)
 
-    def record_bode_diagramm(self, list_of_frequency=None, start=None, stop=None, step=None):
+    def record_bode_diagramm(self, list_of_frequency=None, start=None, stop=None, step=None, auto_set=False):
         if list_of_frequency is None:
             list_of_frequency = np.logspace(np.log10(start), np.log10(stop), step, endpoint=False)
         out = BodePlot()
         self.display('Start of measurement')
         for freq in list_of_frequency:
-            out.append(self.record_point(freq))
+            out.append(self.record_point(freq, auto_set=auto_set))
         self.display('End of measurement')
         return out
-
     def display(self, val):
         if self._disp:
             print(val)

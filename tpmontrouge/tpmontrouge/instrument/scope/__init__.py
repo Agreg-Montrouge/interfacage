@@ -10,7 +10,7 @@ def scope_factory(info):
      """
     conn = auto_connect(info)
     idn = conn.ask('*IDN?')
-    if tektronix in idn:
+    if "tektronix" in idn.lower():
         return Tektronix(conn)
     raise ValueError('Unkwown instrument with ID : {}'.format(idn))
 

@@ -10,7 +10,7 @@ def gbf_factory(info):
      """
     conn = auto_connect(info)
     idn = conn.ask('*IDN?')
-    if agilent in idn.lower():
+    if "agilent" in idn.lower():
         return Agilent(conn)
     raise ValueError('Unkwown instrument with ID : {}'.format(idn))
 

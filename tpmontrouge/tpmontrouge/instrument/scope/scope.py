@@ -71,11 +71,11 @@ class Scope(RootNode):
         return self.channel[2]
 
     @property
-    def channel1(self):
+    def channel3(self):
         return self.channel[3]
 
     @property
-    def channel2(self):
+    def channel4(self):
         return self.channel[4]
 
 
