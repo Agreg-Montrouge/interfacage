@@ -49,14 +49,16 @@ class BodePlot(object):
         axe2 = fig.add_subplot(2,1,2, sharex=axe1)
         axe2.plot(self.freq, self.delta_phi*180/np.pi, 'o-')
         axe2.set_xscale('log')
-        fig.subplots_adjust(hspace=.01)
+        fig.subplots_adjust(hspace=.05)
         axe2.set_xlabel('Frequence (Hz)')
         axe2.set_ylabel('Phase (deg)')
         axe2.grid(True)
         yticks = axe2.yaxis.get_major_ticks()
-        yticks[-1].label1.set_visible(False)
+#        yticks[-1].label1.set_visible(False)
+        axe2.yaxis.set_major_locator(MultipleLocator(45))
         if self.title:
             axe1.set_title(self.title)
+        fig.tight_layout()
 
     plot = plot_matplotlib # default plot
 
@@ -90,3 +92,18 @@ class BodePoint(object):
     @property
     def gain(self):
         return self.amplitude/self.amplitude_ref
+
+    def plot_matplotlib(self, fig=None):
+        if fig is None:
+            from matplotlib.pyplot import figure
+            fig = figure()
+        from matplotlib.ticker import NullFormatter, MultipleLocator
+        axe1 = fig.add_subplot(1,1,1)
+        axe1.plot(self.t, self.y)
+        axe1.plot(self.t, self.y_ref)
+        axe1.set_xlabel('T (s)')
+        axe1.set_ylabel('Tension (V)')
+        axe1.grid(True)
+
+    plot = plot_matplotlib # default plot
+

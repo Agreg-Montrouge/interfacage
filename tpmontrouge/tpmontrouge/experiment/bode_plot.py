@@ -15,6 +15,10 @@ class BodeExperiment(object):
         if wait_time is not None:
            self._wait_time = wait_time 
         self.configure_default_gbf()
+        self.init_bode_plot()
+
+    def init_bode_plot(self):
+        self._bode_plot = BodePlot()
         
 
     def set_gbf_property(self, **kwd):
@@ -25,7 +29,7 @@ class BodeExperiment(object):
         self.set_gbf_property(amplitude=1, function='Sinusoid', offset=0)
 
     def record_point(self, freq, auto_set=False):
-        self.display('Frequency : {}'.format(freq))
+        self.display_txt('Frequency : {}'.format(freq))
         self.gbf.frequency = freq
         if auto_set:
             self.scope.autoset()
@@ -41,18 +45,26 @@ class BodeExperiment(object):
         t = input_wfm.x_data
         y = input_wfm.y_data
         ref = ref_wfm.y_data
-        return BodePoint(t, y, ref, freq=freq)
+        last_point = BodePoint(t, y, ref, freq=freq)
+#        self.display(last_point.delta_phi)
+        self._bode_plot.append(last_point)
+        self.display_last_point(last_point)
+
+    def display_last_point(self, last_point):
+        msg = '\tPhi={}, gain={}'.format(last_point.delta_phi, last_point.gain)
+        self.display_txt(msg)
 
     def record_bode_diagramm(self, list_of_frequency=None, start=None, stop=None, step=None, auto_set=False):
         if list_of_frequency is None:
             list_of_frequency = np.logspace(np.log10(start), np.log10(stop), step, endpoint=False)
-        out = BodePlot()
-        self.display('Start of measurement')
+        self.init_bode_plot()
+        self.display_txt('Start of measurement')
         for freq in list_of_frequency:
-            out.append(self.record_point(freq, auto_set=auto_set))
-        self.display('End of measurement')
-        return out
-    def display(self, val):
+            self.record_point(freq, auto_set=auto_set)
+        self.display_txt('End of measurement')
+        return self._bode_plot
+
+    def display_txt(self, val):
         if self._disp:
             print(val)
 

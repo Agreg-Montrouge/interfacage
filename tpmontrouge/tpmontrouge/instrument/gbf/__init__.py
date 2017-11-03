@@ -1,4 +1,4 @@
-from ..connection import auto_connect
+from ..connection import auto_connect, get_all_connection
 from .agilent.generic import Agilent
 
 
@@ -15,3 +15,14 @@ def gbf_factory(info):
     raise ValueError('Unkwown instrument with ID : {}'.format(idn))
 
 
+def _get_all_gbf():
+    for elm in get_all_connection():
+        try:
+            gbf_factory(elm)
+        except Exception:
+            pass
+        else:
+            yield elm
+
+def get_all_gbf():
+    return list(_get_all_gbf())
