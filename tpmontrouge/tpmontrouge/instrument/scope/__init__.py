@@ -25,4 +25,4 @@ def _get_all_scopes():
             yield elm
 
 def get_all_scopes():
-    return list(_get_all_gbf())
+    return list(_get_all_scopes())

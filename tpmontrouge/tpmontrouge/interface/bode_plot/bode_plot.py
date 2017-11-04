@@ -101,8 +101,8 @@ class Connection(StateMachine):
     def refresh(self):
         self.choices.clear()
         list_of_device = self.get_list_of_devices()
-        self.choices.addItem('Default')
-        self.choices.insertSeparator(10000)
+#        self.choices.addItem('Default')
+#        self.choices.insertSeparator(10000)
         self.choices.addItems(list_of_device)
         self.choices.insertSeparator(10000)
         self.choices.addItem('Simulation')
@@ -120,7 +120,7 @@ class Connection(StateMachine):
         return device
 
 from ...instrument.gbf import gbf_factory, get_all_gbf
-from ...instrument.scope import scope_factory
+from ...instrument.scope import scope_factory,get_all_scopes
 
 class GBFConnection(Connection):
     name = 'GBF'
@@ -135,15 +135,15 @@ class GBFConnection(Connection):
             value = self.default
         if value=='Simulation':
             self._device = GBF(RootGBF())
-            return
-        return gbf_factory(value)
+        else:
+            self._device = gbf_factory(value)
 
 class ScopeConnection(Connection):
     name = 'Scope'
     default = 'Simulation'
 
     def get_list_of_devices(self):
-        return []
+        return get_all_scopes()
 
     def create_device(self):
         value = self.choices.currentText()
@@ -151,8 +151,8 @@ class ScopeConnection(Connection):
             value = self.default
         if value=='Simulation':
             self._device = Scope(RootScope())
-            return
-        return scope_factory(value)
+        else:
+            self._device = scope_factory(value)
 
 class BodeWindows(QtGui.QWidget):
     def __init__(self):
