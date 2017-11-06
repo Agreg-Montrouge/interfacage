@@ -154,6 +154,16 @@ class ScopeConnection(Connection):
         else:
             self._device = scope_factory(value)
 
+class MyMPLWidget(pyqtgraph.widgets.MatplotlibWidget.MatplotlibWidget):
+    def __init__(self, *args, **kwd):
+        super(MyMPLWidget, self).__init__()
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHeightForWidth(True)
+        self.setSizePolicy(sizePolicy)
+
+    def heightForWidth(self, width):
+        return width * 0.7
+
 class BodeWindows(QtGui.QWidget):
     def __init__(self):
         super(BodeWindows, self).__init__()
@@ -169,12 +179,18 @@ class BodeWindows(QtGui.QWidget):
 
         buttons = BodeStartStopPause(layout=btn_layout, parent=self)
         btn_layout.addWidget(t)
-        btn_layout.addStretch(1)
+#        btn_layout.addStretch(1)
 
-        plot1 = pyqtgraph.widgets.MatplotlibWidget.MatplotlibWidget()
-        main_layout.addWidget(plot1)
-        plot2 = pyqtgraph.widgets.MatplotlibWidget.MatplotlibWidget()
-        main_layout.addWidget(plot2)
+        plot1 = MyMPLWidget()
+        tmp_layout = QtGui.QVBoxLayout()
+        tmp_layout.addWidget(plot1)
+        tmp_layout.addStretch(1)
+        main_layout.addLayout(tmp_layout)
+        plot2 = MyMPLWidget()
+        tmp_layout = QtGui.QVBoxLayout()
+        tmp_layout.addWidget(plot2)
+        tmp_layout.addStretch(1)
+        main_layout.addLayout(tmp_layout)
 
         self.plot1 = plot1
         self.plot2 = plot2
@@ -187,6 +203,8 @@ class BodeWindows(QtGui.QWidget):
 
         self.scope = ScopeConnection()
         btn_layout.addWidget(self.scope.make_layout())
+        btn_layout.addStretch(1)
+#        btn_layout.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
 
         buttons.connect(self.new_state)
 
