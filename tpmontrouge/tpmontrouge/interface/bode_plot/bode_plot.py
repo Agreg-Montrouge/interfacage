@@ -121,8 +121,10 @@ class BodeWindows(QtGui.QWidget):
 
     _initial_dir = os.getenv('HOME') or ''
     def save_experiment(self):
-        file_name, _ = QtGui.QFileDialog.getSaveFileName(self, 'Save file', 
+        file_name = QtGui.QFileDialog.getSaveFileName(self, 'Save file', 
                         self._initial_dir, "Data file (*.dat)")
+        if isinstance(file_name, tuple): # depends on the version ...
+            file_name = file_name[0]
         print(file_name)
         if file_name:
             self.running_exp.save(file_name)
