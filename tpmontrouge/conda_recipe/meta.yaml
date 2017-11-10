@@ -1,0 +1,23 @@
+package:
+  name: tpmontrouge
+  version: "2017.11"
+
+source:
+  path: ..
+
+requirements:
+  build:
+    - python
+  run:
+    - python
+    - numpy
+    - cached-property
+    - pyqtgraph
+    - scipy
+    - matplotlib
+
+test:
+  imports:
+    - tpmontrouge
+
+
