@@ -172,7 +172,7 @@ class Tektronix(Scope, Instrument):
         value_as_str = {slope.PositiveEdge:'RISe', slope.NegativeEdge:'FALL'}.get(value, None)
         if value_as_str is None:
             raise Exception('Slope {} is not allowed'.format(value))
-        self.scpi_write('TRIGger:MAIn:EDGE:LEVel', value_as_str)
+        self.scpi_write('TRIGger:MAIn:EDGE:Slope', value_as_str)
     
     def get_trigger_slope(self):
         out = self.scpi_ask('TRIGger:MAIn:EDGE:Slope')
