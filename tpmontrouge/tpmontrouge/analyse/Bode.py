@@ -32,7 +32,7 @@ class BodePlot(object):
     def freq(self):
         return self.get_column('freq')
 
-    def plot_matplotlib(self, fig=None):
+    def plot_matplotlib(self, fig=None, log_scale=True):
         if fig is None:
             from matplotlib.pyplot import figure
             fig = figure()
@@ -40,7 +40,8 @@ class BodePlot(object):
         # see http://wittman.physics.ucdavis.edu/Matplotlib-examples/
         axe1 = fig.add_subplot(2,1,1)
         axe1.plot(self.freq, 20*np.log(self.gain)/np.log(10), 'o-')
-        axe1.set_xscale('log')
+        if log_scale:
+            axe1.set_xscale('log')
         axe1.yaxis.set_major_locator(MultipleLocator(10))
         for tick in axe1.get_xticklabels():
             tick.set_visible(False)
@@ -48,7 +49,8 @@ class BodePlot(object):
         axe1.set_ylabel('Gain (dB)')
         axe2 = fig.add_subplot(2,1,2, sharex=axe1)
         axe2.plot(self.freq, self.delta_phi*180/np.pi, 'o-')
-        axe2.set_xscale('log')
+        if log_scale:
+            axe1.set_xscale('log')
         fig.subplots_adjust(hspace=.05)
         axe2.set_xlabel('Frequence (Hz)')
         axe2.set_ylabel('Phase (deg)')
@@ -62,6 +64,9 @@ class BodePlot(object):
 
     plot = plot_matplotlib # default plot
 
+    def save(self, fname):
+        tout = np.array([self.freq, self.gain, self.delta_phi]).T
+        np.savetxt(fname, tout, header='Frequence\tgain\tdelta_phi')
 
 class BodePoint(object):
     def __init__(self, t, y, y_ref, freq):
@@ -98,12 +103,19 @@ class BodePoint(object):
             from matplotlib.pyplot import figure
             fig = figure()
         from matplotlib.ticker import NullFormatter, MultipleLocator
-        axe1 = fig.add_subplot(1,1,1)
+        axe1 = fig.add_subplot(2,1,1)
         axe1.plot(self.t, self.y)
-        axe1.plot(self.t, self.y_ref)
+        axe2 = fig.add_subplot(2,1,2, sharex=axe1)
+        axe2.plot(self.t, self.y_ref)
         axe1.set_xlabel('T (s)')
-        axe1.set_ylabel('Tension (V)')
+        axe1.set_ylabel('Signal (V)')
+        axe2.set_ylabel('Référence (V)')
         axe1.grid(True)
+        axe2.grid(True)
+        fig.tight_layout()
 
     plot = plot_matplotlib # default plot
+
+
+        
 

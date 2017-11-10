@@ -3,16 +3,16 @@ from time import sleep
 from pyqtgraph.Qt import QtCore, QtGui
 import pyqtgraph.widgets.MatplotlibWidget
 import numpy as np
+import os
 
 from ..utils.start_stop_pause import ExpThread, StateMachine
 from ..utils.start_stop_pause import StartStopPause
 
-from ...experiment.test.virtual_instrument_for_bode_plot import RootGBF, RootScope
-from ...instrument.gbf.gbf import GBF
-from ...instrument.scope.scope import Scope
-from ...experiment.bode_plot import BodeExperiment as _BodeExperiment
 
-app = pg.QtGui.QApplication([])
+from ...instrument.gbf.interface_qt import GBFConnection
+from ...instrument.scope.interface_qt import ScopeConnection
+
+from ...experiment.bode_plot import BodeExperiment as _BodeExperiment
 
 from pyqtgraph.parametertree import Parameter, ParameterTree
 
@@ -20,9 +20,10 @@ from pyqtgraph.parametertree import Parameter, ParameterTree
 #scope = Scope(RootScope())
 
 class BodeExperiment(_BodeExperiment):
-    def __init__(self, *args, scope_mpl_figure=None, bode_mpl_figure=None, **kwd):
+    def __init__(self, *args, log_scale=True, scope_mpl_figure=None, bode_mpl_figure=None, **kwd):
         self.scope_mpl_figure = scope_mpl_figure
         self.bode_mpl_figure = bode_mpl_figure
+        self.log_scale = log_scale
         super(BodeExperiment, self).__init__(*args, **kwd)
 
     def loop(self, iterator):
@@ -38,7 +39,7 @@ class BodeExperiment(_BodeExperiment):
         if self.bode_mpl_figure is not None:
             fig = self.bode_mpl_figure 
             fig.clf()
-            self._bode_plot.plot(fig)
+            self._bode_plot.plot(fig, log_scale=self.log_scale)
             fig.canvas.draw()
 
 params = [{'name':'Start', 'type':'float', 'value':100, 'suffix': 'Hz', 'siPrefix': True, 'limits':(0, None), 'dec':True, 'step':.5}, 
@@ -52,107 +53,6 @@ class BodeStartStopPause(StartStopPause):
         self._thread = BodeThread(bode_windows=self.parent())
         self._thread.start()
 
-class Connection(StateMachine):
-    name = ""
-    _device = None
-    def __init__(self, *args, **kwd):
-        super(Connection, self).__init__(states=['Unconnected', 'Connected'], *args, **kwd)
-
-        self.button = pg.QtGui.QPushButton("")
-        self.choices = pg.QtGui.QComboBox()
-        self.choices.addItems([])
-
-        self.entering_unconnected()
-        self.button.clicked.connect(self.connect_button_pressed)
-
-        self.refresh_btn = QtGui.QPushButton("Reload")
-#        self.refresh_btn.setFixedWidth(20)
-#        self.refresh_btn.setFixedHeight(20)
-#        self.refresh_btn.setIcon(QtGui.QIcon(pixmaps.getPixmap('default')))
-        self.refresh_btn.clicked.connect(self.refresh)  
-        self.refresh()
-
-
-    def connect_button_pressed(self):
-        if self.state=='Connected':
-            self.set_state('Unconnected')
-        elif self.state=='Unconnected':
-            self.set_state('Connected')
-
-    def entering_connected(self, previous_state=None):
-        self.choices.setEnabled(False)
-        self.button.setText('Disconnect')
-        self.create_device()
-
-    def entering_unconnected(self, previous_state=None):
-        self.choices.setEnabled(True)
-        self.button.setText('Connect')
-
-    def make_layout(self):
-        layout = pg.LayoutWidget()
-        label = pg.QtGui.QLabel()
-        label.setText(self.name)
-        layout.addWidget(label, colspan=2)
-        layout.addWidget(self.button, row=1, col=0)
-        layout.addWidget(self.choices, row=1, col=1)
-        layout.addWidget(self.refresh_btn, row=1, col=2)
-        return layout
-
-    def refresh(self):
-        self.choices.clear()
-        list_of_device = self.get_list_of_devices()
-#        self.choices.addItem('Default')
-#        self.choices.insertSeparator(10000)
-        self.choices.addItems(list_of_device)
-        self.choices.insertSeparator(10000)
-        self.choices.addItem('Simulation')
-
-    def auto_connect(self):
-        if self.get_state()=='Unconnected':
-            self.entering_connected()
-            self.set_state('Connected')        
-
-    @property
-    def device(self):
-        device = self._device
-        if device is None:
-            raise Exception('No device connected')
-        return device
-
-from ...instrument.gbf import gbf_factory, get_all_gbf
-from ...instrument.scope import scope_factory,get_all_scopes
-
-class GBFConnection(Connection):
-    name = 'GBF'
-    default = 'Simulation'
-
-    def get_list_of_devices(self):
-        return get_all_gbf()
-
-    def create_device(self):
-        value = self.choices.currentText()
-        if value=="Default":
-            value = self.default
-        if value=='Simulation':
-            self._device = GBF(RootGBF())
-        else:
-            self._device = gbf_factory(value)
-
-class ScopeConnection(Connection):
-    name = 'Scope'
-    default = 'Simulation'
-
-    def get_list_of_devices(self):
-        return get_all_scopes()
-
-    def create_device(self):
-        value = self.choices.currentText()
-        if value=="Default":
-            value = self.default
-        if value=='Simulation':
-            self._device = Scope(RootScope())
-        else:
-            self._device = scope_factory(value)
 
 class MyMPLWidget(pyqtgraph.widgets.MatplotlibWidget.MatplotlibWidget):
     def __init__(self, *args, **kwd):
@@ -178,6 +78,7 @@ class BodeWindows(QtGui.QWidget):
         t.setParameters(p, showTop=False)
 
         buttons = BodeStartStopPause(layout=btn_layout, parent=self)
+        self.start_stop_btns = buttons
         btn_layout.addWidget(t)
 #        btn_layout.addStretch(1)
 
@@ -206,14 +107,44 @@ class BodeWindows(QtGui.QWidget):
         btn_layout.addStretch(1)
 #        btn_layout.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
 
-        buttons.connect(self.new_state)
+        buttons.connect(self.new_state_tree)
+
+        self.save_btn = pg.QtGui.QPushButton("Save data")
+        self.save_btn.setEnabled(False)
+        self.save_btn.clicked.connect(self.save_experiment)
+        btn_layout.addWidget(self.save_btn)
+        buttons.connect(self.new_state_save)
 
 
-    def new_state(self, state):
+    _initial_dir = os.getenv('HOME') or ''
+    def save_experiment(self):
+        file_name, _ = QtGui.QFileDialog.getSaveFileName(self, 'Save file', 
+                        self._initial_dir, "Data file (*.dat)")
+        print(file_name)
+        if file_name:
+            self.running_exp.save(file_name)
+
+    @property
+    def running_exp(self):
+        return self.start_stop_btns._thread.running_exp
+
+    def new_state_tree(self, state):
         if state=='Running' or state=='Paused':
             self.bode_params_tree.setEnabled(False)
         else:
             self.bode_params_tree.setEnabled(True)
+
+
+    def new_state_save(self, state):
+        if state=='Running':
+            self.save_btn.setEnabled(False)
+        elif state=='Paused':
+            self.save_btn.setEnabled(True)
+        elif state=='Stopped':
+            if self.running_exp is not None:
+                self.save_btn.setEnabled(True)
+            else:
+                self.save_btn.setEnabled(False)
 
 class BodeThread(ExpThread):
     def __init__(self, *args, bode_windows=None, **kwd):
@@ -240,7 +171,8 @@ class BodeThread(ExpThread):
         return BodeExperiment(self.gbf, self.scope, self.scope.channel1, self.scope.channel2, 
                                 disp=True, wait_time=0,
                                 scope_mpl_figure=self.bode_windows.plot1.getFigure(), 
-                                bode_mpl_figure=self.bode_windows.plot2.getFigure())
+                                bode_mpl_figure=self.bode_windows.plot2.getFigure(),
+                                log_scale = self.parameters['log'])
 
     def get_iterator(self):
         p = self.parameters
@@ -255,6 +187,7 @@ class BodeThread(ExpThread):
             return list(np.linspace(start, stop, step, endpoint=False))
 
 if __name__=='__main__':
+    app = pg.QtGui.QApplication([])
     win = BodeWindows()
     win.show()
     app.exec_()

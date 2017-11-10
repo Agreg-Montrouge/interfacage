@@ -21,6 +21,7 @@ def generate_signal(freq):
     return t, ref, out
 
 
+
 class Test(unittest.TestCase):
     def fit(self, phase=.2):
         t = np.linspace(0, 1, 101)
@@ -44,5 +45,6 @@ class Test(unittest.TestCase):
         fig = figure()
         bode_plot.plot(fig=fig)
         fig.savefig(os.path.join(tempfile.gettempdir(), 'bode_test.pdf'))
-
+        fname = os.path.join(tempfile.gettempdir(), 'test.dat')
+        bode_plot.save(fname)
 

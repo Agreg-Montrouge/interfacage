@@ -46,16 +46,17 @@ class ExpThread(pg.QtCore.QThread):
 
     Usually, you will subclass this class and specify the exp attribute or property and the get_iterator method. 
     """
-    exp = None
+    running_exp = None
     def __init__(self, btn):
 #        self.exp = experiment
-        assert self.exp is not None, 'You should subclass ExpThread and set the class attribute exp'
+#        assert self.exp is not None, 'You should subclass ExpThread and set the class attribute exp'
         self.btn = btn
         self.iterator = Iterator(parent=self)
         super(ExpThread, self).__init__()
 
     def run(self):
-        self.exp.loop(self.iterator)
+        self.running_exp = self.exp
+        self.running_exp.loop(self.iterator)
         self.btn.stop()
 
     def get_iterator(self):
@@ -87,7 +88,7 @@ class StateMachine(pg.QtCore.QObject):
     def set_state(self, state):
         if state not in self._states:
             raise Exception('State not allowed')
-        print('SET STATE', state)
+#        print('SET STATE', state)
         self.previous_state = self.state
         self.state = state
         self.sig_new_state.emit(state)
@@ -111,7 +112,7 @@ class StartStopPause(StateMachine):
         super(StartStopPause, self).__init__(states=['Stopped', 'Paused', 'Running', 'WaitingForStop'], *args, **kwd)
         on_off_btn = pg.QtGui.QPushButton("Start")
         on_off_btn.clicked.connect(self.start_stop)
-        on_off_btn.setShortcut(pg.QtCore.Qt.Key_Space)
+#        on_off_btn.setShortcut(pg.QtCore.Qt.Key_Space)
 #        on_off_btn.setSizePolicy(
 #            pg.QtGui.QSizePolicy.Preferred,
 #            pg.QtGui.QSizePolicy.Preferred)

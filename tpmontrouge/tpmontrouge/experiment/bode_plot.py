@@ -68,3 +68,5 @@ class BodeExperiment(object):
         if self._disp:
             print(val)
 
+    def save(self, fname):
+        self._bode_plot.save(fname)
