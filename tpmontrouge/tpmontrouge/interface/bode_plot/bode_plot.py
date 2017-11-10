@@ -45,7 +45,10 @@ class BodeExperiment(_BodeExperiment):
 params = [{'name':'Start', 'type':'float', 'value':100, 'suffix': 'Hz', 'siPrefix': True, 'limits':(0, None), 'dec':True, 'step':.5}, 
             {'name':'Stop', 'type':'float', 'value':10000, 'suffix': 'Hz', 'siPrefix': True, 'limits':(0, None), 'dec':True, 'step':.5}, 
              {'name':'Step', 'type':'int', 'value':20, 'dec':True},
-        {'name':'log', 'type':'bool', 'value':True}]
+        {'name':'log', 'type':'bool', 'value':True},
+        {'name':'Sig. chan.', 'type':'list', 'values':[1, 2, 3, 4], 'value':1},
+        {'name':'Ref. chan.', 'type':'list', 'values':[1, 2, 3, 4], 'value':2}
+]
 
 
 class BodeStartStopPause(StartStopPause):
@@ -168,7 +171,9 @@ class BodeThread(ExpThread):
 
     @property
     def exp(self):
-        return BodeExperiment(self.gbf, self.scope, self.scope.channel1, self.scope.channel2, 
+        return BodeExperiment(self.gbf, self.scope, 
+                                self.scope.channel[self.parameters['Sig. chan.']], 
+                                self.scope.channel[self.parameters['Ref. chan.']], 
                                 disp=True, wait_time=0,
                                 scope_mpl_figure=self.bode_windows.plot1.getFigure(), 
                                 bode_mpl_figure=self.bode_windows.plot2.getFigure(),
