@@ -46,8 +46,8 @@ params = [{'name':'Start', 'type':'float', 'value':100, 'suffix': 'Hz', 'siPrefi
             {'name':'Stop', 'type':'float', 'value':10000, 'suffix': 'Hz', 'siPrefix': True, 'limits':(0, None), 'dec':True, 'step':.5}, 
              {'name':'Step', 'type':'int', 'value':20, 'dec':True},
         {'name':'log', 'type':'bool', 'value':True},
+        {'name':'Ref. chan.', 'type':'list', 'values':[1, 2, 3, 4], 'value':1},
         {'name':'Sig. chan.', 'type':'list', 'values':[1, 2, 3, 4], 'value':2},
-        {'name':'Ref. chan.', 'type':'list', 'values':[1, 2, 3, 4], 'value':1}
 ]
 
 
