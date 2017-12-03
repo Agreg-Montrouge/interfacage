@@ -33,8 +33,8 @@ class RootScope(ScopeSimulation):
             ref = ref[::10]
             number_of_cycle = 1000*dt*freq
         sl = slice(None) if len(out)<1000 else slice(-1000,None)
-        if channel==1:
-            return Waveform(data=out[sl], t0=t0, dt=dt) 
         if channel==2:
+            return Waveform(data=out[sl], t0=t0, dt=dt) 
+        if channel==1:
             return Waveform(data=ref[sl], t0=t0, dt=dt) 
 
