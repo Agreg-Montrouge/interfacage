@@ -2,6 +2,8 @@ import pyqtgraph as pg
 from pyqtgraph import QtGui
 from ...interface.utils.start_stop_pause import ExpThread, StateMachine
 
+from .device_info import AllDevices
+
 class Connection(StateMachine):
     name = ""
     _device = None
@@ -69,4 +71,27 @@ class Connection(StateMachine):
         if device is None:
             raise Exception('No device connected')
         return device
+
+    def get_list_of_devices(self):
+        all_devices = AllDevices()
+        all_devices_given_model = all_devices.get_all_connected_devices(kind_of_model=self.kind_of_model)
+        dct = {}
+        lst = []
+        for i, dev in enumerate(all_devices_given_model):
+            id_ = '{i}: {dev.short_string}'.format(i=i, dev=dev)
+            lst.append(id_)
+            dct[id_] = dev
+        self.dct = dct
+        return lst
+
+    def create_device(self):
+        value = self.choices.currentText()
+        if value=="Default":
+            value = self.default
+        if value=='Simulation':
+            self._device = self.simulated_instrument
+        else:
+            self._device = self.dct[value].instrument
+
+
 

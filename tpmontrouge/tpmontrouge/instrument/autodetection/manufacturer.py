@@ -48,7 +48,7 @@ class Manufacturer(object):
 tektronix = Manufacturer('Tektronix')
 tektronix.add_to_list_of_manufacturer()
 
-agilent = Manufacturer('Agilent')
-agilent.add_to_list_of_manufacturer('Agilent Technologies')
-
+agilent_technologies = Manufacturer('Agilent')
+agilent_technologies.add_to_list_of_manufacturer('Agilent Technologies')
+keysight = agilent_technologies
 

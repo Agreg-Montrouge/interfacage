@@ -31,7 +31,7 @@ class DeviceInfo(object):
         self._device_str = device_str
 
     def get_connection(self):
-        pass
+        raise Exception('The class {} does not allow connection'.format(type(self).__name__))
 
     @cached_property
     def idn(self):
@@ -50,9 +50,16 @@ class DeviceInfo(object):
         model_name = self.idn[1]
         return manuf.get_model_class(model_name)
 
+    @property
+    def instrument(self):
+        return self.model_class(self.get_connection())
+
     def __str__(self):
         return self._device_str
 
     def __repr__(self):
         return 'DeviceInfo("{self._device_str}")'.format(self=self)
-
+    
+    @property
+    def short_string(self):
+        return self.idn[0] + ' ' + self.idn[1]

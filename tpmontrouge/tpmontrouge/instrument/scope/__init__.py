@@ -1,7 +1,6 @@
 from ..connection import auto_connect, get_all_connection
 from .tektronix.generic import Tektronix
-
-Tektronix.add_class_to_manufacturer('TDS')
+from .keysight.generic import Keysight
 
 
 def scope_factory(info):

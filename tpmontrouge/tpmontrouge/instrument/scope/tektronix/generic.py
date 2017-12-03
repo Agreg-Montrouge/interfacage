@@ -19,7 +19,6 @@ from ..constant import coupling
 from ..constant import slope
 from ..waveform import Waveform
 
-
 class Tektronix(Scope, Instrument):
     manufacturer = tektronix
     def __init__(self, *args, **kwd):
@@ -190,5 +189,5 @@ class WithoutImpedance(object):
     def get_channel_impedance(self, val, channel=None):
         return impedance.OneMegOhm
 
-
+Tektronix.add_class_to_manufacturer('TDS')
 

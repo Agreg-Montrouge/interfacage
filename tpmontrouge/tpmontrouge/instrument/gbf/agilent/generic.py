@@ -3,11 +3,13 @@ from ..constant import function
 
 from ..gbf import GBF
 from ...utils.instrument import Instrument
+from ...autodetection.manufacturer import agilent_technologies
 from ...utils.scpi import is_equal
 
 from ..constant import function
 
 class Agilent(GBF, Instrument):
+    manufacturer = agilent_technologies
     def __init__(self, *args, **kwd):
         Instrument.__init__(self, *args, **kwd)
         GBF.__init__(self, root=self)
@@ -53,4 +55,8 @@ class Agilent(GBF, Instrument):
     def set_function(self, val):
         val = function.convert(val)
         self.scpi_write('FUNC', self.func_to_scpi[val])
+
+Agilent.add_class_to_manufacturer('32303')
+Agilent.add_class_to_manufacturer('33220')
+
 

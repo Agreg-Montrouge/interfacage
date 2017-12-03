@@ -10,6 +10,7 @@ import numbers
 import numpy as np
 
 from ...utils.instrument import Instrument
+from ...autodetection.manufacturer import keysight
 from ...scope.scope import Scope
 from ...utils.scpi import is_equal
 
@@ -20,6 +21,7 @@ from ..waveform import Waveform
 
 
 class Keysight(Scope, Instrument):
+    manufacturer = keysight
     def __init__(self, *args, **kwd):
         Instrument.__init__(self, *args, **kwd)
         Scope.__init__(self, root=self)
@@ -206,5 +208,6 @@ class Keysight(Scope, Instrument):
 #    def get_channel_impedance(self, val, channel=None):
 #        return impedance.OneMegOhm
 
+Keysight.add_class_to_manufacturer('[DM]SO-X 2')
 
 
