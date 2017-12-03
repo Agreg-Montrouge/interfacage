@@ -28,7 +28,7 @@ class BodeExperiment(object):
     def configure_default_gbf(self):
         self.set_gbf_property(amplitude=1, function='Sinusoid', offset=0)
 
-    def record_point(self, freq, auto_set=False):
+    def record_point(self, freq, auto_set=False, add_to_plot=True):
         self.display_txt('Frequency : {}'.format(freq))
         self.gbf.frequency = freq
         if auto_set:
@@ -46,9 +46,9 @@ class BodeExperiment(object):
         y = input_wfm.y_data
         ref = ref_wfm.y_data
         last_point = BodePoint(t, y, ref, freq=freq)
-#        self.display(last_point.delta_phi)
-        self._bode_plot.append(last_point)
-        self.display_last_point(last_point)
+        if add_to_plot:
+            self._bode_plot.append(last_point)
+            self.display_last_point(last_point)
 
     def display_last_point(self, last_point):
         msg = '\tPhi={}, gain={}'.format(last_point.delta_phi, last_point.gain)
@@ -59,7 +59,9 @@ class BodeExperiment(object):
             list_of_frequency = np.logspace(np.log10(start), np.log10(stop), step, endpoint=False)
         self.init_bode_plot()
         self.display_txt('Start of measurement')
-        for freq in list_of_frequency:
+        for i, freq in enumerate(list_of_frequency):
+            if i==0: # Perform the measurement twice. 
+                self.record_point(freq, auto_set=auto_set, add_to_plot=False)
             self.record_point(freq, auto_set=auto_set)
         self.display_txt('End of measurement')
         return self._bode_plot

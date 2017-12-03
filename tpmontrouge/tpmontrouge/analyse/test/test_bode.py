@@ -45,6 +45,6 @@ class Test(unittest.TestCase):
         fig = figure()
         bode_plot.plot(fig=fig)
         fig.savefig(os.path.join(tempfile.gettempdir(), 'bode_test.pdf'))
-        fname = os.path.join(tempfile.gettempdir(), 'test.dat')
+        fname = os.path.join(tempfile.gettempdir(), 'test.txt')
         bode_plot.save(fname)
 

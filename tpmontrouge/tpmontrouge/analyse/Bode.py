@@ -66,7 +66,7 @@ class BodePlot(object):
 
     def save(self, fname):
         tout = np.array([self.freq, self.gain, self.delta_phi]).T
-        np.savetxt(fname, tout, header='Frequence\tgain\tdelta_phi')
+        np.savetxt(fname, tout, header='Frequence\tgain\tdelta_phi', newline='\r\n')
 
 class BodePoint(object):
     def __init__(self, t, y, y_ref, freq):
