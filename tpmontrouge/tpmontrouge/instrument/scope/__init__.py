@@ -1,6 +1,8 @@
 from ..connection import auto_connect, get_all_connection
 from .tektronix.generic import Tektronix
 
+Tektronix.add_class_to_manufacturer('TDS')
+
 
 def scope_factory(info):
     """ Factory function to create a Scope instance
@@ -9,7 +11,7 @@ def scope_factory(info):
         info : information such a visa_resource, an IP, ...
      """
     conn = auto_connect(info)
-    idn = conn.ask('*IDN?')
+    idn = conn.ask('*IDN?') # set instrument to local. Utiliser un context manager ?
     if "tektronix" in idn.lower():
         return Tektronix(conn)
     raise ValueError('Unkwown instrument with ID : {}'.format(idn))

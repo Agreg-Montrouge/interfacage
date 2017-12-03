@@ -106,8 +106,6 @@ class Keysight(Scope, Instrument):
     def set_data_source(self, channel):
         self.write(':WAVeform:SOURce CHANnel{}'.format(channel))
 
-
-
     def get_preamble(self):
         # Format, Type, Points, Count, XIncrement, XOrigin, XReference, YIncrement, YOrigin, YReference
         out = self.ask(':WAV:PRE?')

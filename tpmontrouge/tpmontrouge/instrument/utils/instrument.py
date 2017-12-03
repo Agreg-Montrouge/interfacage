@@ -43,7 +43,10 @@ class Instrument(object):
     def scpi_ask_for_float(self, cmd):
         return float(self.scpi_ask(cmd))
 
-
+    @classmethod
+    def add_class_to_manufacturer(cls, model_name):
+        cls.manufacturer.add_model(model_name, cls)
+        
 
 class FakeSCPI(object):
     _record = {}

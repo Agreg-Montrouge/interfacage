@@ -11,5 +11,3 @@ def auto_connect(info):
         return open_resource(info)
     raise ValueError('Unknown resource information "{}"'.format(info))
 
-
-

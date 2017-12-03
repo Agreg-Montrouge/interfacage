@@ -10,6 +10,7 @@ import numbers
 import numpy as np
 
 from ...utils.instrument import Instrument
+from ...autodetection.manufacturer import tektronix
 from ...scope.scope import Scope
 from ...utils.scpi import is_equal
 
@@ -20,6 +21,7 @@ from ..waveform import Waveform
 
 
 class Tektronix(Scope, Instrument):
+    manufacturer = tektronix
     def __init__(self, *args, **kwd):
         Instrument.__init__(self, *args, **kwd)
         Scope.__init__(self, root=self)
@@ -120,7 +122,6 @@ class Tektronix(Scope, Instrument):
         data = (res - offset)*scale
         return Waveform(data=data, t0=x_0, dt=delta_x) 
 
-
     def set_channel_state(self, val, channel):
         self.scpi_write('SELECT:CH{}'.format(channel), 1 if val else 0)
 
@@ -129,8 +130,6 @@ class Tektronix(Scope, Instrument):
 
     def is_active(self, channel):
         return self.get_channel_state(channel)
-
-
 
     def set_horizontal_scale(self, scale):
         self.scpi_write("HORizontal:SCAle", scale)
@@ -145,8 +144,6 @@ class Tektronix(Scope, Instrument):
     def get_horizontal_offset(self):
         print('HORIZ', self.scpi_ask("HORizontal:MAin:POSition"))
         return self.scpi_ask_for_float("HORizontal:MAin:POSition")
-
-
 
     def set_trigger_source(self, source):
         if isinstance(source, numbers.Number):
