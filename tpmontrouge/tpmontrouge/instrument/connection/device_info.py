@@ -23,7 +23,7 @@ class AllDevices(object):
                 model_class = device.model_class
             except Exception:
                 continue
-            if kind_of_model is None or issubclass(model_class, kind_of_model):
+            if kind_of_model is None or (model_class is not None and issubclass(model_class, kind_of_model)):
                 yield device
 
 class DeviceInfo(object):

@@ -190,4 +190,5 @@ class WithoutImpedance(object):
         return impedance.OneMegOhm
 
 Tektronix.add_class_to_manufacturer('TDS')
+Tektronix.add_class_to_manufacturer('MSO')
 
