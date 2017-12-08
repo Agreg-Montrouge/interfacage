@@ -1,4 +1,5 @@
 import re
+from warnings import warn
 
 class ListOfManufacturer(object):
     def __init__(self):
@@ -37,6 +38,8 @@ class Manufacturer(object):
         for model_name, model_class in self._list_of_model:
             if re.match(model_name, val, re.IGNORECASE):
                 return model_class
+        warn('Unkwnown model {} for {}'.format(val, self))
+
 
     def add_to_list_of_manufacturer(self, name=None):
         name = name or self._name
