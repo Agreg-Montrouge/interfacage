@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['bode.py'],
-             pathex=['D:\\noms\\pierre\\tmp\\python-projects\\interfacage\\tpmontrouge\\scripts'],
+             pathex=['D:\\noms\\pierre\\tmp\\interfacage\\tpmontrouge\\scripts'],
              binaries=[],
              datas=[],
              hiddenimports=['scipy.special._ufuncs_cxx',
