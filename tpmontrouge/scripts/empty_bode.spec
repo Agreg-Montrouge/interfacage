@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['bode.py'],
+a = Analysis(['empty_bode.py'],
              pathex=['..'],
              binaries=[],
              datas=[],
@@ -35,7 +35,7 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
-          name='bode',
+          name='empty_bode',
           debug=False,
           strip=False,
           upx=True,
