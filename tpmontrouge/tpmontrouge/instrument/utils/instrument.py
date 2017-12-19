@@ -38,7 +38,7 @@ class Instrument(object):
         return self.write(cmd + ' '+','.join(map(str, args)))
 
     def scpi_ask(self, cmd):
-        return self.ask(cmd if cmd.endswith('?') else cmd + '?')
+        return self.ask(cmd if cmd.endswith('?') else cmd + '?').strip()
 
     def scpi_ask_for_float(self, cmd):
         return float(self.scpi_ask(cmd))

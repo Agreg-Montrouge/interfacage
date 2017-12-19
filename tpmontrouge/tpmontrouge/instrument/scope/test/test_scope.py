@@ -16,18 +16,26 @@ class GenericTest(object):
         self.scope.autoset()
         self.assertEqual(self.scope._root._last_command.lower(), 'autoset')
 
-    def test_channel(self):
+    def test_channel_imp(self):
         self.scope.channel[1].impedance = 'FiftyOhm'
         self.assertEqual(str(self.scope.channel[1].impedance), 'FiftyOhm')
         self.assertEqual(str(self.scope.channel1.impedance), 'FiftyOhm')
+    def test_channel_coup(self):
         self.scope.channel[1].coupling = 'AC'
         self.assertEqual(str(self.scope.channel[1].coupling), 'AC')
+    def test_channel_offset(self):        
         self.scope.channel[2].offset = 0.1
         self.assertEqual(self.scope.channel[2].offset, 0.1)
+    def test_channel_scale(self):                
         self.scope.channel[2].scale = 0.1
         self.assertEqual(self.scope.channel[2].scale, 0.1)
 
     def test_trigger(self):
+        self.scope.trigger.source = 1
+        print(self.scope.trigger.source)
+        self.assertEqual(self.scope.trigger.source, 1)
+
+
         self.scope.trigger.slope = 'positiveedge'
         self.assertEqual(self.scope.trigger.slope, 'PositiveEdge')
 

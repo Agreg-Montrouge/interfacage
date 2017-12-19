@@ -15,6 +15,7 @@ class BodeExperiment(object):
         if wait_time is not None:
            self._wait_time = wait_time 
         self.configure_default_gbf()
+        self.configure_default_scope()
         self.init_bode_plot()
 
     def init_bode_plot(self):
@@ -27,6 +28,15 @@ class BodeExperiment(object):
 
     def configure_default_gbf(self):
         self.set_gbf_property(amplitude=1, function='Sinusoid', offset=0)
+        sleep(.5)
+        
+    def configure_default_scope(self):
+        self.scope.start_acquisition()
+        self.scope.trigger.source = self.reference_channel.key
+        self.scope.level = 0
+        for ch in [self.input_channel, self.reference_channel]:
+            ch.offset = 0
+            ch.scale = .3
 
     def record_point(self, freq, auto_set=False, add_to_plot=True):
         self.display_txt('Frequency : {}'.format(freq))
@@ -37,7 +47,7 @@ class BodeExperiment(object):
                 sleep(self._wait_time)
         else:
             self.scope.horizontal.scale = 1/freq
-            sleep(20/freq)
+            sleep(20/freq+0.1)
         self.scope.stop_acquisition()
         input_wfm = self.input_channel.get_waveform()
         ref_wfm = self.reference_channel.get_waveform()

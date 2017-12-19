@@ -10,9 +10,6 @@ class TestTektonix(GenericTest, unittest.TestCase):
         idn = inst.ask('*IDN?')
         self.assertIn("TEKTRONIX", idn)
         
-    def test_channel(self):
-        pass
-
 if __name__=="__main__":
     import visa
     import sys
@@ -23,4 +20,5 @@ if __name__=="__main__":
         resource = 'GPIB0::1::INSTR'
     inst = rm.open_resource(resource)
     TestTektonix.inst= inst
+    print(inst)
     unittest.main()

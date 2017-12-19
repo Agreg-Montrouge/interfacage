@@ -36,13 +36,13 @@ class Keysight(Scope, Instrument):
         self.write(':STOP')
 
     def scpi_channel_write(self, channel, cmd, *args):
-        self.scpi_write('CHANell{channel}:{cmd}'.format(channel=channel, cmd=cmd), *args)
+        self.scpi_write('CHAN{channel}:{cmd}'.format(channel=channel, cmd=cmd), *args)
 
     def scpi_channel_ask(self, channel, cmd):
-        return self.scpi_ask('CHANell{channel}:{cmd}'.format(channel=channel, cmd=cmd))
+        return self.scpi_ask('CHAN{channel}:{cmd}'.format(channel=channel, cmd=cmd))
 
     def scpi_channel_ask_for_float(self, channel, cmd):
-        return self.scpi_ask_for_float('CHANell{channel}:{cmd}'.format(channel=channel, cmd=cmd))
+        return self.scpi_ask_for_float('CHAN{channel}:{cmd}'.format(channel=channel, cmd=cmd))
 
     impedance_to_str = {impedance.OneMegOhm:'ONEMeg', impedance.Max:'ONEMeg'}
     def set_channel_impedance(self, val, channel=None):
@@ -110,20 +110,13 @@ class Keysight(Scope, Instrument):
 
     def get_preamble(self):
         # Format, Type, Points, Count, XIncrement, XOrigin, XReference, YIncrement, YOrigin, YReference
-        out = self.ask(':WAV:PRE?')
+        out = self.scpi_ask(':WAV:PRE')
         return list(map(eval, out.strip().split(',')))
 
     def ask_array(self, cmd):
         self.write(cmd)
-        first = self._inst.read(1)
-        header_size = eval(self._inst.read(1))
-        size_str = self._inst.read(header_size)
-        while size_str[0]==b'0': # remove leading 0
-            size_str = size_str[1:]
-        size = int(size_str)
-        output = self._inst.read(size)
-        self._inst.read(1) # \n
-        return output
+        out = self._inst.read_raw()[:-1]
+        return out[int(out[1])+2:]
 
     def get_channel_waveform(self, channel=1, **kwd):
         self.set_data_source(channel)
@@ -165,14 +158,15 @@ class Keysight(Scope, Instrument):
 
     def set_trigger_source(self, source):
         if isinstance(source, numbers.Number):
-            source = 'CHANnel{}'.format(source)
+            source = 'CHAN{}'.format(source)
         if source.startswith('CH') or source in ['EXT', 'LINE', 'WGEN']:
             self.scpi_write('TRIGger:EDGE:SOUrce', source)
-        raise Exception('Unkwown value {} for trigger source'.format(source))
+        else:
+            raise Exception('Unkwown value {} for trigger source'.format(source))
 
-    def get_trigger_channel(self):
-        out = self.scpi_ask('TRIGger:EDGE:SOUrce')
-        if out.startswith('CH'):
+    def get_trigger_source(self):
+        out = self.scpi_ask('TRIGger:EDGE:SOUrce').strip()
+        if out.startswith('CHAN'):
             return int(out[-1:])
         return out
 

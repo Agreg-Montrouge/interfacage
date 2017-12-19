@@ -15,12 +15,17 @@ class TestKeysight(GenericTest, unittest.TestCase):
         idn = self.scope.ask('*IDN?')
         self.assertIn("AGILENT", idn)
         
-    def test_channel(self):
+    def test_channel_imp(self):
         pass
+    
+    
+#from ....connection.usbtmc import USBTMC
+#conn = USBTMC()
+from ....connection.device_info import AllDevices
 
-from ....connection.usbtmc import USBTMC
-conn = USBTMC()
-scope = Keysight(conn)
+all_devices = list(AllDevices().get_all_connected_devices())
+
+scope = all_devices[0].instrument
 TestKeysight.scope = scope
 
 # AGILENT TECHNOLOGIES,DSO-X 2002A,MY57235663,02.42.2017032900
