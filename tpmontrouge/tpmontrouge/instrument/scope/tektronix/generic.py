@@ -152,7 +152,7 @@ class Tektronix(Scope, Instrument):
         else:
             raise Exception('Unkwown value {} for trigger source'.format(source))
 
-    def get_trigger_channel(self):
+    def get_trigger_source(self):
         out = self.scpi_ask('TRIGger:MAIn:EDGE:SOUrce')
         if out.startswith('CH'):
             return int(out[2:])
