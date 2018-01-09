@@ -32,7 +32,7 @@ class GenericTest(object):
 
     def test_trigger(self):
         self.scope.trigger.source = 1
-        print(self.scope.trigger.source)
+#        print(self.scope.trigger.source)
         self.assertEqual(self.scope.trigger.source, 1)
 
 
