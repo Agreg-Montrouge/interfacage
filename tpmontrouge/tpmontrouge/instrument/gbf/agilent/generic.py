@@ -15,10 +15,10 @@ class Agilent(GBF, Instrument):
         GBF.__init__(self, root=self)
         
     def on_command(self):
-        self.scpi_write('OUTPUT ON')
+        self.scpi_write('OUTPUT', 'ON')
 
     def off_command(self):
-        self.scpi_write('OUTPUT OFF')
+        self.scpi_write('OUTPUT', 'OFF')
 
     def get_frequency(self):
         return self.scpi_ask_for_float('FREQ')
