@@ -19,10 +19,14 @@ class RootGBF(GBFSimulation):
         RootScope.current_frequency = val
 
 class RootScope(ScopeSimulation):
+    _channel_state = {1:1, 2:1}
+    current_frequency = None
     def get_channel_waveform(self, channel=None, **kwd):
         dt = 1E-5
         N = 100000
         freq = self.current_frequency
+        if freq is None:
+            freq = 1000 + np.random.rand()*100
         t0 = -dt*N/2
         Tt = (np.arange(N))*dt + t0
         _, ref, out = generate_signal(freq, Tt)

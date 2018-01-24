@@ -125,10 +125,10 @@ class Tektronix(Scope, Instrument):
         self.scpi_write('SELECT:CH{}'.format(channel), 1 if val else 0)
 
     def get_channel_state(self, channel):
-        self.scpi_ask('SELECT:CH{}'.format(channel)) == '1'
+        return self.scpi_ask('SELECT:CH{}'.format(channel)) == '1'
 
-    def is_active(self, channel):
-        return self.get_channel_state(channel)
+#    def is_active(self, channel):
+#        return self.get_channel_state(channel)
 
     def set_horizontal_scale(self, scale):
         self.scpi_write("HORizontal:SCAle", scale)
