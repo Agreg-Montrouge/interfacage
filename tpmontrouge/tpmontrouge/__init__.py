@@ -1,1 +1,3 @@
-__version__ = '2017.12-dev-2'
+__version__ = '2018.02-dev'
+
+plot_engine = 'mpl'

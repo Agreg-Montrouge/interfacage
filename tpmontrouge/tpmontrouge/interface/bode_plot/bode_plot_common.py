@@ -20,27 +20,27 @@ from pyqtgraph.parametertree import Parameter, ParameterTree
 #scope = Scope(RootScope())
 
 class BodeExperiment(_BodeExperiment):
-    def __init__(self, *args, log_scale=True, scope_mpl_figure=None, bode_mpl_figure=None, **kwd):
-        self.scope_mpl_figure = scope_mpl_figure
-        self.bode_mpl_figure = bode_mpl_figure
+    def __init__(self, *args, log_scale=True, scope_figure=None, bode_figure=None, **kwd):
+        self.scope_figure = scope_figure
+        self.bode_figure = bode_figure
         self.log_scale = log_scale
         super(BodeExperiment, self).__init__(*args, **kwd)
 
     def loop(self, iterator):
         self.record_bode_diagramm(list_of_frequency=iterator)
 
-    def display_last_point(self, last_point):
-        super(BodeExperiment, self).display_last_point(last_point)
-        if self.scope_mpl_figure is not None:
-            fig = self.scope_mpl_figure
-            fig.clf()
-            last_point.plot(fig)
-            fig.canvas.draw()
-        if self.bode_mpl_figure is not None:
-            fig = self.bode_mpl_figure 
-            fig.clf()
-            self._bode_plot.plot(fig, log_scale=self.log_scale)
-            fig.canvas.draw()
+#    def display_last_point(self, last_point):
+#        super(BodeExperiment, self).display_last_point(last_point)
+#        if self.scope_figure is not None:
+#            fig = self.scope_figure
+#            fig.clf()
+#            last_point.plot(fig)
+#            fig.canvas.draw()
+#        if self.bode_figure is not None:
+#            fig = self.bode_mpl_figure 
+#            fig.clf()
+#            self._bode_plot.plot(fig, log_scale=self.log_scale)
+#            fig.canvas.draw()
 
 params = [{'name':'Start', 'type':'float', 'value':100, 'suffix': 'Hz', 'siPrefix': True, 'limits':(0, None), 'dec':True, 'step':.5}, 
             {'name':'Stop', 'type':'float', 'value':10000, 'suffix': 'Hz', 'siPrefix': True, 'limits':(0, None), 'dec':True, 'step':.5}, 
@@ -68,9 +68,10 @@ class MyMPLWidget(pyqtgraph.widgets.MatplotlibWidget.MatplotlibWidget):
         return width * 0.7
 
 class BodeWindows(QtGui.QWidget):
+    bode_experiment = BodeExperiment
     def __init__(self):
         super(BodeWindows, self).__init__()
-        main_layout = QtGui.QHBoxLayout()
+        self.main_layout = main_layout = QtGui.QHBoxLayout()
         self.setLayout(main_layout)
         btn_layout = QtGui.QVBoxLayout()
 
@@ -85,19 +86,8 @@ class BodeWindows(QtGui.QWidget):
         btn_layout.addWidget(t)
 #        btn_layout.addStretch(1)
 
-        plot1 = MyMPLWidget()
-        tmp_layout = QtGui.QVBoxLayout()
-        tmp_layout.addWidget(plot1)
-        tmp_layout.addStretch(1)
-        main_layout.addLayout(tmp_layout)
-        plot2 = MyMPLWidget()
-        tmp_layout = QtGui.QVBoxLayout()
-        tmp_layout.addWidget(plot2)
-        tmp_layout.addStretch(1)
-        main_layout.addLayout(tmp_layout)
+        self.add_plot_widgets()
 
-        self.plot1 = plot1
-        self.plot2 = plot2
         self.start_stop_buttons = buttons
         self.bode_params = p
         self.bode_params_tree = t
@@ -117,6 +107,22 @@ class BodeWindows(QtGui.QWidget):
         self.save_btn.clicked.connect(self.save_experiment)
         btn_layout.addWidget(self.save_btn)
         buttons.connect(self.new_state_save)
+
+
+#    def add_plot_widgets(self):
+#        plot1 = MyMPLWidget()
+#        tmp_layout = QtGui.QVBoxLayout()
+#        tmp_layout.addWidget(plot1)
+#        tmp_layout.addStretch(1)
+#        main_layout.addLayout(tmp_layout)
+#        plot2 = MyMPLWidget()
+#        tmp_layout = QtGui.QVBoxLayout()
+#        tmp_layout.addWidget(plot2)
+#        tmp_layout.addStretch(1)
+#        main_layout.addLayout(tmp_layout)
+
+#        self.plot1 = plot1
+#        self.plot2 = plot2
 
 
     _initial_dir = os.getenv('HOME') or ''
@@ -173,12 +179,12 @@ class BodeThread(ExpThread):
 
     @property
     def exp(self):
-        return BodeExperiment(self.gbf, self.scope, 
+        return self.bode_windows.bode_experiment(self.gbf, self.scope, 
                                 self.scope.channel[self.parameters['Sig. chan.']], 
                                 self.scope.channel[self.parameters['Ref. chan.']], 
                                 disp=True, wait_time=0,
-                                scope_mpl_figure=self.bode_windows.plot1.getFigure(), 
-                                bode_mpl_figure=self.bode_windows.plot2.getFigure(),
+                                scope_figure=self.bode_windows.plot1, 
+                                bode_figure=self.bode_windows.plot2,
                                 log_scale = self.parameters['log'])
 
     def get_iterator(self):

@@ -1,30 +1,24 @@
 from pyqtgraph.Qt import QtCore, QtGui
-from .scope import scope
-from .bode_plot import bode_plot
+from .scope import ScopeWindows
+from .bode_plot import BodeWindows
 
 class MainWindow(QtGui.QTabWidget):
     def __init__(self):
         super().__init__()
 
-#        tab1	= QtGui.QWidget()
+        self.addTab(ScopeWindows(),"Oscilloscope")
+        self.addTab(BodeWindows(),"Diagramme de Bode")
 
-#        vBoxlayout	= QtGui.QVBoxLayout()
-#        pushButton1 = QtGui.QPushButton("Start")
-#        pushButton2 = QtGui.QPushButton("Settings")
-#        pushButton3 = QtGui.QPushButton("Stop")
-#        vBoxlayout.addWidget(pushButton1)
-#        vBoxlayout.addWidget(pushButton2)
-#        vBoxlayout.addWidget(pushButton3)
-#        tab1.setLayout(vBoxlayout)   
-
-        self.addTab(scope.ScopeWindows(),"Oscilloscope")
-        self.addTab(bode_plot.BodeWindows(),"Diagramme de Bode")
-
-#        tabs	= QtGui.QTabWidget()
-#        self.setLayout(tabs)
-
-if __name__=='__main__':
+def main(argv=[]):
+    if len(argv)>1:
+        if argv[1]=="test":
+            from ...instrument.scope.test import test_detection
+            from ...instrument.gbf.test import test_detection
     app = QtGui.QApplication([])
     win = MainWindow()
     win.show()
     app.exec_()
+
+
+if __name__=='__main__':
+    main()

@@ -62,6 +62,31 @@ class BodePlot(object):
             axe1.set_title(self.title)
         fig.tight_layout()
 
+    c1, c2 = None,None
+    def plot_pyqtgraph(self, view=None, log_scale=True):
+#        if pw is None:
+        import pyqtgraph as pg
+        if self.c1 is None:
+#            pw = pg.plot()
+            l = pg.GraphicsLayout()
+            view.setCentralItem(l)
+            view.show()
+            p0 = l.addPlot(0, 0)
+            p0.showGrid(x = True, y = True, alpha = 0.3)
+            p1 = l.addPlot(1, 0)
+            p1.showGrid(x = True, y = True, alpha = 0.3) 
+            self.c1 = p1.plot(symbol='o')
+            self.c2 = p0.plot(symbol='o')
+        #        p1.setXLink(p0)
+            l.layout.setSpacing(0.)
+            l.setContentsMargins(0., 0., 0., 0.)
+            p1.setLogMode(x=True)
+            p0.setLogMode(x=True)
+#        if self.title:
+#            p0.setLabel('top', self.title)
+        self.c1.setData(self.freq, 20*np.log10(self.gain))
+        self.c2.setData(self.freq, self.delta_phi*180/np.pi)
+
     plot = plot_matplotlib # default plot
 
     def save(self, fname):
@@ -116,6 +141,7 @@ class BodePoint(object):
 
     plot = plot_matplotlib # default plot
 
-
+    def plot_pyqtgraph(self, view):
+        pass
         
 
