@@ -4,6 +4,8 @@ from .utils import unwrap_phase
 
 import numpy as np
 
+
+
 class BodePlot(object):
     title = None
     def __init__(self, title=None):
@@ -142,6 +144,16 @@ class BodePoint(object):
     plot = plot_matplotlib # default plot
 
     def plot_pyqtgraph(self, view):
-        pass
-        
+        import pyqtgraph as pg
+        l = pg.GraphicsLayout()
+        view.setCentralItem(l)
+        view.show()
+        p0 = l.addPlot(0, 0)
+        p0.showGrid(x = True, y = True, alpha = 0.3)
+        p1 = l.addPlot(1, 0)
+        p1.showGrid(x = True, y = True, alpha = 0.3) 
+        c1 = p1.plot(self.t, self.y)
+        c2 = p0.plot(self.t, self.y_ref)
+        l.layout.setSpacing(0.)
+        l.setContentsMargins(0., 0., 0., 0.)        
 

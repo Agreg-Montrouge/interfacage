@@ -20,17 +20,19 @@ from pyqtgraph.parametertree import Parameter, ParameterTree
 #scope = Scope(RootScope())
 
 class BodeExperiment(_BodeExperiment):
-    def __init__(self, *args, log_scale=True, scope_figure=None, bode_figure=None, **kwd):
+    def __init__(self, *args, log_scale=True, scope_figure=None, bode_figure=None, thread=None, **kwd):
         self.scope_figure = scope_figure
         self.bode_figure = bode_figure
         self.log_scale = log_scale
+        self.thread = thread
         super(BodeExperiment, self).__init__(*args, **kwd)
 
     def loop(self, iterator):
         self.record_bode_diagramm(list_of_frequency=iterator)
 
-#    def display_last_point(self, last_point):
-#        super(BodeExperiment, self).display_last_point(last_point)
+    def display_last_point(self, last_point):
+        super(BodeExperiment, self).display_last_point(last_point)
+        self.thread.end_of_one_iteration.emit((last_point, self._bode_plot))
 #        if self.scope_figure is not None:
 #            fig = self.scope_figure
 #            fig.clf()
@@ -157,11 +159,17 @@ class BodeWindows(QtGui.QWidget):
             else:
                 self.save_btn.setEnabled(False)
 
+    def end_of_one_iteration(self, data):
+        print('END OF ONE ITERATION', data)   
+
+
 class BodeThread(ExpThread):
+    end_of_one_iteration = pg.QtCore.Signal(object)
     def __init__(self, *args, bode_windows=None, **kwd):
         self.bode_windows = bode_windows
         kwd['btn'] = bode_windows.start_stop_buttons
         super(BodeThread, self).__init__(*args, **kwd)
+        self.end_of_one_iteration.connect(bode_windows.end_of_one_iteration)
 
     @property
     def parameters(self):
@@ -185,7 +193,7 @@ class BodeThread(ExpThread):
                                 disp=True, wait_time=0,
                                 scope_figure=self.bode_windows.plot1, 
                                 bode_figure=self.bode_windows.plot2,
-                                log_scale = self.parameters['log'])
+                                log_scale = self.parameters['log'], thread=self)
 
     def get_iterator(self):
         p = self.parameters
