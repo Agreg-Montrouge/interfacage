@@ -8,8 +8,6 @@ import os
 from ..utils.start_stop_pause import ExpThread, StateMachine
 from ..utils.start_stop_pause import StartStopPause
 
-
-#from ...instrument.gbf.interface_qt import GBFConnection
 from ...instrument.scope.interface_qt import ScopeConnection
 
 from ...experiment.bode_plot import BodeExperiment as _BodeExperiment
@@ -18,32 +16,31 @@ from pyqtgraph.parametertree import Parameter, ParameterTree
 
 
 class ScopeExperiment(object):
-    def __init__(self, scope, scope_mpl_figure=None):
+    def __init__(self, scope, scope_figure=None, thread=None):
         self.scope = scope
-        self.scope_mpl_figure = scope_mpl_figure
+        self.scope_figure = scope_figure
         self.mem = {}
+        self.thread = thread
 
     def loop(self, iterator, delay=.5):
         t0 = time()
         for _ in iterator:
             self.mem = {}
-#####            self.scope._root.current_frequency = 1000 + np.random.rand()*100
-#            self.scope_mpl_figure.clf()
+
             self.scope.stop_acquisition()
             for channel in self.scope.list_of_active_channel:
                 wfm = channel.get_waveform()
-#                wfm.plot_matplotlib(fig=self.scope_mpl_figure)
                 self.mem[channel.key] = wfm
             self.scope.start_acquisition()            
-            if self.scope_mpl_figure:
-                self.scope_mpl_figure.clf()
-                for i, key in enumerate(sorted(self.mem)):
-                    self.mem[key].plot_matplotlib(fig=self.scope_mpl_figure)
-                self.scope_mpl_figure.canvas.draw()
+            self.plot()
             t = time()
             if t<t0+delay:
                 sleep(delay + t0 -t)
             t0 = time()
+
+    def plot(self):
+        self.thread.end_of_one_iteration.emit(self.mem.copy())
+
 
     def save(self, fname):
         if self.mem:
@@ -60,33 +57,22 @@ class ScopeExperiment(object):
         np.savetxt(fname, tout, header='\t'.join(name), newline='\r\n')
 
 
-#    def display_last_point(self, last_point):
-#        super(BodeExperiment, self).display_last_point(last_point)
-#        if self.scope_mpl_figure is not None:
-#            fig = self.scope_mpl_figure
-#            fig.clf()
-#            last_point.plot(fig)
-#            fig.canvas.draw()
-#        if self.bode_mpl_figure is not None:
-#            fig = self.bode_mpl_figure 
-#            fig.clf()
-#            self._bode_plot.plot(fig, log_scale=self.log_scale)
-#            fig.canvas.draw()
-
 class ScopeThread(ExpThread):
-    def __init__(self, *args, scope_windows=None, **kwd):
-        self.scope_windows = scope_windows
-        kwd['btn'] = scope_windows.start_stop_buttons
+    end_of_one_iteration = pg.QtCore.Signal(object)
+    def __init__(self, *args, windows=None, **kwd):
+        self._windows = windows
+        kwd['btn'] = windows.start_stop_buttons
         super().__init__(*args, **kwd)
+        self.end_of_one_iteration.connect(windows.end_of_one_iteration)
 
     @property
     def scope(self):
-        self.scope_windows.scope.auto_connect()
-        return self.scope_windows.scope.device
+        self._windows.scope.auto_connect()
+        return self._windows.scope.device
 
     @property
     def exp(self):
-        out = ScopeExperiment(self.scope, scope_mpl_figure=self.scope_windows.plot1.getFigure())
+        out = self._windows.experiment(self.scope, scope_figure=self._windows.plot1, thread=self)
         return out
 
     def get_iterator(self):
@@ -96,25 +82,17 @@ class ScopeThread(ExpThread):
         return infinite()
 
 
-class MyMPLWidget(pyqtgraph.widgets.MatplotlibWidget.MatplotlibWidget):
-    def __init__(self, *args, **kwd):
-        super(MyMPLWidget, self).__init__()
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
-        sizePolicy.setHeightForWidth(True)
-        self.setSizePolicy(sizePolicy)
-
-    def heightForWidth(self, width):
-        return width * 0.7
 
 class ScopeStartStopPause(StartStopPause):
     def start_thread(self):
-        self._thread = ScopeThread(scope_windows=self.parent())
+        self._thread = ScopeThread(windows=self.parent())
         self._thread.start()
 
 class ScopeWindows(QtGui.QWidget):
+    experiment = ScopeExperiment
     def __init__(self):
         super().__init__()
-        main_layout = QtGui.QHBoxLayout()
+        self.main_layout = main_layout = QtGui.QHBoxLayout()
         self.setLayout(main_layout)
         btn_layout = QtGui.QVBoxLayout()
 
@@ -128,12 +106,13 @@ class ScopeWindows(QtGui.QWidget):
 
         self.start_stop_buttons = buttons
 
-        plot1 = MyMPLWidget()
-        tmp_layout = QtGui.QVBoxLayout()
-        tmp_layout.addWidget(plot1)
-        tmp_layout.addStretch(1)
-        main_layout.addLayout(tmp_layout)
-        self.plot1 = plot1
+        self.add_plot_widgets()
+#        plot1 = MyMPLWidget()
+#        tmp_layout = QtGui.QVBoxLayout()
+#        tmp_layout.addWidget(plot1)
+#        tmp_layout.addStretch(1)
+#        main_layout.addLayout(tmp_layout)
+#        self.plot1 = plot1
 
         self.save_btn = pg.QtGui.QPushButton("Save data")
         self.save_btn.setEnabled(False)
@@ -167,6 +146,8 @@ class ScopeWindows(QtGui.QWidget):
             else:
                 self.save_btn.setEnabled(False)
 
+    def end_of_one_iteration(self, data):
+        pass
 
 
 if __name__=='__main__':

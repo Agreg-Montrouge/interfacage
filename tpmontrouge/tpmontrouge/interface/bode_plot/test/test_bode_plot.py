@@ -24,6 +24,7 @@ class Test(unittest.TestCase):
         app.exec_()
 
         del app
+        del win
 
     def test_mpl(self):
         self.the_test('mpl')

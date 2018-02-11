@@ -39,8 +39,8 @@ class Waveform(object):
     plot = plot_matplotlib
 
     def plot_pyqtgraph(self, pw=None, **kwd):
-        if pw is None:
-            import pyqtgraph as pw
+#        if pw is None:
+#            import pyqtgraph as pw
         plt = pw.plot(self.x_data, self.y_data, pen=(0,0,255), **kwd)
 #        label = plt.getAxis('left')
 #        label.setWidth(0)
@@ -48,6 +48,4 @@ class Waveform(object):
 #        label.textWidth = 200
 #        plt.setLabel('bottom', self.x_label)
         return plt
-
-
 

@@ -46,6 +46,9 @@ class BodeWindows(bode_plot_common.BodeWindows):
         self.plot1 = plot1
         self.plot2 = plot2
 
+    def end_of_one_iteration(self, data):
+        pass
+
 
 
 if __name__=='__main__':
