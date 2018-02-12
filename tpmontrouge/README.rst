@@ -20,13 +20,13 @@ Il est possible d'installer le package à l'aide de la commande::
 Interface
 ---------
 
-Il existe une interface graphique pour faire un diagramme de Bode et pour visualiser un oscilloscope. Elle est accessible, après installation, depuis une des commandes suivantes::
+Il existe une interface graphique pour faire un diagramme de Bode et pour visualiser un oscilloscope. Elle est accessible, après installation, depuis une des commandes suivantes::s
 
     tpmontrouge full-gui
     tpmontrouge scope
     tpmontrouge bode
 
-Il existe aussi des fichier executable directement sous Windows. 
+Il existe aussi des fichiers executable directement sous Windows. 
 
 
 Instrument
