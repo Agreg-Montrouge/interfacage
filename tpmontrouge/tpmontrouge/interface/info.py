@@ -27,7 +27,7 @@ info="""
 <h2>Crédits / Licence </h2>
 <p> Application crée par Pierre Cladé pour le Département de Physique de l'École Normale Supérieure. </p>
 
-<p> Ce logiciel est disponible sous licence MIT ou tout autre licence obtenue par l'auteur.</p>
+<p> Ce logiciel est disponible sous licence MIT ou toute autre licence obtenue par l'auteur.</p>
 
 <p style="font-size:10pt;" align="right"><i> Version {__version__} </i></p>
 </div>
