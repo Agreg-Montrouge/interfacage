@@ -134,6 +134,7 @@ class StartStopPause(StateMachine):
 #        self._thread = self._thread_class(btn=self)
         self.set_state('Stopped')
 
+
 #    @property
 #    def _thread(self):
 #        assert self._thread_class is not None, 'You should set the thread_class'

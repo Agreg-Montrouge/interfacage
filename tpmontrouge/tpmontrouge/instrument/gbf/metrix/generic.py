@@ -3,13 +3,13 @@ from ..constant import function
 
 from ..gbf import GBF
 from ...utils.instrument import Instrument
-from ...autodetection.manufacturer import agilent_technologies
+from ...autodetection.manufacturer import metrix
 from ...utils.scpi import is_equal
 
 from ..constant import function
 
-class Agilent(GBF, Instrument):
-    manufacturer = agilent_technologies
+class Metrix(GBF, Instrument):
+    manufacturer = metrix
     def __init__(self, *args, **kwd):
         Instrument.__init__(self, *args, **kwd)
         GBF.__init__(self, root=self)
@@ -40,9 +40,10 @@ class Agilent(GBF, Instrument):
 
     func_to_scpi={function.Sinusoid:"SIN", 
                 function.Square:'SQU',
-                function.Ramp:'RAMP',
-                function.Noise:'NOIS',
-                function.DC:'DC'}
+#                function.Ramp:'RAMP',
+#                function.Noise:'NOIS',
+                function.DC:'DC',
+                function.Triangle:'TRI'}
 
     def get_function(self):
         out = self.scpi_ask('FUNC')
@@ -56,7 +57,7 @@ class Agilent(GBF, Instrument):
         val = function.convert(val)
         self.scpi_write('FUNC', self.func_to_scpi[val])
 
-Agilent.add_class_to_manufacturer('32303')
-Agilent.add_class_to_manufacturer('33220')
+#Agilent.add_class_to_manufacturer('32303')
+#Agilent.add_class_to_manufacturer('33220')
 
 

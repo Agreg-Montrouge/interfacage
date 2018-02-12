@@ -68,8 +68,8 @@ class ScopeSimulation(object):
         data = np.sin(100*np.arange(N)*dt)
         return Waveform(data=data, t0=t0, dt=dt) 
 
-    def get_list_of_channel(self):
-        return range(1, 5)
+#    def get_list_of_channel(self):
+#        return range(1, 5)
 
     _channel_state = {}
     def set_channel_state(self, val, channel):
@@ -77,13 +77,6 @@ class ScopeSimulation(object):
 
     def get_channel_state(self, channel):
         return self._channel_state.get(channel, False)
-
-    def is_active(self, channel):
-        return self.get_channel_state(channel)
-
-#    def get_list_of_active_channel(self):
-#        pass
-
 
     _horiz_scale = 1
     def set_horizontal_scale(self, scale):

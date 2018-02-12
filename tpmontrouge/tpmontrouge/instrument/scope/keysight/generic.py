@@ -129,16 +129,11 @@ class Keysight(Scope, Instrument):
         return Waveform(data=data, t0=XOrigin, dt=XIncrement) 
 
 
-#    def set_channel_state(self, val, channel):
-#        self.scpi_write('SELECT:CH{}'.format(channel), 1 if val else 0)
+    def set_channel_state(self, val, channel):
+        self.scpi_channel_write(channel, 'DISPlay', 1 if val else 0)
 
-#    def get_channel_state(self, channel):
-#        self.scpi_ask('SELECT:CH{}'.format(channel)) == '1'
-
-#    def is_active(self, channel):
-#        return self.get_channel_state(channel)
-
-
+    def get_channel_state(self, channel):
+        return self.scpi_channel_ask(channel, 'DISPlay') == '1'
 
     def set_horizontal_scale(self, scale):
         self.scpi_write("TIMebase:SCAle", scale)

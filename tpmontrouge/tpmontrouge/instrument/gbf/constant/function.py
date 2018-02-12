@@ -19,6 +19,7 @@ Square = Function('Square')
 Ramp = Function('Ramp')
 Noise = Function('Noise')
 DC = Function('DC')
+Triangle = Function('Triangle')
 
 convert = Function.convert
 

@@ -27,6 +27,10 @@ class ChannelNode(Node):
     impedance = IndexableProperty('channel_impedance')
     offset = IndexableProperty('channel_vertical_offset')
     scale = IndexableProperty('channel_vertical_scale')
+    state = IndexableProperty('channel_state')
+
+    def is_active(self):
+        return self._parent.is_active(self.channel_name)
 
     def get_waveform(self, **kwd):
         return self.root.get_channel_waveform(self.channel_name, **kwd)
@@ -59,8 +63,24 @@ class Scope(RootNode):
 
     number_of_channel = 2
     @property
+    def _list_of_channel_number(self):
+        return list(range(1, self.number_of_channel+1))
+
+    @property
+    def list_of_channel(self):
+        return [self.channel[i] for i in self._list_of_channel_number]
+    
+    @property
+    def list_of_active_channel(self):
+        return [self.channel[i] for i in self._list_of_channel_number if self.is_active(i)]
+
+    @property
     def channel(self):
-        return WithIndex(parent=self, node_class=ChannelNode)
+        return WithIndex(parent=self, node_class=ChannelNode, index_range=self._list_of_channel_number)
+
+    def is_active(self, channel):
+        return self.root.get_channel_state(channel)
+    
 
     @property
     def channel1(self):

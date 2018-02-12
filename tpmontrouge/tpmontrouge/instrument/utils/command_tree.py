@@ -1,9 +1,13 @@
 class WithIndex(object):
-    def __init__(self, parent, node_class):
+    def __init__(self, parent, node_class, index_range=None):
         self._parent = parent
         self._node_class = node_class
+        self._index_range = index_range
         
     def __getitem__(self, key):
+        if self._index_range is not None:
+            if key not in self._index_range:
+                raise IndexError('The value of the index should be in {}'.format(self._index_range))
         return self._node_class(parent=self._parent, key=key)
 
 

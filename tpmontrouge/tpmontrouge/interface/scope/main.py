@@ -1,9 +1,7 @@
 import pyqtgraph as pg
 
-
-
 def main(argv=[]):
-    from . import get_bode_window
+    from . import get_scope_window
     if len(argv)>1:
         if argv[1]=="test":
             from ...instrument.scope.test import test_detection
