@@ -1,3 +1,4 @@
+import sys
 import argparse
 
 from pyqtgraph.Qt import QtCore, QtGui
@@ -17,12 +18,19 @@ class MainWindow(QtGui.QTabWidget):
         self.addTab(get_scope_window(plot_engine=plot_engine),"Oscilloscope")
         self.addTab(get_bode_window(plot_engine=plot_engine),"Diagramme de Bode")
 
-def main(argv=[]):
-    parser = argparse.ArgumentParser(description='Programme principale pour le TP de Montrouge')
+def create_parser(parser=None):
+    if parser is None:
+        parser = argparse.ArgumentParser(description='Programme principale pour le TP de Montrouge')
     parser.add_argument('--test', action='store_true', help='Use to test unconnected instrument')
     parser.add_argument('--plot_engine', default='pyqtgraph', help='Engine to do the plots', choices=['mpl', 'pyqtgraph'])
+    return parser
 
-    args = parser.parse_args(argv[1:])
+
+def main(args=None):
+    if not isinstance(args, argparse.Namespace):
+        parser = create_parser()
+        args = parser.parse_args(args)
+    
     if args.test:
             from ..instrument.scope.test import test_detection
             from ..instrument.gbf.test import test_detection
@@ -33,5 +41,4 @@ def main(argv=[]):
 
 
 if __name__=='__main__':
-    import sys
-    main(sys.argv)
+    main()

@@ -54,7 +54,7 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords='sample setuptools development',
+    keywords='scope bode diagramm instrument',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
@@ -97,7 +97,9 @@ setup(
 #    # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'bode=tpmontrouge.interface.bode_plot.main:main',
+            'tpmontrouge-bode=tpmontrouge.interface.bode_plot.main:main',
+            'tpmontrouge-scope=tpmontrouge.interface.scope.main:main',
+            'tpmontrouge-full-gui=tpmontrouge.interface.main:main',
             'tpmontrouge=tpmontrouge.main:main',
         ],
     },

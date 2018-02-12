@@ -1,19 +1,24 @@
 import sys
 import argparse
-
 from . import __version__
+from .interface import main as full_main
+from .interface.scope import main as scope_main
+from .interface.bode_plot import main as bode_main
 
-parser = argparse.ArgumentParser(epilog='Available action: bode zip')
+parser = argparse.ArgumentParser()
 
-group = parser.add_mutually_exclusive_group(required=True)
-
-group.add_argument('--version', action='store_true',
-        help="show the version of tpmontrouge")
-
-group.add_argument('action', type=str, nargs='?', help='the action to launch')
+parser = argparse.ArgumentParser(
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 
-def create_zip():
+parser.add_argument('-v', '--version', action='store_true',
+        help="show the version of tpmontrouge and exit")
+
+#parser.add_argument('action', nargs='?', choices=['full', 'bode', 'scope', 'zip'], help='the action to launch', default='interface')
+
+subparsers = parser.add_subparsers(help='sub-command help')
+
+def create_zip(args):
     import os
     import zipfile
     import fnmatch
@@ -46,25 +51,57 @@ def create_zip():
 
     a.close()
 
+zip_parser = subparsers.add_parser('zip', help='Zip file')
+zip_parser.set_defaults(func=create_zip)
+
+full_parser = subparsers.add_parser('full-gui', help='Full GUI interface')
+full_main.create_parser(full_parser)
+full_parser.set_defaults(func=full_main.main)
+
+scope_parser = subparsers.add_parser('scope', help='Scope GUI')
+scope_main.create_parser(scope_parser)
+scope_parser.set_defaults(func=scope_main.main)
+
+bode_parser = subparsers.add_parser('bode', help='Bode GUI')
+bode_main.create_parser(bode_parser)
+bode_parser.set_defaults(func=bode_main.main)
+
 
 def main():
-    if len(sys.argv) > 1 and not sys.argv[1].startswith('-'):
-        action = sys.argv[1]
-    else:
-        args, opts = parser.parse_known_args()
-        if args.version:
-            print(__version__)
-            return
-
-    if not action:
-        parser.print_usage(file=sys.stderr)
-        sys.exit("subcommand is required")
-
-    if action=='bode':
-        from .interface.bode_plot import main
-        args = sys.argv[0:1] + sys.argv[2:]
-        main(args)
+#    if len(sys.argv) > 1 and not sys.argv[1].startswith('-'):
+#        action = sys.argv[1]
+#    else:
+    args = parser.parse_args()
+    if args.version:
+        print(__version__)
         return
 
-    if action=='zip':
-        create_zip()
+    args.func(args)
+
+#    action = args.action
+
+#    if not action:
+#        parser.print_usage(file=sys.stderr)
+#        sys.exit("subcommand is required")
+
+#    args = [action] + opts
+
+#    if action=='bode':
+#        from .interface.bode_plot import main
+#        main(args)
+#        return
+
+#    if action=='scope':
+#        from .interface.scope import main
+#        main(args)
+#        return
+
+#    if action=='full':
+#        from .interface.main import main
+#        main(args)
+#        return
+
+#    if action=='zip':
+#        create_zip()
+#        return
+

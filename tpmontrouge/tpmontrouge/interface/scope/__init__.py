@@ -1,7 +1,5 @@
 #from .scope import ScopeWindows
 
-from .main import main
-
 from ... import plot_engine
 from . import scope_mpl
 from . import scope_pyqtgraph

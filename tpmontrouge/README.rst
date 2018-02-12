@@ -8,6 +8,26 @@ Il est partagé en plusieurs sous package :
 * Instrument : qui contient les drivers des differents instruments
 * Analyse : package permettant d'analyser des données
 * Experiment : dépend de analyse et instrument : permet de réaliser une experience, comme un diagramme de Bode
+* Interface : inerface graphique
+
+Installation
+------------
+
+Il est possible d'installer le package à l'aide de la commande:
+
+    pip install tpmontrouge
+
+Interface
+---------
+
+Il existe une interface graphique pour faire un diagramme de Bode et pour visualiser un oscilloscope. Elle est accessible, après installation, depuis une des commandes suivantes:
+
+    tpmontrouge full-gui
+    tpmontrouge scope
+    tpmontrouge bode
+
+Il existe aussi des fichier executable directement sous Windows. 
+
 
 Instrument
 ----------

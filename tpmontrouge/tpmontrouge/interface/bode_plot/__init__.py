@@ -1,5 +1,3 @@
-from .main import main
-
 from ... import plot_engine
 from . import bode_plot_mpl
 from . import bode_plot_pyqtgraph
