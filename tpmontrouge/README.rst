@@ -13,14 +13,14 @@ Il est partagé en plusieurs sous package :
 Installation
 ------------
 
-Il est possible d'installer le package à l'aide de la commande:
+Il est possible d'installer le package à l'aide de la commande::
 
     pip install tpmontrouge
 
 Interface
 ---------
 
-Il existe une interface graphique pour faire un diagramme de Bode et pour visualiser un oscilloscope. Elle est accessible, après installation, depuis une des commandes suivantes:
+Il existe une interface graphique pour faire un diagramme de Bode et pour visualiser un oscilloscope. Elle est accessible, après installation, depuis une des commandes suivantes::
 
     tpmontrouge full-gui
     tpmontrouge scope
