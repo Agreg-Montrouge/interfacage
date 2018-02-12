@@ -1,5 +1,8 @@
 from ..connection import auto_connect, get_all_connection
+from .gbf import GBF
+
 from .agilent.generic import Agilent
+
 
 
 def gbf_factory(info):

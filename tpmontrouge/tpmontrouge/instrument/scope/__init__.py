@@ -1,6 +1,7 @@
 from ..connection import auto_connect, get_all_connection
 from .tektronix.generic import Tektronix
 from .keysight.generic import Keysight
+from .scope import Scope
 
 
 def scope_factory(info):

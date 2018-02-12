@@ -18,6 +18,15 @@ class ListOfManufacturer(object):
                 return instance
         return None
 
+    def get_all_models(self, kind_of_instrument=None):
+        out = {}
+        for name, instance in self._list_of_manufacturer:
+            instrument_list = out.setdefault(name, [])
+            for model_name, model_class in instance._list_of_model:
+                if kind_of_instrument is None or issubclass(model_class, kind_of_instrument): 
+                    instrument_list.append(model_name)
+        return out
+
 list_of_manufacturer = ListOfManufacturer()
 
 class Manufacturer(object):

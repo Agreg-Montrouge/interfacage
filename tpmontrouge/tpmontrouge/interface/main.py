@@ -3,6 +3,8 @@ import argparse
 from pyqtgraph.Qt import QtCore, QtGui
 from .scope import get_scope_window
 from .bode_plot import get_bode_window
+from .info import get_info
+
 from .. import plot_engine
 
 class MainWindow(QtGui.QTabWidget):
@@ -11,6 +13,7 @@ class MainWindow(QtGui.QTabWidget):
         super().__init__()
         plot_engine = plot_engine or self.plot_engine
 
+        self.addTab(get_info(), 'Info')
         self.addTab(get_scope_window(plot_engine=plot_engine),"Oscilloscope")
         self.addTab(get_bode_window(plot_engine=plot_engine),"Diagramme de Bode")
 
