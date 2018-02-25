@@ -20,7 +20,7 @@ class ScopeWindows(scope_common.ScopeWindows):
         view.show()
         for i, key in enumerate(sorted(data)):
             wfm = data[key]
-            p0 = l.addPlot(i, 0)
+            p0 = l.addPlot(i, 0, title='Channel {}'.format(key), labels={'left':'Tenstion (V)', 'bottom':'Temps (s)'})
             p0.showGrid(x = True, y = True, alpha = 0.3)
             p0.plot(wfm.x_data, wfm.y_data)
 
