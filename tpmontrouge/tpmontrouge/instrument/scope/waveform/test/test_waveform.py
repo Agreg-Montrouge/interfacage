@@ -10,13 +10,13 @@ matplotlib.use('Agg')
 from matplotlib.pyplot import figure
 
 import pyqtgraph as pg
-pg.setConfigOption('background', 'w')
-pg.setConfigOption('foreground', 'k')
+#pg.setConfigOption('background', 'w')
+#pg.setConfigOption('foreground', 'k')
 import pyqtgraph.exporters
 
 
 from ..waveform import Waveform
-from .....interface.test.pyqt_graph_test_helper import PyQtPlotGraphicsTest
+from .....interface.test.pyqt_graph_test_helper import PyQtPlotGraphicsTestBis
 
 
 dt = 1E-6
@@ -25,6 +25,14 @@ freq = 1000
 
 data = np.sin(np.arange(N)*dt*2*np.pi*freq)
 wf = Waveform(data = data, t0=0, dt=dt)
+
+class WaveFormPyQtGraph(PyQtPlotGraphicsTestBis):
+    def plot(self):
+        wf.plot_matplotlib(self.view)
+        self.filename = os.path.join(tempfile.gettempdir(), 'scope_test.jpg')
+
+
+
 
 class TestWaveform(unittest.TestCase):
     def test_waveform(self):

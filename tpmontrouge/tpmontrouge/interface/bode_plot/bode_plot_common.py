@@ -102,7 +102,7 @@ class BodeWindows(QtGui.QWidget):
         btn_layout.addStretch(1)
 #        btn_layout.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
 
-        buttons.connect(self.new_state_tree)
+        self.buttons = buttons.connect(self.new_state_tree)
 
         self.save_btn = pg.QtGui.QPushButton("Save data")
         self.save_btn.setEnabled(False)
@@ -162,6 +162,10 @@ class BodeWindows(QtGui.QWidget):
     def end_of_one_iteration(self, data):
         print('END OF ONE ITERATION', data)   
 
+    def test_action(self):
+        self.scope.choices.setCurrentIndex(self.scope.choices.count()-1)
+        self.gbf.choices.setCurrentIndex(self.gbf.choices.count()-1)
+        self.start_stop_btns.on_off_btn.click()
 
 class BodeThread(ExpThread):
     end_of_one_iteration = pg.QtCore.Signal(object)
@@ -206,6 +210,7 @@ class BodeThread(ExpThread):
             return list(np.exp(np.linspace(np.log(start), np.log(stop), step, endpoint=False)))
         else:
             return list(np.linspace(start, stop, step, endpoint=False))
+
 
 if __name__=='__main__':
     app = pg.QtGui.QApplication([])

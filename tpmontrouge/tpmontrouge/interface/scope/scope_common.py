@@ -97,7 +97,7 @@ class ScopeWindows(QtGui.QWidget):
         btn_layout = QtGui.QVBoxLayout()
 
         main_layout.addLayout(btn_layout)
-        buttons = ScopeStartStopPause(layout=btn_layout, parent=self)
+        self.buttons = buttons = ScopeStartStopPause(layout=btn_layout, parent=self)
         btn_layout.addStretch(1)
 
         self.scope = ScopeConnection()
@@ -149,6 +149,9 @@ class ScopeWindows(QtGui.QWidget):
     def end_of_one_iteration(self, data):
         pass
 
+    def test_action(self):
+        self.scope.choices.setCurrentIndex(self.scope.choices.count()-1)
+        self.buttons.on_off_btn.click()
 
 if __name__=='__main__':
     app = pg.QtGui.QApplication([])

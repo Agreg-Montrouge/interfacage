@@ -16,7 +16,7 @@ import pyqtgraph.exporters
 
 
 from ..Bode import BodePoint, BodePlot
-from ...interface.test.pyqt_graph_test_helper import PyQtPlotGraphicsTest
+from ...interface.test.pyqt_graph_test_helper import PyQtPlotGraphicsTestBis
 
 
 def generate_signal(freq):
@@ -27,6 +27,17 @@ def generate_signal(freq):
     b,a = signal.butter(1, [0.02, 0.04], btype='pass')
     out = signal.lfilter(b,a,out)
     return t, ref, out
+
+
+class BodePlotPyQTGraph(PyQtPlotGraphicsTestBis):
+    def plot(self):
+        bode_plot = BodePlot('Filtre double')
+        for freq in np.logspace(0.5, 3.5, 51):
+            t, ref, out = generate_signal(freq)
+            bode_plot.append(BodePoint(t, out, ref, freq=freq))
+
+        bode_plot.plot_pyqtgraph(self.view)
+        self.filename = os.path.join(tempfile.gettempdir(), 'bode_test.jpg')
 
 
 
@@ -56,46 +67,10 @@ class Test(unittest.TestCase):
         fname = os.path.join(tempfile.gettempdir(), 'test.txt')
         bode_plot.save(fname)
 
-#    def test_bode_plot_pyqtgraph(self):
-#        bode_plot = BodePlot('Filtre double')
-#        for freq in np.logspace(0.5, 3.5, 51):
-#            t, ref, out = generate_signal(freq)
-#            bode_plot.append(BodePoint(t, out, ref, freq=freq))
-
-#                                                             
-#        app = QtGui.QApplication([])  
-#        view = pg.GraphicsView()                                                            
-#        bode_plot.plot_pyqtgraph(view)
-
-
-#        def tick():
-#            p = pg.Qt.QtGui.QApplication.primaryScreen().grabWindow(view.winId())
-#            filename = os.path.join(tempfile.gettempdir(), 'bode_test.jpg')
-#            p.save(filename, 'jpg')
-#            app.exit()    
-
-#        timer = pg.Qt.QtCore.QTimer()
-#        timer.timeout.connect(tick)
-#        timer.start(100)
-
-
-#        app.exec_()
-#        del app
-
-#        return view
 
 
     def test_bode_plot_pyqtgraph(self):
-        bode_plot = BodePlot('Filtre double')
-        for freq in np.logspace(0.5, 3.5, 51):
-            t, ref, out = generate_signal(freq)
-            bode_plot.append(BodePoint(t, out, ref, freq=freq))
-
-        app_test = PyQtPlotGraphicsTest()
-        bode_plot.plot_pyqtgraph(app_test.view)
-        filename = os.path.join(tempfile.gettempdir(), 'bode_test.jpg')
-        app_test.exec_and_save(filename)
-
+        BodePlotPyQTGraph().test()
 
     
 

@@ -18,6 +18,9 @@ class MainWindow(QtGui.QTabWidget):
         self.addTab(get_scope_window(plot_engine=plot_engine),"Oscilloscope")
         self.addTab(get_bode_window(plot_engine=plot_engine),"Diagramme de Bode")
 
+    def test_action(self):
+        self.setCurrentIndex(1)
+
 def create_parser(parser=None):
     if parser is None:
         parser = argparse.ArgumentParser(description='Programme principale pour le TP de Montrouge')
