@@ -54,7 +54,8 @@ class ScopeExperiment(object):
                 out += [y]
                 name += ['CH{}'.format(key)]
         tout = np.array(out).T
-        np.savetxt(fname, tout, header='\t'.join(name), newline='\r\n')
+        header = ' '.join(['{:25}'.format(elm) for elm in name])
+        np.savetxt(fname, tout, header=header, newline='\r\n')
 
 
 class ScopeThread(ExpThread):
