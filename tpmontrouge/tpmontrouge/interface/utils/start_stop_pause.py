@@ -1,3 +1,5 @@
+import os
+
 import pyqtgraph as pg
 from time import sleep
 from pyqtgraph.Qt import QtCore, QtGui
@@ -43,16 +45,20 @@ class ExpThread(pg.QtCore.QThread):
 
     Basically, this will start a loop of the experiment with the possibility to stop or pause the loop. 
 
-
     Usually, you will subclass this class and specify the exp attribute or property and the get_iterator method. 
+
+    IMPORTANT NOTE : for matplotlib, the plot should be done in the experiment thread. For PyQT graph, it
+    should be done in the main thread. The end_of_one_iteration signal is used for the plot. 
+
     """
     running_exp = None
-    def __init__(self, btn):
-#        self.exp = experiment
-#        assert self.exp is not None, 'You should subclass ExpThread and set the class attribute exp'
-        self.btn = btn
+    end_of_one_iteration = pg.QtCore.Signal(object)
+    def __init__(self, parent_windows=None, **kwd):
+        self.parent_windows = parent_windows
+        self.btn = parent_windows.start_stop_buttons
         self.iterator = Iterator(parent=self)
         super(ExpThread, self).__init__()
+        self.end_of_one_iteration.connect(parent_windows.end_of_one_iteration)
 
     def run(self):
         self.running_exp = self.exp
@@ -73,6 +79,12 @@ class ExpThread(pg.QtCore.QThread):
             if self.btn.get_state()=='Stopped' or self.btn.get_state()=='WaitingForStop':
                 raise StopIteration
             sleep(.05)
+
+    def save(self, filename):
+        try:
+            self.running_exp.save(filename)
+        except AttributeError:
+            raise Exception('In order to save, the experiment should have a save method')
 
 class StateMachine(pg.QtCore.QObject):
     sig_new_state = pg.QtCore.Signal(str)
@@ -112,33 +124,15 @@ class StartStopPause(StateMachine):
         super(StartStopPause, self).__init__(states=['Stopped', 'Paused', 'Running', 'WaitingForStop'], *args, **kwd)
         on_off_btn = pg.QtGui.QPushButton("Start")
         on_off_btn.clicked.connect(self.start_stop)
-#        on_off_btn.setShortcut(pg.QtCore.Qt.Key_Space)
-#        on_off_btn.setSizePolicy(
-#            pg.QtGui.QSizePolicy.Preferred,
-#            pg.QtGui.QSizePolicy.Preferred)
         self.on_off_btn = on_off_btn
-
         pause_btn = pg.QtGui.QPushButton("Pause")
-        #pause_btn.setParent(plt)
         pause_btn.clicked.connect(self.pause_resume)
         pause_btn.setEnabled(False)
-#        pause_btn.setSizePolicy(
-#            pg.QtGui.QSizePolicy.Preferred,
-#            pg.QtGui.QSizePolicy.Preferred)
         self.pause_btn = pause_btn
         if layout is not None:
             layout.addWidget(self.on_off_btn)
-            layout.addWidget(self.pause_btn)            
-#        if thread_class is not None:
-#            self._thread_class = thread_class
-#        self._thread = self._thread_class(btn=self)
+            layout.addWidget(self.pause_btn)
         self.set_state('Stopped')
-
-
-#    @property
-#    def _thread(self):
-#        assert self._thread_class is not None, 'You should set the thread_class'
-#        return self._thread_class(btn=self)
 
     def start_thread(self):
         assert self._thread_class is not None, 'You should set the thread_class'
@@ -179,12 +173,39 @@ class StartStopPause(StateMachine):
             self.pause_btn.setText('Resume')
             self.set_state("Paused")
     
-#    _list_of_state = ['Stopped', 'Paused', 'Running']
-#    def set_state(self, state):
-#        assert state in self._list_of_state
-#        self._state = state
-#        self.new_state.emit(state)
+class StartStopPauseSave(StartStopPause):
+    def __init__(self, layout=None, thread_class=None, *args, **kwd):
+        super(StartStopPauseSave, self).__init__(layout, thread_class, *args, **kwd)
+        save_btn = pg.QtGui.QPushButton("Save")
+        save_btn.setEnabled(False)
+        self.save_btn = save_btn
+        if layout is not None:
+            layout.addWidget(self.save_btn)
+        self.connect(self.new_state_save)
+        self.save_btn.clicked.connect(self.save_gui)
 
-#    def get_state(self):    
-#        return self._state
+
+    _initial_dir = os.getenv('HOME') or ''
+    def save_gui(self):
+        file_name = QtGui.QFileDialog.getSaveFileName(self.save_btn, 'Save file', 
+                        self._initial_dir, "Data file (*.txt)")
+        if isinstance(file_name, tuple): # depends on the version ...
+            file_name = file_name[0]
+        if file_name:
+            self.save(file_name)
+
+    def save(self, filename):
+        self._thread.save(filename)
+
+    def new_state_save(self, state):
+        if state=='Running':
+            self.save_btn.setEnabled(False)
+        elif state=='Paused':
+            self.save_btn.setEnabled(True)
+        elif state=='Stopped':
+            if self._thread.running_exp is not None:
+                self.save_btn.setEnabled(True)
+            else:
+                self.save_btn.setEnabled(False)
+
 
