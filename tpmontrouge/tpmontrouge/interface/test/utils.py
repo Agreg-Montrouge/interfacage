@@ -22,7 +22,7 @@ class ProcessApp(Process):
             p = pg.Qt.QtGui.QApplication.primaryScreen().grabWindow(win.winId())
             if self.filename is not None:
                 p.save(os.path.join(tempfile.gettempdir(), self.filename), 'jpg')
-            app.exit()    
+            app.exit()
 
         timer = pg.Qt.QtCore.QTimer()
         timer.timeout.connect(tick)

@@ -60,3 +60,4 @@ class PyQtPlotGraphicsTestBis(Process):
     def test(self):
         self.start()
         self.join()
+
