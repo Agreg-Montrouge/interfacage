@@ -98,7 +98,7 @@ class BodeWindows(QtGui.QWidget):
 
     @property
     def running_exp(self):
-        return self.start_stop_btns._thread.running_exp
+        return self.start_stop_buttons._thread.running_exp
 
     def new_state_tree(self, state):
         if state=='Running' or state=='Paused':
@@ -112,7 +112,7 @@ class BodeWindows(QtGui.QWidget):
     def test_action(self):
         self.scope.choices.setCurrentIndex(self.scope.choices.count()-1)
         self.gbf.choices.setCurrentIndex(self.gbf.choices.count()-1)
-        self.start_stop_btns.on_off_btn.click()
+        self.start_stop_buttons.on_off_btn.click()
 
 class BodeThread(ExpThread):
     @property

@@ -10,12 +10,13 @@ class Test(unittest.TestCase):
         app = ProcessApp(get_bode_window, filename='test_bode_app_mpl.jpg', plot_engine='mpl', shut_down_delay=2000)
         app.start()
         app.join()
+        self.assertEqual(app.queue.get(), None)
 
     def test_pyqtgraph(self):
         app = ProcessApp(get_bode_window, filename='test_bode_app_pyqtgraph.jpg', plot_engine='pyqtgraph', shut_down_delay=2000)
         app.start()
         app.join()
-
+        self.assertEqual(app.queue.get(), None)
 
 
 if __name__=='__main__':
