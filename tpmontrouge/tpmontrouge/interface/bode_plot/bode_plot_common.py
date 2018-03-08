@@ -32,7 +32,8 @@ class BodeExperiment(_BodeExperiment):
 
     def display_last_point(self, last_point):
         super(BodeExperiment, self).display_last_point(last_point)
-        self.thread.end_of_one_iteration.emit((last_point, self._bode_plot))
+        self._last_point = last_point
+#        self.thread.end_of_one_iteration.emit((last_point, self._bode_plot))
 
 params = [{'name':'Start', 'type':'float', 'value':100, 'suffix': 'Hz', 'siPrefix': True, 'limits':(0, None), 'dec':True, 'step':.5}, 
             {'name':'Stop', 'type':'float', 'value':10000, 'suffix': 'Hz', 'siPrefix': True, 'limits':(0, None), 'dec':True, 'step':.5}, 

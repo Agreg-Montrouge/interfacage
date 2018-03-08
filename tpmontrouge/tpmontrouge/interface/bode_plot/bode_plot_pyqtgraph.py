@@ -38,9 +38,12 @@ class BodeWindows(bode_plot_common.BodeWindows):
         self.plot2 = plot2
 
     def end_of_one_iteration(self, data):
-        last_point, bode_plot = data
-        last_point.plot_pyqtgraph(self.plot1)
-        bode_plot.plot_pyqtgraph(self.plot2)
+#        last_point, bode_plot = data
+#        last_point.plot_pyqtgraph(self.plot1)
+ #       bode_plot.plot_pyqtgraph(self.plot2)
+        self.start_stop_buttons._thread.running_exp._bode_plot.plot_pyqtgraph(self.plot2)
+        self.start_stop_buttons._thread.running_exp._last_point.plot_pyqtgraph(self.plot1)
+
 
 
 

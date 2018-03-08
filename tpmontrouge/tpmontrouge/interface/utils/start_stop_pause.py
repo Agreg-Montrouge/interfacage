@@ -13,7 +13,7 @@ def _infinite_range():
 
 class Iterator(object):
     def __init__(self, parent):
-        self._i = 0
+        self._first = True
         self.reset_iterator()
         self._parent = parent
 
@@ -30,6 +30,10 @@ class Iterator(object):
         return self
 
     def next(self):
+        if self._first:
+            self._first = False
+        else:
+            self._parent.end_of_one_iteration.emit(None)
         next_ = next(self._iterator)
         return self._parent.what_to_do(next_)
 
