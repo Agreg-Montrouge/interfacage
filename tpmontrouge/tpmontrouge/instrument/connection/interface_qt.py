@@ -7,15 +7,24 @@ from .device_info import AllDevices
 class Connection(StateMachine):
     name = ""
     _device = None
-    def __init__(self, *args, **kwd):
-        super(Connection, self).__init__(states=['Unconnected', 'Connected'], *args, **kwd)
+    def __init__(self, with_enable_button=False, *args, **kwd):
+        super(Connection, self).__init__(states=['Unconnected', 'Connected', 'Disabled'], *args, **kwd)
+
+        self._with_enable_button = with_enable_button
 
         self.button = pg.QtGui.QPushButton("")
         self.choices = pg.QtGui.QComboBox()
         self.choices.addItems([])
 
-        self.entering_unconnected()
+        self.label = pg.QtGui.QLabel(self.name)
+
+
+
         self.button.clicked.connect(self.connect_button_pressed)
+
+        if self._with_enable_button:
+            self.enable_button = pg.QtGui.QCheckBox()
+            self.enable_button.stateChanged.connect(self.enable_button_changed)
 
         self.refresh_btn = QtGui.QPushButton("Reload")
 #        self.refresh_btn.setFixedWidth(20)
@@ -24,6 +33,7 @@ class Connection(StateMachine):
         self.refresh_btn.clicked.connect(self.refresh)  
         self.refresh()
 
+        self.set_state('Disabled')
 
     def connect_button_pressed(self):
         if self.state=='Connected':
@@ -31,20 +41,49 @@ class Connection(StateMachine):
         elif self.state=='Unconnected':
             self.set_state('Connected')
 
+    def enable_button_changed(self, value):
+        if value:
+            self.set_state('Unconnected')
+        else:
+            self.set_state('Disabled')
+
+    @property
+    def is_enable(self):
+        return not (self.state=='Disabled')
+    
+
     def entering_connected(self, previous_state=None):
+        print('Entering connected')
+        self.button.setEnabled(True)
         self.choices.setEnabled(False)
+        self.refresh_btn.setEnabled(True)
+        self.label.setEnabled(True)
         self.button.setText('Disconnect')
         self.create_device()
 
     def entering_unconnected(self, previous_state=None):
+        print('Entering unconnected')
+        self.button.setEnabled(True)
         self.choices.setEnabled(True)
+        self.refresh_btn.setEnabled(True)
+        self.label.setEnabled(True)
         self.button.setText('Connect')
+
+    def entering_disabled(self, previous_state=None):
+        print('Entering Disabled')
+        self.choices.setEnabled(False)
+        self.button.setEnabled(False)
+        self.refresh_btn.setEnabled(False)
+        self.label.setEnabled(False)
 
     def make_layout(self):
         layout = pg.LayoutWidget()
-        label = pg.QtGui.QLabel()
-        label.setText(self.name)
-        layout.addWidget(label, colspan=2)
+        layout.addWidget(self.label, col=0)
+        if self._with_enable_button:
+            tmp = pg.LayoutWidget()
+            tmp.addWidget(self.enable_button, col=0)
+            tmp.addWidget(pg.QtGui.QLabel('enable'), col=1)
+            layout.addWidget(tmp, col=2)
         layout.addWidget(self.button, row=1, col=0)
         layout.addWidget(self.choices, row=1, col=1)
         layout.addWidget(self.refresh_btn, row=1, col=2)

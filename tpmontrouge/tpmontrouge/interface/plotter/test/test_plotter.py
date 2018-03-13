@@ -13,7 +13,7 @@ class TestScopeExperimentWindows(unittest.TestCase):
 #        app.join()
 
     def test_pyqtgraph(self):
-        app = ProcessApp(PlotterWindow, filename='test_plotter_app_pyqtgraph.jpg', shut_down_delay = 3000)
+        app = ProcessApp(PlotterWindow, filename='test_plotter_app_pyqtgraphb.jpg', shut_down_delay = 3000)
         app.start()
         app.join()
 

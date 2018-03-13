@@ -10,4 +10,4 @@ class GenericTest(object):
 
 
 class TestVoltmeterSimulation(GenericTest, unittest.TestCase):
-    voltmeter = VoltMeter(root=VoltmeterSimulation())
+    voltmeter = Voltmeter(root=VoltmeterSimulation())

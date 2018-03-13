@@ -9,6 +9,8 @@ from ..utils.start_stop_pause import ExpThread
 from ..utils.start_stop_pause import StartStopPauseSave
 
 
+from ...instrument.voltmeter.interface_qt import VoltmeterConnection
+
 class PlotterExperiment(_PlotterExperiment):
     def __init__(self, list_of_interface, sample_rate, thread=None, **kwd):
         super(PlotterExperiment, self).__init__(list_of_interface, sample_rate, **kwd)
@@ -38,6 +40,24 @@ class PlotterWindow(QtGui.QWidget):
 
 # Ajouter le sample rate
 
+        
+        self.sample_rate = pg.SpinBox(value=10, dec=True, step=1, bounds=[0.01, 100])
+        tmp = pg.LayoutWidget()
+        tmp.addWidget(pg.QtGui.QLabel('Sample rate'), col=0)
+        tmp.addWidget(self.sample_rate, col=1)
+        btn_layout.addWidget(tmp)
+
+        n = 4
+        self.voltmeters = []
+        for i in range(n):
+            voltmeter = VoltmeterConnection(with_enable_button=True)
+            if i<2:
+                voltmeter.set_state('Unconnected')
+            btn_layout.addWidget(voltmeter.make_layout())
+            self.voltmeters.append(voltmeter)
+        btn_layout.addStretch(1)
+
+
         self.add_plot_widgets()
 
     def add_plot_widgets(self):
@@ -61,8 +81,21 @@ class PlotterWindow(QtGui.QWidget):
 
 class PlotterThread(ExpThread):
     @property
+    def inst_list(self):
+        out = []
+        for elm in self.parent_windows.voltmeters:
+            if elm.is_enable:
+                elm.auto_connect()
+                out.append(elm.device)
+        return out
+
+    @property
     def exp(self):
-        out = self.parent_windows.experiment([int1, int2], sample_rate=10, disp=False)
+        try:
+            out = self.parent_windows.experiment(self.inst_list, sample_rate=self.parent_windows.sample_rate.value(), disp=False)
+        except Exception as e:
+            print(e)
+            raise
         return out
 
     def get_iterator(self):
