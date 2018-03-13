@@ -100,6 +100,7 @@ class StateMachine(pg.QtCore.QObject):
         if initial_state is None:
             initial_state = states[0]
         self.set_state(initial_state)
+        self.sig_new_state.connect(self.entering)
 
     def set_state(self, state):
         if state not in self._states:
@@ -108,7 +109,7 @@ class StateMachine(pg.QtCore.QObject):
         self.previous_state = self.state
         self.state = state
         self.sig_new_state.emit(state)
-        self.sig_new_state.connect(self.entering)
+#        self.sig_new_state.connect(self.entering)
 
     def get_state(self):
         return self.state
