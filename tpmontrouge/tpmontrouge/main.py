@@ -4,6 +4,7 @@ from . import __version__
 from .interface import main as full_main
 from .interface.scope import main as scope_main
 from .interface.bode_plot import main as bode_main
+from .interface.plotter import main as plotter_main
 
 parser = argparse.ArgumentParser()
 
@@ -66,6 +67,9 @@ bode_parser = subparsers.add_parser('bode', help='Bode GUI')
 bode_main.create_parser(bode_parser)
 bode_parser.set_defaults(func=bode_main.main)
 
+plotter_parser = subparsers.add_parser('plotter', help='Plotter GUI')
+bode_main.create_parser(plotter_parser)
+plotter_parser.set_defaults(func=plotter_main.main)
 
 def main():
 #    if len(sys.argv) > 1 and not sys.argv[1].startswith('-'):
