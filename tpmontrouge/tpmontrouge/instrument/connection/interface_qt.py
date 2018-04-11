@@ -56,7 +56,7 @@ class Connection(StateMachine):
 
 
     def entering_connected(self, previous_state=None):
-        print('Entering connected')
+#        print('Entering connected')
         self.button.setEnabled(True)
         self.choices.setEnabled(False)
         self.refresh_btn.setEnabled(True)
@@ -65,7 +65,7 @@ class Connection(StateMachine):
         self.create_device()
 
     def entering_unconnected(self, previous_state=None):
-        print('Entering unconnected')
+#        print('Entering unconnected')
         self.button.setEnabled(True)
         self.choices.setEnabled(True)
         self.refresh_btn.setEnabled(True)
@@ -73,7 +73,7 @@ class Connection(StateMachine):
         self.button.setText('Connect')
 
     def entering_disabled(self, previous_state=None):
-        print('Entering Disabled')
+#        print('Entering Disabled')
         self.choices.setEnabled(False)
         self.button.setEnabled(False)
         self.refresh_btn.setEnabled(False)
