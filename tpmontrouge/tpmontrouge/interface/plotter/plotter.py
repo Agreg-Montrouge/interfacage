@@ -38,11 +38,18 @@ class PlotterWindow(QtGui.QWidget):
 
         self.start_stop_buttons = PlotterStartStopPauseSave(layout=start_stop_save_layout, parent=self)
 
-        self.sample_rate = pg.SpinBox(value=10, dec=True, step=1, bounds=[0.01, 100])
+        self.sample_rate = pg.SpinBox(value=10, dec=True, step=1, bounds=[0.01, 100], suffix=' S/s')
         tmp = pg.LayoutWidget()
         tmp.addWidget(pg.QtGui.QLabel('Sample rate'), col=0)
         tmp.addWidget(self.sample_rate, col=1)
         btn_layout.addWidget(tmp)
+
+        self.duration = pg.SpinBox(value=10, dec=True, step=1, bounds=[1, 10000], suffix=' s')
+        tmp = pg.LayoutWidget()
+        tmp.addWidget(pg.QtGui.QLabel('Acquisition duration'), col=0)
+        tmp.addWidget(self.duration, col=1)
+        btn_layout.addWidget(tmp)
+
 
         n = 4
         self.voltmeters = []
@@ -103,7 +110,9 @@ class PlotterThread(ExpThread):
         return out
 
     def get_iterator(self):
-        def infinite():
-            while True:
-                yield None
-        return infinite()
+#        def infinite():
+#            while True:
+#                yield None
+#        return infinite()
+        return range(int(self.parent_windows.duration.value()*self.parent_windows.sample_rate.value()))
+
