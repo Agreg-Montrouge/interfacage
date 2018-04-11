@@ -48,6 +48,9 @@ class Manufacturer(object):
             if re.match(model_name, val, re.IGNORECASE):
                 return model_class
         warn('Unkwnown model {} for {}'.format(val, self))
+        def error(*args, **kwd):
+            raise(Exception('Unknown model {} for {}. Are you sure that the model class was loaded ?'.format(val, self)))
+        return error
 
 
     def add_to_list_of_manufacturer(self, name=None):

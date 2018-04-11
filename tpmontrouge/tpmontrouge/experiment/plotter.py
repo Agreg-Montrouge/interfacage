@@ -83,7 +83,8 @@ class PlotterExperiment(object):
             p0 = l.addPlot(i, 0, title=plotter_line.name, labels={'left':plotter_line.y_label, 'bottom':'Temps (s)'})
             p0.showGrid(x = True, y = True, alpha = 0.3)
             p0.plot(plotter_line.times, plotter_line.data)
-
+        l.layout.setSpacing(0.)
+        l.setContentsMargins(0., 0., 0., 0.)  
 
 
 

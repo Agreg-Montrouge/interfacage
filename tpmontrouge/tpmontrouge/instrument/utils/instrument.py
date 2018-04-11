@@ -46,7 +46,10 @@ class Instrument(object):
     @classmethod
     def add_class_to_manufacturer(cls, model_name):
         cls.manufacturer.add_model(model_name, cls)
-        
+
+    @property
+    def idn(self):
+        return self.scpi_ask('*IDN?')        
 
 class FakeSCPI(object):
     _record = {}

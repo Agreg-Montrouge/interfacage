@@ -9,8 +9,8 @@ class Agilent(Voltmeter, Instrument):
         Instrument.__init__(self, *args, **kwd)
         Voltmeter.__init__(self, root=self)
         
-    def read_value(self):
-        return self.scpi_ask_for_float('MEAS')
+    def get_value(self):
+        return self.scpi_ask_for_float('READ?')
 
 Agilent.add_class_to_manufacturer('34450A')
 Agilent.add_class_to_manufacturer('34401A')

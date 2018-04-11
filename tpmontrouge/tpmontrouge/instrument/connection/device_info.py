@@ -58,8 +58,10 @@ class DeviceInfo(object):
         return self._device_str
 
     def __repr__(self):
-        return 'DeviceInfo("{self._device_str}")'.format(self=self)
+        return '{self.__class__.__name__}("{self._device_str}")'.format(self=self)
     
     @property
     def short_string(self):
         return self.idn[0] + ' ' + self.idn[1]
+
+
