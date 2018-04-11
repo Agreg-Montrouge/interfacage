@@ -1,4 +1,4 @@
-from time import sleep
+from time import sleep, time
 
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
@@ -69,9 +69,13 @@ class PlotterWindow(QtGui.QWidget):
         self.plot1 = plot1
 
 
+    t0 = time()
     def end_of_one_iteration(self, plot_function):
         view = self.plot1
-        self.start_stop_buttons._thread.running_exp.plot_pyqtgraph(view)
+        t = time()
+        if t>self.t0 + 0.5:
+            self.start_stop_buttons._thread.running_exp.plot_pyqtgraph(view)
+            self.t0 = t
         #plot_function(view)
 
     def test_action(self):
