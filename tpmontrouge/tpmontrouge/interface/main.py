@@ -8,6 +8,7 @@ from .plotter import get_plotter_window
 from .info import get_info
 
 from .. import plot_engine
+from .utils.display_exception import activate_error_dialog
 
 class MainWindow(QtGui.QTabWidget):
     plot_engine=plot_engine
@@ -39,6 +40,7 @@ def main(args=None):
     if args.test:
             from ..instrument.scope.test import test_detection
             from ..instrument.gbf.test import test_detection
+    activate_error_dialog()
     app = QtGui.QApplication([])
     win = MainWindow(args.plot_engine)
     win.show()

@@ -3,8 +3,8 @@ import argparse
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 
-
 from . import get_plotter_window
+from ..utils.display_exception import activate_error_dialog
 
 def create_parser(parser=None):
     if parser is None:
@@ -21,6 +21,7 @@ def main(args=None):
     if args.test:
             from ..instrument.scope.test import test_detection
             from ..instrument.gbf.test import test_detection
+    activate_error_dialog()
     app = QtGui.QApplication([])
     win = get_plotter_window(args.plot_engine)
     win.show()
