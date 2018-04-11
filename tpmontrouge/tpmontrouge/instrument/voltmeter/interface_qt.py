@@ -4,7 +4,7 @@ from .test.simu_voltmeter import VoltmeterSimulation
 from .voltmeter import Voltmeter
 
 class VoltmeterConnection(interface_qt.Connection):
-    name = 'Voltmeter'
+    name = 'Instrument'
     default = 'Simulation'
     kind_of_model = Voltmeter
 

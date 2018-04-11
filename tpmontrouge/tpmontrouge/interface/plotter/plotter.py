@@ -56,7 +56,8 @@ class PlotterWindow(QtGui.QWidget):
         for i in range(n):
             voltmeter = VoltmeterConnection(with_enable_button=True)
             if i<1:
-                voltmeter.set_state('Unconnected')
+                voltmeter.enable_button.setCheckState(2)
+#                voltmeter.set_state('Unconnected')
 #                print([elm for elm in dir(type(voltmeter.enable_button)) if 'eck' in elm])
 #                print(voltmeter.enable_button.setChecked(True))
 #                voltmeter.enable_button.setState(True)
