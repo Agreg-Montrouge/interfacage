@@ -4,6 +4,7 @@ import argparse
 from pyqtgraph.Qt import QtCore, QtGui
 from .scope import get_scope_window
 from .bode_plot import get_bode_window
+from .plotter import get_plotter_window
 from .info import get_info
 
 from .. import plot_engine
@@ -17,6 +18,7 @@ class MainWindow(QtGui.QTabWidget):
         self.addTab(get_info(), 'Info')
         self.addTab(get_scope_window(plot_engine=plot_engine),"Oscilloscope")
         self.addTab(get_bode_window(plot_engine=plot_engine),"Diagramme de Bode")
+        self.addTab(get_plotter_window(plot_engine=plot_engine),"Table traçante")
 
     def test_action(self):
         self.setCurrentIndex(1)

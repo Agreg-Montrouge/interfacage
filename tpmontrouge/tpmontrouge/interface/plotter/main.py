@@ -4,13 +4,13 @@ import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 
 
-from . import get_bode_window
+from . import get_plotter_window
 
 def create_parser(parser=None):
     if parser is None:
-        parser = argparse.ArgumentParser(description='Programme pour faire un diagramme de bode')
+        parser = argparse.ArgumentParser(description='Programme pour faire une table traçante')
     parser.add_argument('--test', action='store_true', help='Use to test unconnected instrument')
-    parser.add_argument('--plot_engine', default='pyqtgraph', help='Engine to do the plots', choices=['mpl', 'pyqtgraph'])
+    parser.add_argument('--plot_engine', default='pyqtgraph', help='Engine to do the plots', choices=['pyqtgraph'])
     return parser
 
 def main(args=None):
@@ -22,7 +22,7 @@ def main(args=None):
             from ..instrument.scope.test import test_detection
             from ..instrument.gbf.test import test_detection
     app = QtGui.QApplication([])
-    win = get_bode_window(args.plot_engine)
+    win = get_plotter_window(args.plot_engine)
     win.show()
     app.exec_()
 

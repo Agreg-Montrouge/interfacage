@@ -76,7 +76,11 @@ def main():
         print(__version__)
         return
 
-    args.func(args)
+    try:
+        args.func(args)
+    except AttributeError:
+        print(parser.parse_args(['--help']))
+        return
 
 #    action = args.action
 
