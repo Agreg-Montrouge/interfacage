@@ -38,9 +38,6 @@ class PlotterWindow(QtGui.QWidget):
 
         self.start_stop_buttons = PlotterStartStopPauseSave(layout=start_stop_save_layout, parent=self)
 
-# Ajouter le sample rate
-
-        
         self.sample_rate = pg.SpinBox(value=10, dec=True, step=1, bounds=[0.01, 100])
         tmp = pg.LayoutWidget()
         tmp.addWidget(pg.QtGui.QLabel('Sample rate'), col=0)
@@ -51,8 +48,11 @@ class PlotterWindow(QtGui.QWidget):
         self.voltmeters = []
         for i in range(n):
             voltmeter = VoltmeterConnection(with_enable_button=True)
-            if i<2:
+            if i<1:
                 voltmeter.set_state('Unconnected')
+                print([elm for elm in dir(type(voltmeter.enable_button)) if 'eck' in elm])
+                print(voltmeter.enable_button.setChecked(True))
+#                voltmeter.enable_button.setState(True)
             btn_layout.addWidget(voltmeter.make_layout())
             self.voltmeters.append(voltmeter)
         btn_layout.addStretch(1)
@@ -61,7 +61,7 @@ class PlotterWindow(QtGui.QWidget):
         self.add_plot_widgets()
 
     def add_plot_widgets(self):
-        plot1 = pg.GraphicsView() 
+        plot1 = pg.GraphicsView()
         tmp_layout = QtGui.QVBoxLayout()
         tmp_layout.addWidget(plot1)
         tmp_layout.addStretch(1)
@@ -70,7 +70,7 @@ class PlotterWindow(QtGui.QWidget):
 
 
     def end_of_one_iteration(self, plot_function):
-        view = self.plot1            
+        view = self.plot1
         self.start_stop_buttons._thread.running_exp.plot_pyqtgraph(view)
         #plot_function(view)
 
@@ -103,4 +103,3 @@ class PlotterThread(ExpThread):
             while True:
                 yield None
         return infinite()
-

@@ -30,10 +30,13 @@ class Connection(StateMachine):
 #        self.refresh_btn.setFixedWidth(20)
 #        self.refresh_btn.setFixedHeight(20)
 #        self.refresh_btn.setIcon(QtGui.QIcon(pixmaps.getPixmap('default')))
-        self.refresh_btn.clicked.connect(self.refresh)  
+        self.refresh_btn.clicked.connect(self.refresh)
         self.refresh()
 
-        self.set_state('Disabled')
+        if self._with_enable_button:
+            self.set_state('Disabled')
+        else:
+            self.set_state('Unconnected')
 
     def connect_button_pressed(self):
         if self.state=='Connected':
@@ -50,7 +53,7 @@ class Connection(StateMachine):
     @property
     def is_enable(self):
         return not (self.state=='Disabled')
-    
+
 
     def entering_connected(self, previous_state=None):
         print('Entering connected')
@@ -80,13 +83,13 @@ class Connection(StateMachine):
         layout = pg.LayoutWidget()
         layout.addWidget(self.label, col=0)
         if self._with_enable_button:
-            tmp = pg.LayoutWidget()
-            tmp.addWidget(self.enable_button, col=0)
-            tmp.addWidget(pg.QtGui.QLabel('enable'), col=1)
-            layout.addWidget(tmp, col=2)
+#            tmp = pg.LayoutWidget()
+            layout.addWidget(self.enable_button, col=2)
+            layout.addWidget(pg.QtGui.QLabel('enable'), col=3)
+            #layout.addWidget(tmp, col=2)
         layout.addWidget(self.button, row=1, col=0)
         layout.addWidget(self.choices, row=1, col=1)
-        layout.addWidget(self.refresh_btn, row=1, col=2)
+        layout.addWidget(self.refresh_btn, row=1, col=2, colspan=2)
         return layout
 
     def refresh(self):
@@ -102,7 +105,7 @@ class Connection(StateMachine):
     def auto_connect(self):
         if self.get_state()=='Unconnected':
             self.entering_connected()
-            self.set_state('Connected')        
+            self.set_state('Connected')
 
     @property
     def device(self):
@@ -131,6 +134,3 @@ class Connection(StateMachine):
             self._device = self.simulated_instrument
         else:
             self._device = self.dct[value].instrument
-
-
-

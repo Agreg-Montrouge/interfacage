@@ -14,6 +14,8 @@ class ScopeWindows(scope_common.ScopeWindows):
         self.plot1 = plot1
 
     def end_of_one_iteration(self, data):
+        if data is None:
+            return
         view = self.plot1            
         l = pg.GraphicsLayout()
         view.setCentralItem(l)
