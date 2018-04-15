@@ -1,6 +1,6 @@
-__version__ = '2018.02'
+__version__ = '2018.04'
 
-plot_engine = 'mpl'
+plot_engine = 'pyqtgraph'
 
 #import pyqtgraph
 #pyqtgraph.setConfigOptions(foreground='k', background='w')
