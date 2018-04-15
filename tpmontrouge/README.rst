@@ -20,13 +20,13 @@ Il est possible d'installer le package à l'aide de la commande::
 Interface
 ---------
 
-Il existe une interface graphique pour faire un diagramme de Bode et pour visualiser un oscilloscope. Elle est accessible, après installation, depuis une des commandes suivantes::s
+Il existe une interface graphique pour faire un diagramme de Bode et pour visualiser un oscilloscope. Elle est accessible, après installation, depuis une des commandes suivantes::
 
-    tpmontrouge full-gui
+    tpmontrouge all
     tpmontrouge scope
     tpmontrouge bode
 
-Il existe aussi des fichiers executable directement sous Windows. 
+Il existe aussi des fichiers executables directement sous Windows. 
 
 
 Instrument
@@ -39,9 +39,9 @@ L'idée est d'avoir une interface commune à chaque type d'instrument, ce qui n�
 
 Exemple :: 
     
-    from tpmontrouge.instrument import scope_factory
+    from tpmontrouge.instrument import auto_connect
 
-    scope = scope_factory('GPIB0::1::INSTR')
+    scope = auto_connect('GPIB0::1::INSTR')
 
     scope.autoset()
     wfm = scope.channel1.get_waveform()
@@ -78,8 +78,8 @@ Par exemple ::
     from tpmontrouge.instrument import scope_factory, gbf_factory
     from tpmontrouge.experiment import BodeExperiment
 
-    scope = scope_factory('GPIB0::1::INSTR')
-    gbf = gbf_factory('GPIB0::10::INSTR')
+    scope = auto_connect('GPIB0::1::INSTR')
+    gbf = auto_connect('GPIB0::10::INSTR')
 
     bode_experiment = BodeExperiment(gbf, scope, input_channel=scope.channel2, reference_channel=scope.channel1, disp=True)
     bode_plot = bode_experiment.record_bode_diagramm(start=10000, stop=10000000, step=30)

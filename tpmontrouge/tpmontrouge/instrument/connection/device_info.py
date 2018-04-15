@@ -17,7 +17,7 @@ class AllDevices(object):
     def list_of_devices(self):
         return self._list_of_devices
 
-    def get_all_connected_devices(self, kind_of_model=None):
+    def _get_all_connected_devices(self, kind_of_model=None):
         for device in self.list_of_devices:
             try:
                 model_class = device.model_class
@@ -25,6 +25,9 @@ class AllDevices(object):
                 continue
             if kind_of_model is None or (model_class is not None and issubclass(model_class, kind_of_model)):
                 yield device
+
+    def get_all_connected_devices(self, kind_of_model=None):
+        return list(self._get_all_connected_devices(kind_of_model=kind_of_model))
 
 class DeviceInfo(object):
     def __init__(self, device_str):
@@ -58,7 +61,7 @@ class DeviceInfo(object):
         return self._device_str
 
     def __repr__(self):
-        return '{self.__class__.__name__}("{self._device_str}")'.format(self=self)
+        return '{self.__class__.__name__}("{self._device_str}", "{self.short_string}")'.format(self=self)
     
     @property
     def short_string(self):

@@ -97,10 +97,10 @@ setup(
 #    # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'tpmontrouge-bode=tpmontrouge.interface.bode_plot.main:main',
-            'tpmontrouge-scope=tpmontrouge.interface.scope.main:main',
-            'tpmontrouge-full-gui=tpmontrouge.interface.main:main',
-            'tpmontrouge=tpmontrouge.main:main',
+            'tpmontrouge-bode = tpmontrouge.interface.bode_plot.main:main',
+            'tpmontrouge-scope = tpmontrouge.interface.scope.main:main',
+            'tpmontrouge-all = tpmontrouge.interface.main:main',
+            'tpmontrouge = tpmontrouge.main:main',
         ],
     },
 )

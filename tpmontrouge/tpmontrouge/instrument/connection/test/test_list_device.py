@@ -12,8 +12,8 @@ class Test(unittest.TestCase):
         all_devices = AllDevices()
 
     def test_function(self):
-        self.assertEqual(len(get_all_connected_devices('Scope')), 3)
-        self.assertEqual(len(get_all_connected_devices(Scope)), 3)
+        self.assertIn('AGILENT', str(get_all_connected_devices('Scope')))
+        self.assertIn('AGILENT', str(get_all_connected_devices(Scope)))
 
 if __name__=='__main__':
     all_devices = AllDevices()
