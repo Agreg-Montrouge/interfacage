@@ -19,7 +19,8 @@ class MainWindow(QtGui.QTabWidget):
         self.addTab(get_info(), 'Info')
         self.addTab(get_scope_window(plot_engine=plot_engine),"Oscilloscope")
         self.addTab(get_bode_window(plot_engine=plot_engine),"Diagramme de Bode")
-        self.addTab(get_plotter_window(plot_engine=plot_engine),"Table traçante")
+        if plot_engine=='pyqtgraph':
+            self.addTab(get_plotter_window(plot_engine=plot_engine),"Table traçante")
 
     def test_action(self):
         self.setCurrentIndex(1)

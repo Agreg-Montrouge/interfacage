@@ -55,7 +55,7 @@ def create_zip(args):
 zip_parser = subparsers.add_parser('zip', help='Zip file')
 zip_parser.set_defaults(func=create_zip)
 
-full_parser = subparsers.add_parser('full-gui', help='Full GUI interface')
+full_parser = subparsers.add_parser('all', help='Full GUI interface')
 full_main.create_parser(full_parser)
 full_parser.set_defaults(func=full_main.main)
 
@@ -86,30 +86,4 @@ def main():
         print(parser.parse_args(['--help']))
         return
 
-#    action = args.action
-
-#    if not action:
-#        parser.print_usage(file=sys.stderr)
-#        sys.exit("subcommand is required")
-
-#    args = [action] + opts
-
-#    if action=='bode':
-#        from .interface.bode_plot import main
-#        main(args)
-#        return
-
-#    if action=='scope':
-#        from .interface.scope import main
-#        main(args)
-#        return
-
-#    if action=='full':
-#        from .interface.main import main
-#        main(args)
-#        return
-
-#    if action=='zip':
-#        create_zip()
-#        return
 

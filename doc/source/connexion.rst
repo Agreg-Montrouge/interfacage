@@ -4,16 +4,30 @@ Connexion à un instrument
 
 Il existe plusieurs type de connexion : GPIB, RS232 (série), USB ou ethernet. Sous windows, la plupart des connexions sont gérées par VISA, ce qui simplifie le problème. 
 
-Je ne me casse pas la tête
-==========================
+Méthode automatique
+===================
 
 Chaque instrument est défini par une chaine de caractère. A partir de cette chaîne, on peut déterminer automatiquement le type de connexion (voir la suite) et l'ouvrir. Cette fonction se trouve dans le module :mod:`tpmontrouge.instrument.connection.auto_connect`. 
 
-Cette fonction est appellée par les fonctions du type ``scope_factory``.
-
 Par exemple ::
 
-    conn = auto_connect("GPIB0::1::INSTR")
+    my_instrument = auto_connect("GPIB0::1::INSTR")
+
+Lister les instruments
+======================
+
+On peut lister tous les instruments à l'aide de la ligne de la fonction  :: 
+
+    from tpmontrouge.instrument import AllDevices
+
+    all_devices = AllDevices()
+    print(all_devices.list_of_devices)
+
+On peut aussi filtrer par type d'instrument : 
+
+    print(list(all_devices.get_all_connected_devices(Scope)))
+
+
 
 VISA
 ====
