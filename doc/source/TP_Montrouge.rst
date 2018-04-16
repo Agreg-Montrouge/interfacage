@@ -15,8 +15,8 @@ Contents:
    :maxdepth: 2
 
    installation
-   connexion
-   creer_un_instrument
+   utilisation
+   comprendre
 
 
 Indices and tables

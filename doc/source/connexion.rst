@@ -2,6 +2,10 @@
 Connexion à un instrument
 =========================
 
+Nous rappelons qu'il y a deux problèmes différents : définir un mode communication avec l'intrument et ensuite savoir lui donner des ordres. Pour prendre une image, le premire problème c'est trouver un mode de communication (téléphone, SMS, mail, ...) et le second problème, c'est parler la même langue. 
+
+Dans cette partie, nous traitons le premier problème. 
+
 Il existe plusieurs type de connexion : GPIB, RS232 (série), USB ou ethernet. Sous windows, la plupart des connexions sont gérées par VISA, ce qui simplifie le problème. 
 
 Méthode automatique
@@ -26,7 +30,6 @@ On peut lister tous les instruments à l'aide de la ligne de la fonction  ::
 On peut aussi filtrer par type d'instrument : 
 
     print(list(all_devices.get_all_connected_devices(Scope)))
-
 
 
 VISA
