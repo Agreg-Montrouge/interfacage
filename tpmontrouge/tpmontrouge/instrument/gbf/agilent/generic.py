@@ -58,5 +58,6 @@ class Agilent(GBF, Instrument):
 
 Agilent.add_class_to_manufacturer('32303')
 Agilent.add_class_to_manufacturer('33220')
+Agilent.add_class_to_manufacturer('33210')
 
 
