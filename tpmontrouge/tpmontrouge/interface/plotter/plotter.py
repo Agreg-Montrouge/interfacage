@@ -4,7 +4,6 @@ import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 
 from ...experiment.plotter import PlotterExperiment as _PlotterExperiment
-from ...experiment.test.test_plotter import int1, int2
 from ..utils.start_stop_pause import ExpThread
 from ..utils.start_stop_pause import StartStopPauseSave
 
