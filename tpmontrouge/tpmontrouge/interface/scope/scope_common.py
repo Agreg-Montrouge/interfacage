@@ -26,7 +26,6 @@ class ScopeExperiment(object):
         t0 = time()
         for _ in iterator:
             self.mem = {}
-
             self.scope.stop_acquisition()
             for channel in self.scope.list_of_active_channel:
                 wfm = channel.get_waveform()
@@ -34,6 +33,7 @@ class ScopeExperiment(object):
             self.scope.start_acquisition()            
             self.plot()
             t = time()
+            sleep(0.2)
             if t<t0+delay:
                 sleep(delay + t0 -t)
             t0 = time()
