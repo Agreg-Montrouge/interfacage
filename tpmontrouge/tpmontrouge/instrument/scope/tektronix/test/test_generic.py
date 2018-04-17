@@ -23,10 +23,17 @@ class FakeSCPITektronix(FakeSCPI):
         'WFMPre:XIN':str(dt),
         'WFMPre:XZERO':'0',
         'WFMPre:YMUlt':str(ymult),
-        'WFMPre:YOFf':str(yoff)}
+        'WFMPre:YOFf':str(yoff),
+        '*IDN':'TEKTRONIX,MSO3014,234234,V.34.123'}
 
 class TestTektonix(GenericTest, unittest.TestCase):
     scope = Tektronix(FakeSCPITektronix())
 
     def test_base(self):
         pass
+
+    def test_idn(self):
+        self.assertEqual(self.scope.model_number, 'MSO3014')
+        self.assertEqual(self.scope.number_of_channel, 4)
+
+

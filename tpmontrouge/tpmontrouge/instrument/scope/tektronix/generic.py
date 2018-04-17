@@ -182,6 +182,11 @@ class Tektronix(Scope, Instrument):
     def get_trigger_mode(self):
         self.scpi_ask('TRIGger:MAIn:MODe')
 
+    @property
+    def number_of_channel(self):
+        if self.model_number.endswith('4'):
+            return 4
+        return 2
 
 class WithoutImpedance(object):
     def set_channel_impedance(self, val, channel=None):

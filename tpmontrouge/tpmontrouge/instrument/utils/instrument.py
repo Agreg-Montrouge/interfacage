@@ -49,7 +49,21 @@ class Instrument(object):
 
     @property
     def idn(self):
-        return self.scpi_ask('*IDN?')        
+        out = self.ask('*IDN?')
+        return out.strip().split(',')
+
+    @property
+    def maunfacturer(self):
+        return self.idn[0]
+
+    @property
+    def model_number(self):
+        return self.idn[1]
+
+    @property
+    def serial_number(self):
+        return self.idn[2]
+
 
 class FakeSCPI(object):
     _record = {}
