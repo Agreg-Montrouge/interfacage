@@ -110,9 +110,15 @@ class PlotterThread(ExpThread):
         return out
 
     def get_iterator(self):
+        def range_with_timeout(N, timeout):
+            t0 = time()
+            for i in range(N):
+                yield i
+                if time()>t0 + timeout:
+                    break    
 #        def infinite():
 #            while True:
 #                yield None
 #        return infinite()
-        return range(int(self.parent_windows.duration.value()*self.parent_windows.sample_rate.value()))
+        return range_with_timeout(int(self.parent_windows.duration.value()*self.parent_windows.sample_rate.value()), self.parent_windows.duration.value())
 
