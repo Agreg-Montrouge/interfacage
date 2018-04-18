@@ -1,3 +1,6 @@
+from multiprocessing import Process, Queue
+import queue
+
 from scipy.optimize import curve_fit, fmin
 from numpy import pi, sin, exp, array, linspace
 
@@ -19,7 +22,7 @@ def find_frequency(t, y):
     return fmin(f_to_optimize, Tfreq[k_opt], disp=0)
 
 
-def fit_sinusoid(t, y, freq=None, postfix=''):
+def _fit_sinusoid(t, y, freq=None, postfix='', queue=None):
     """ Fit by a sinusoid. Return a positive amplitude
 
     Fit the signal y(t) by : 
@@ -32,12 +35,24 @@ def fit_sinusoid(t, y, freq=None, postfix=''):
     phase = 0
     offset = y.mean()
     p = offset, amplitude, freq, phase
-    popt, _ = curve_fit(sinusoid, t, y, p)
+    try:
+        popt, _ = curve_fit(sinusoid, t, y, p)
+    except RuntimeError:
+        return dict(zip(['offset', 'amplitude', 'frequency', 'phase'], p))
     out = dict(zip(['offset', 'amplitude', 'frequency', 'phase'], popt))
     if out['amplitude']<0:
         out['amplitude'] = -out['amplitude']
         out['phase'] = (out['phase'] + pi)%(2*pi)
-    return {key+postfix:val for key,val in out.items()}
+    output = {key+postfix:val for key,val in out.items()}
+    if queue is not None:
+        queue.put(output)
+        return
+    return output
 
-
-
+def fit_sinusoid(t, y, freq=None, postfix=''):
+    q = Queue()
+    proc = Process(target=_fit_sinusoid, args=(t, y, freq, postfix, q))
+    proc.start()
+    res = q.get(timeout=5)
+    proc.join()
+    return res
