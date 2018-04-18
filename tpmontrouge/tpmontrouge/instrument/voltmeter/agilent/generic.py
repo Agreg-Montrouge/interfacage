@@ -1,6 +1,6 @@
 from ..voltmeter import Voltmeter
 from ...utils.instrument import Instrument
-from ...autodetection.manufacturer import agilent_technologies
+from ...autodetection.manufacturer import agilent_technologies, hewlett_packard
 from ...utils.scpi import is_equal
 
 class Agilent(Voltmeter, Instrument):
@@ -12,7 +12,12 @@ class Agilent(Voltmeter, Instrument):
     def get_value(self):
         return self.scpi_ask_for_float('READ?')
 
+class HewlettPackard(Agilent):
+    manufacturer = hewlett_packard
+
 Agilent.add_class_to_manufacturer('34450A')
 Agilent.add_class_to_manufacturer('34401A')
 
+HewlettPackard.add_class_to_manufacturer('34450A')
+HewlettPackard.add_class_to_manufacturer('34401A')
 
