@@ -1,10 +1,9 @@
+import numpy as np
 from cached_property import cached_property
+
+
 from .utils.fit import fit_sinusoid
 from .utils import unwrap_phase
-
-import numpy as np
-
-
 
 class BodePlot(object):
     title = None
