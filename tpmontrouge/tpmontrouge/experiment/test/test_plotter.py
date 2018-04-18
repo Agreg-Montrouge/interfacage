@@ -64,12 +64,19 @@ class Test(unittest.TestCase):
         self.assertIn('Interface 1', plotter_experiment.last_points_as_str)
         self.assertIn('Interface 2', plotter_experiment.last_points_as_str)
 
-
     def testC(self):
         BodePlotPyQTGraph(1).test()
 
     def testD(self):
         BodePlotPyQTGraph(3).test()
+
+    def testE(self):
+
+        plotter_experiment = PlotterExperiment([int1, int2, int3], sample_rate=100000, disp=False)
+
+        plotter_experiment.loop(range(10))
+        filename = os.path.join(tempfile.gettempdir(), 'plotter_save.txt')
+        plotter_experiment.save(filename)
 
 
 class BodePlotPyQTGraph(PyQtPlotGraphicsTestBis):

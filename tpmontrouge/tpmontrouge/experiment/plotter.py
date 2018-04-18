@@ -86,5 +86,15 @@ class PlotterExperiment(object):
         l.layout.setSpacing(0.)
         l.setContentsMargins(0., 0., 0., 0.)  
 
-
+    def save(self, fname):
+        tout = []
+        header = ''
+        for i, plotter_line in enumerate(self._plotter_lines):
+            if i==0:
+                tout.append(plotter_line.times)
+                header += '{:24s}'.format('Time')
+            tout.append(plotter_line.data)
+            header += ' {:25s}'.format(plotter_line.name)
+        tout = np.array(tout).T
+        np.savetxt(fname, tout, header=header, newline='\r\n')
 
