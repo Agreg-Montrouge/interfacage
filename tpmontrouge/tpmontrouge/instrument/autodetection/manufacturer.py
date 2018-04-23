@@ -67,7 +67,7 @@ agilent_technologies = Manufacturer('Agilent')
 agilent_technologies.add_to_list_of_manufacturer('Agilent Technologies')
 keysight = agilent_technologies
 
-hewlett_packard = Manufacturer('Hewlett Packard')
+hewlett_packard = Manufacturer('HEWLETT-PACKARD')
 hewlett_packard.add_to_list_of_manufacturer()
 
 metrix = Manufacturer('Metrix')
