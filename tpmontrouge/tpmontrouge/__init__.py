@@ -1,4 +1,4 @@
-__version__ = '2018.05.r2'
+__version__ = '2018.05.r3'
 
 plot_engine = 'pyqtgraph'
 
