@@ -14,8 +14,8 @@ class BodeExperiment(object):
         self._disp = disp
         if wait_time is not None:
            self._wait_time = wait_time 
-        self.configure_default_gbf()
         self.configure_default_scope()
+        self.configure_default_gbf()
         self.init_bode_plot()
 
     def init_bode_plot(self):
@@ -35,6 +35,7 @@ class BodeExperiment(object):
         self.scope.trigger.source = self.reference_channel.key
         self.scope.level = 0
         for ch in [self.input_channel, self.reference_channel]:
+            ch.state = True
             ch.offset = 0
             ch.scale = .3
 
