@@ -25,7 +25,7 @@ info="""
 <h2>Liste des GBF compatibles</h2>
 {gbf_html}
 
-<h2>Liste des enregistreur compatibles</h2>
+<h2>Liste des enregistreurs compatibles</h2>
 {voltmeter_html}
 
 
