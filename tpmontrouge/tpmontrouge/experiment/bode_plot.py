@@ -59,7 +59,7 @@ class BodeExperiment(object):
             except Exception as e:
                 print('ERROR', e)
                 print('Try again')
-                if i==2:
+                if i==1:
                     raise e
         t = input_wfm.x_data
         y = input_wfm.y_data

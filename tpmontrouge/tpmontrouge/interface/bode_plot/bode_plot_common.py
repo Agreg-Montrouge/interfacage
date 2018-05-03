@@ -62,8 +62,8 @@ class MyMPLWidget(pyqtgraph.widgets.MatplotlibWidget.MatplotlibWidget):
 
 class BodeWindows(QtGui.QWidget):
     bode_experiment = BodeExperiment
-    def __init__(self):
-        super(BodeWindows, self).__init__()
+    def __init__(self, **kwd):
+        super(BodeWindows, self).__init__(**kwd)
         self.main_layout = main_layout = QtGui.QHBoxLayout()
         self.setLayout(main_layout)
         btn_layout = QtGui.QVBoxLayout()
@@ -95,7 +95,7 @@ class BodeWindows(QtGui.QWidget):
 #        btn_layout.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
 
         self.start_stop_buttons.connect(self.new_state_tree)
-
+        self.start_stop_buttons.connect(self.parent().new_tab_state)
 
     @property
     def running_exp(self):

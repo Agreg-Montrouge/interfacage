@@ -37,7 +37,7 @@ class ScopeExperiment(object):
                 except Exception as e:
                     print('ERROR', e)
                     print('Try again')
-                    if i==2:
+                    if i==1:
                         raise e
             self.plot()
             t = time()
@@ -91,8 +91,8 @@ class ScopeStartStopPauseSave(StartStopPauseSave):
 
 class ScopeWindows(QtGui.QWidget):
     experiment = ScopeExperiment
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwd):
+        super().__init__(**kwd)
         self.main_layout = main_layout = QtGui.QHBoxLayout()
         self.setLayout(main_layout)
         btn_layout = QtGui.QVBoxLayout()
@@ -106,6 +106,8 @@ class ScopeWindows(QtGui.QWidget):
         btn_layout.addStretch(1)
 
         self.add_plot_widgets()
+        self.start_stop_buttons.connect(self.parent().new_tab_state)
+
 
     @property
     def running_exp(self):

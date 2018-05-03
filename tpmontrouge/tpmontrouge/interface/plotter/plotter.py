@@ -25,8 +25,8 @@ class PlotterStartStopPauseSave(StartStopPauseSave):
 
 class PlotterWindow(QtGui.QWidget):
     experiment = PlotterExperiment
-    def __init__(self):
-        super(PlotterWindow, self).__init__()
+    def __init__(self, **kwd):
+        super(PlotterWindow, self).__init__(**kwd)
         self.main_layout = main_layout = QtGui.QHBoxLayout()
         self.setLayout(main_layout)
         btn_layout = QtGui.QVBoxLayout()
@@ -64,8 +64,9 @@ class PlotterWindow(QtGui.QWidget):
             self.voltmeters.append(voltmeter)
         btn_layout.addStretch(1)
 
-
         self.add_plot_widgets()
+        self.start_stop_buttons.connect(self.parent().new_tab_state)
+
 
     def add_plot_widgets(self):
         plot1 = pg.GraphicsView()

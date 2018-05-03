@@ -122,7 +122,7 @@ class BodePoint(object):
                 break
             except Exception as e:
                 print('Error ', e)
-                if i==2:
+                if i==1:
                     out = {}
                     raise e        
         return out
