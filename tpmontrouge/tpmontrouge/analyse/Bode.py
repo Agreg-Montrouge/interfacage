@@ -19,7 +19,7 @@ class BodePlot(object):
 
 
     def get_column(self, name):
-        return np.array([getattr(elm, name) for elm in self._list_of_point])
+        return np.array([getattr(elm, name) for elm in self._list_of_point if elm.is_fit_valid])
 
     @property
     def delta_phi(self):
@@ -105,14 +105,26 @@ class BodePoint(object):
         self.y_ref = y_ref
         self.freq = freq
 
+    @property
+    def is_fit_valid(self):
+        return self.fit_parameter!={}
+
     @cached_property
     def fit_parameter(self):
         return self.fit()
 
     def fit(self):
         out = {}
-        out.update(fit_sinusoid(self.t, self.y, freq=self.freq, postfix=''))
-        out.update(fit_sinusoid(self.t, self.y_ref, freq=self.freq, postfix='_ref'))
+        for i in range(2):
+            try:
+                out.update(fit_sinusoid(self.t, self.y, freq=self.freq, postfix=''))
+                out.update(fit_sinusoid(self.t, self.y_ref, freq=self.freq, postfix='_ref'))
+                break
+            except Exception as e:
+                print('Error ', e)
+                if i==2:
+                    out = {}
+                    raise e        
         return out
 
     for key in ['offset', 'amplitude', 'frequency', 'phase']:

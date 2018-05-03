@@ -49,10 +49,18 @@ class BodeExperiment(object):
         else:
             self.scope.horizontal.scale = 1/freq
             sleep(20/freq+0.1)
-        self.scope.stop_acquisition()
-        input_wfm = self.input_channel.get_waveform()
-        ref_wfm = self.reference_channel.get_waveform()
-        self.scope.start_acquisition()
+        for i in range(2):
+            try:
+                self.scope.stop_acquisition()
+                input_wfm = self.input_channel.get_waveform()
+                ref_wfm = self.reference_channel.get_waveform()
+                self.scope.start_acquisition()
+                break
+            except Exception as e:
+                print('ERROR', e)
+                print('Try again')
+                if i==2:
+                    raise e
         t = input_wfm.x_data
         y = input_wfm.y_data
         ref = ref_wfm.y_data
@@ -62,8 +70,12 @@ class BodeExperiment(object):
             self.display_last_point(last_point)
 
     def display_last_point(self, last_point):
-        msg = '\tPhi={}, gain={}'.format(last_point.delta_phi, last_point.gain)
+        if last_point.is_fit_valid:
+            msg = '\tPhi={}, gain={}'.format(last_point.delta_phi, last_point.gain)
+        else:
+            msg = '\tUnable to perform the fit'
         self.display_txt(msg)
+            
 
     def record_bode_diagramm(self, list_of_frequency=None, start=None, stop=None, step=None, auto_set=False):
         if list_of_frequency is None:
