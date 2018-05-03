@@ -26,11 +26,19 @@ class ScopeExperiment(object):
         t0 = time()
         for _ in iterator:
             self.mem = {}
-            self.scope.stop_acquisition()
-            for channel in self.scope.list_of_active_channel:
-                wfm = channel.get_waveform()
-                self.mem[channel.key] = wfm
-            self.scope.start_acquisition()            
+            for i in range(2):
+                try:
+                    self.scope.stop_acquisition()
+                    for channel in self.scope.list_of_active_channel:
+                        wfm = channel.get_waveform()
+                        self.mem[channel.key] = wfm
+                    self.scope.start_acquisition()            
+                    break
+                except Exception as e:
+                    print('ERROR', e)
+                    print('Try again')
+                    if i==2:
+                        raise e
             self.plot()
             t = time()
             sleep(0.2)
