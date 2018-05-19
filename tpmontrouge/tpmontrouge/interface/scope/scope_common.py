@@ -6,7 +6,7 @@ import numpy as np
 import os
 
 from ..utils.start_stop_pause import ExpThread, StateMachine
-from ..utils.start_stop_pause import StartStopPauseSave
+from ..utils.start_stop_pause import StartStopPauseSaveSingle
 
 from ...instrument.scope.interface_qt import ScopeConnection
 
@@ -14,6 +14,11 @@ from ...experiment.bode_plot import BodeExperiment as _BodeExperiment
 
 from pyqtgraph.parametertree import Parameter, ParameterTree
 
+
+class SingleType(object):
+    pass
+
+Single = SingleType()
 
 class ScopeExperiment(object):
     def __init__(self, scope, scope_figure=None, thread=None):
@@ -24,15 +29,17 @@ class ScopeExperiment(object):
 
     def loop(self, iterator, delay=.5):
         t0 = time()
-        for _ in iterator:
+        for val in iterator:
             self.mem = {}
             for i in range(2):
                 try:
-                    self.scope.stop_acquisition()
+                    if val is not Single:
+                        self.scope.stop_acquisition()
                     for channel in self.scope.list_of_active_channel:
                         wfm = channel.get_waveform()
                         self.mem[channel.key] = wfm
-                    self.scope.start_acquisition()            
+                    if val is not Single:
+                        self.scope.start_acquisition()            
                     break
                 except Exception as e:
                     print('ERROR', e)
@@ -66,6 +73,10 @@ class ScopeExperiment(object):
 
 
 class ScopeThread(ExpThread):
+    def __init__(self, single=False, **kwd):
+        super(ScopeThread, self).__init__(**kwd)
+        self._single = single
+
     @property
     def scope(self):
         self.parent_windows.scope.auto_connect()
@@ -77,6 +88,8 @@ class ScopeThread(ExpThread):
         return out
 
     def get_iterator(self):
+        if self._single:
+            return [Single]
         def infinite():
             while True:
                 yield None
@@ -84,9 +97,13 @@ class ScopeThread(ExpThread):
 
 
 
-class ScopeStartStopPauseSave(StartStopPauseSave):
+class ScopeStartStopPauseSave(StartStopPauseSaveSingle):
     def start_thread(self):
         self._thread = ScopeThread(parent_windows=self.parent())
+        self._thread.start()
+
+    def start_single_thread(self):
+        self._thread = ScopeThread(parent_windows=self.parent(), single=True)
         self._thread.start()
 
 class ScopeWindows(QtGui.QWidget):
@@ -106,7 +123,8 @@ class ScopeWindows(QtGui.QWidget):
         btn_layout.addStretch(1)
 
         self.add_plot_widgets()
-        self.start_stop_buttons.connect(self.parent().new_tab_state)
+        if self.parent():
+            self.start_stop_buttons.connect(self.parent().new_tab_state)
 
 
     @property

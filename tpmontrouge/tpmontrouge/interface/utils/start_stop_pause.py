@@ -214,3 +214,40 @@ class StartStopPauseSave(StartStopPause):
                 self.save_btn.setEnabled(False)
 
 
+class StartStopPauseSaveSingle(StartStopPauseSave):
+    def __init__(self, layout=None, thread_class=None, *args, **kwd):
+        super(StartStopPauseSaveSingle, self).__init__(layout, thread_class, *args, **kwd)
+        single_btn = pg.QtGui.QPushButton("Single")
+        single_btn.setEnabled(True)
+        self.single_btn = single_btn
+        if layout is not None:
+            layout.addWidget(self.single_btn)
+        self.connect(self.new_state_single)
+        self.single_btn.clicked.connect(self.single_clicked)
+
+
+    def single_clicked(self):
+        self.start_single()
+
+    def new_state_single(self, state):
+        if state=='Running':
+            self.single_btn.setEnabled(False)
+        elif state=='Paused':
+            self.single_btn.setEnabled(True)
+        elif state=='Stopped':
+            self.single_btn.setEnabled(True)
+
+
+    def start_single_thread(self):
+        assert self._thread_class is not None, 'You should set the thread_class'
+        self._thread = self._thread_class(btn=self, single=True)
+        self._thread.start()
+        
+
+    def start_single(self):
+        self.pause_btn.setEnabled(True)
+        self.pause_btn.setText('Pause')
+        self.on_off_btn.setText('Stop')
+        self.start_single_thread()
+        self.set_state("Running")
+

@@ -65,7 +65,8 @@ class PlotterWindow(QtGui.QWidget):
         btn_layout.addStretch(1)
 
         self.add_plot_widgets()
-        self.start_stop_buttons.connect(self.parent().new_tab_state)
+        if self.parent():
+            self.start_stop_buttons.connect(self.parent().new_tab_state)
 
 
     def add_plot_widgets(self):

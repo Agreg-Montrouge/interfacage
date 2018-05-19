@@ -80,10 +80,10 @@ def main():
         print(__version__)
         return
 
-    try:
-        args.func(args)
-    except AttributeError:
-        print(parser.parse_args(['--help']))
-        return
+#    try:
+    args.func(args)
+#    except AttributeError:
+#        print(parser.parse_args(['--help']))
+#        return
 
 

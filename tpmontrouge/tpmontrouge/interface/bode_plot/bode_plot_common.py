@@ -95,7 +95,8 @@ class BodeWindows(QtGui.QWidget):
 #        btn_layout.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
 
         self.start_stop_buttons.connect(self.new_state_tree)
-        self.start_stop_buttons.connect(self.parent().new_tab_state)
+        if self.parent():
+            self.start_stop_buttons.connect(self.parent().new_tab_state)
 
     @property
     def running_exp(self):
