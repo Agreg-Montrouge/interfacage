@@ -3,6 +3,7 @@ perso/
 pkg/
 
 *.*~
+*~
 
 ######################
 ####Generic for Python
