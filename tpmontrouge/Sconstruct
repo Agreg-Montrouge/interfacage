@@ -1,0 +1,163 @@
+import os
+import subprocess
+from SCons.Script import Builder
+from string import Template
+import pkgutil
+
+import unittest
+
+import tpmontrouge
+
+env = Environment(ENV=os.environ)
+
+#for importer, modname, ispkg in pkgutil.iter_modules(tpmontrouge.__path__):
+#    print("Found submodule %s (is a package: %s)" % (modname, ispkg))
+
+import fnmatch
+def find_file_generator(rootDirectory, ext='.py', rec=True):
+    """ Liste un repertoire recursivement
+    
+    Generateur sortant la liste de tous les fichier du rootDirectory et ss repertoires
+    tel que acceptanceFunction(fichier) == True 
+    """
+    acceptanceFunction = lambda filename: fnmatch.fnmatch(filename,'*'+ext)
+    for x in os.listdir(rootDirectory):
+        item = os.path.join(rootDirectory, x)
+        if acceptanceFunction(item):
+            yield item
+        if rec and os.path.isdir(item):
+            for y in find_file_generator(item, ext=ext):
+                yield y
+
+full_library = list(find_file_generator('tpmontrouge'))
+#env['BUILDERS']['Unittest'] = Builder(action = 'python -m unittest discover')
+
+def make_the_test(target, source, env):
+    subprocess.call(['python', '-m', 'unittest', 'discover'])
+    subprocess.call(['touch', str(target[0])])
+
+env['BUILDERS']['Unittest'] = Builder(action=make_the_test)
+
+env.Unittest('test', full_library)
+
+
+#################################################
+
+
+from subprocess import call, check_output
+import os
+
+class RemoteSSHCommand(object):
+    _in_context = False
+    def __init__(self, machine_name, encoding='cp858'):
+        self._machine_name = machine_name
+        self._encoding = encoding
+
+    def call(self, command):
+        if not self._in_context:
+            command = '"{}"'.format(command)
+            l = ['ssh', self._machine_name]
+            l.append(command)
+            return check_output(l).decode(self._encoding)
+        else:
+            self._context_list.append(command)
+
+    def __enter__(self):
+        self._in_context = True
+        self._context_list = []
+
+    def __exit__(self, *args):
+        self._in_context = False
+        command = " & ".join(self._context_list)
+        self._last_output = self.call(command)
+
+    @property
+    def last_output(self):
+        return self._last_output
+
+    def dir(self, directory=None):
+        if directory is None:
+            return self.call('dir')
+        else:
+            return self.call('dir '+str(directory))
+
+    def cd(self, directory):
+        return self.call('cd '+str(directory))
+
+
+class LFTP(object):
+    def __init__(self, machine_name):
+        self._machine_name = machine_name
+
+    @property
+    def connection_str(self):
+        return 'sftp://{}'.format(self._machine_name)
+
+    def exec_command(self, cmd):
+        if isinstance(cmd, str):
+            cmd = [cmd]
+        else:
+            cmd = list(cmd)
+#        cmd.insert(0, 'connect '+self.connection_str)
+        cmd_str = " ; ".join(cmd)
+        return check_output(['lftp', '-c', cmd_str])
+
+    def mirror_R(self, source, destination, exclude=[]):
+        """ Syncronise source (local) vers destination (remote) """
+        cmd = "mirror -R"
+        for ext in exclude:
+            cmd = cmd + " --exclude-glob '{}'".format(ext)
+        source = os.path.realpath(source)
+        destination = destination if destination[-1]=='/' else destination+'/'
+        assert destination[1:3]==':/', "destination should be like 'd:/...'"
+        destination = self.connection_str + '/' + destination
+        cmd = cmd + ' {} {}'.format(source, destination)
+        self.exec_command(cmd)
+
+    def get_file(self, source, destination, replace=True):
+        assert source[1:3]==':/', "source should be like 'd:/...'"
+        source = self.connection_str + '/' + source
+        cmd = 'get {} -o {}'.format(source, destination)
+        cmd = [cmd]
+        if replace is True:
+            cmd.insert(0, 'set xfer:clobber on') 
+        self.exec_command(cmd)
+
+
+
+def compile_spec_on_wannier(target, source, env):
+    target_path, target_name = os.path.split(target[0].path)
+    source_path, source_name = os.path.split(source[0].path)
+
+    assert target_path=='dist'
+    assert source_path=='scripts'
+
+    lftp = LFTP('wannier.hsurm.lan')
+    lftp.mirror_R('.', 'c:/noms/pierre/tmp/tmp_build/', exclude=['*.exe', '*.pyc', '*.py~'])
+
+    ssh_client = RemoteSSHCommand('wannier.hsurm.lan')
+
+    with ssh_client:
+        ssh_client.call(r'd:\noms\pierre\anaconda3\Scripts\activate tmp_env')
+        ssh_client.cd(r'c:\noms\pierre\tmp\tmp_build\tpmontrouge\scripts')
+        ssh_client.call(r'pyinstaller -y {}'.format(source_name))
+
+
+    #with ssh_client:
+    #    ssh_client.call(r'd:\noms\pierre\anaconda3\Scripts\activate tmp_env')
+    #    ssh_client.cd(r'c:\noms\pierre\tmp\tmp_build\tpmontrouge\scripts')
+    #    ssh_client.call(r'pyinstaller --onefile bode.spec')
+
+#    print(ssh_client.call(r'c:\noms\pierre\tmp\tmp_build\tpmontrouge\scripts\dist\empty_bode.exe'))
+
+    lftp.get_file(r'c:/noms/pierre/tmp/tmp_build/tpmontrouge/scripts/dist/interface.exe', target[0].path)
+
+
+env['BUILDERS']['Spec'] = Builder(action=compile_spec_on_wannier)
+
+empty_bode = env.Spec('dist/empty_bode.exe', 'scripts/empty_bode.spec')
+Depends(empty_bode, full_library)
+
+interface = env.Spec('dist/interface.exe', 'scripts/interface.spec')
+Depends(interface, full_library)
+
