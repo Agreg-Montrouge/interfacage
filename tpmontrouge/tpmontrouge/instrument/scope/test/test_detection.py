@@ -7,7 +7,7 @@ from ...connection.device_info import AllDevices
 
 list_for_test = ['TEKTRONIX,TDS2000,234234,V.34.123', 
                  'AGILENT TECHNOLOGIES,DSO-X 2002A,MY57235663,02.42.2017032900', 
-                'TEKTRONIX,MSO3014,234234,V.34.123' ]
+                'TEKTRONIX,MSO3014,234234,V.34.123', 'TEKTRONIX,NOTEXISTING2000,234234,V.34.123',  ]
 
 def factory():
     return [DeviceInfoIDN(elm) for elm in list_for_test]
