@@ -1,5 +1,5 @@
 import unittest
-from ..generic import Keysight
+from ..generic import Keysight, TimeoutException
 
 from ...test.test_scope import GenericTest
 from ....utils.instrument import FakeSCPI
@@ -28,6 +28,7 @@ class FakeSCPIKeysight(FakeSCPI):
     def read_raw(self):
         return self._record[':WAV:DATA']
 
+
 class TestKeysight(GenericTest, unittest.TestCase):
     scope = Keysight(FakeSCPIKeysight())
 
@@ -36,3 +37,14 @@ class TestKeysight(GenericTest, unittest.TestCase):
 
     def test_channel_imp(self):
         pass
+
+    def test_stop_after_acquisition(self):
+        FakeSCPIKeysight._record[':WAV:POIN'] = '0'
+        with self.assertRaises(Exception) as context:
+            self.scope.stop_after_acquisition(timeout=0.3)
+        self.assertTrue(isinstance(context.exception, TimeoutException))
+
+        FakeSCPIKeysight._record[':WAV:POIN'] = '10000'
+        self.scope.stop_after_acquisition(timeout=0.3)
+
+

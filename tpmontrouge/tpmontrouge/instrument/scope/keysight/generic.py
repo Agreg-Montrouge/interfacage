@@ -4,12 +4,12 @@ It seams that the commands are the same for all the instrument
 
 Instrument specific commands should be in a specific module
 """
-
 import numbers
+from time import time, sleep
 
 import numpy as np
 
-from ...utils.instrument import Instrument
+from ...utils.instrument import Instrument, TimeoutException
 from ...autodetection.manufacturer import keysight
 from ...scope.scope import Scope
 from ...utils.scpi import is_equal
@@ -34,6 +34,26 @@ class Keysight(Scope, Instrument):
 
     def stop_acquisition_command(self):
         self.write(':STOP')
+
+    def stop_after_acquisition_command(self, timeout):
+        self.write(':STOP')
+        first = True
+        t0 = time()
+        while time()<t0+timeout:
+            try:
+                a = int(self.ask(':WAV:POIN?'))
+                if a<1:
+                    raise Exception
+            except Exception as e:
+                if first:
+                    self.write(':DIGitize')
+                    first = False
+                sleep(0.1)
+                pass
+            else:
+                break
+        else:
+            raise TimeoutException('Scope was not triggered before timeout ({}s)'.format(timeout))
 
     def scpi_channel_write(self, channel, cmd, *args):
         self.scpi_write('CHAN{channel}:{cmd}'.format(channel=channel, cmd=cmd), *args)

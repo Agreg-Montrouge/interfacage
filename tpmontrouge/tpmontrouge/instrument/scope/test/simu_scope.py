@@ -78,7 +78,7 @@ class ScopeSimulation(object):
     def get_channel_state(self, channel):
         return self._channel_state.get(channel, False)
 
-    _horiz_scale = 1
+    _horiz_scale = .1
     def set_horizontal_scale(self, scale):
         self._horiz_scale = scale
 

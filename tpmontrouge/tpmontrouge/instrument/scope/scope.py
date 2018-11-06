@@ -57,9 +57,15 @@ class Scope(RootNode):
     def start_acquisition(self):
         self.root.start_acquisition_command()
 
-
     def stop_acquisition(self):
         self.root.stop_acquisition_command()
+
+    def stop_after_acquisition(self, timeout=1):
+        try:
+            self.root.stop_after_acquisition_command(timeout=timeout)
+        except AttributeError:
+            self.stop_acquisition() 
+        
 
     number_of_channel = 2
     @property
