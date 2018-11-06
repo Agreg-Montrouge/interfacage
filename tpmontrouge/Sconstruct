@@ -33,12 +33,14 @@ full_library = list(find_file_generator('tpmontrouge'))
 #env['BUILDERS']['Unittest'] = Builder(action = 'python -m unittest discover')
 
 def make_the_test(target, source, env):
-    subprocess.call(['python', '-m', 'unittest', 'discover'])
-    subprocess.call(['touch', str(target[0])])
+    subprocess.call(['rm', '-f', str(target[0])])
+    out = subprocess.call(['python', '-m', 'unittest', 'discover'])
+    if out==0:
+        subprocess.call(['touch', str(target[0])])
 
 env['BUILDERS']['Unittest'] = Builder(action=make_the_test)
 
-env.Unittest('test', full_library)
+env.Unittest('.scons_file/test', full_library)
 
 
 #################################################
@@ -148,10 +150,21 @@ def compile_spec_on_wannier(target, source, env):
     #    ssh_client.cd(r'c:\noms\pierre\tmp\tmp_build\tpmontrouge\scripts')
     #    ssh_client.call(r'pyinstaller --onefile bode.spec')
 
-#    print(ssh_client.call(r'c:\noms\pierre\tmp\tmp_build\tpmontrouge\scripts\dist\empty_bode.exe'))
+#    if 'empty_bode' in source_name:
+#        print(ssh_client.call(r'c:\noms\pierre\tmp\tmp_build\tpmontrouge\scripts\dist\empty_bode.exe'))
 
-    lftp.get_file(r'c:/noms/pierre/tmp/tmp_build/tpmontrouge/scripts/dist/interface.exe', target[0].path)
+    lftp.get_file(r'c:/noms/pierre/tmp/tmp_build/tpmontrouge/scripts/'+target[0].path, target[0].path)
 
+def test_empty_bode(target, source, env):
+    subprocess.call(['rm', '-f', str(target[0])])
+
+    ssh_client = RemoteSSHCommand('wannier.hsurm.lan')
+    out = ssh_client.call(r'c:\noms\pierre\tmp\tmp_build\tpmontrouge\scripts\dist\empty_bode.exe')
+    assert tpmontrouge.__version__ in out
+    assert "successfully" in out
+    subprocess.call(['touch', str(target[0])])
+
+env.Command('.scons_file/test_empty_bode', 'dist/empty_bode.exe', test_empty_bode)
 
 env['BUILDERS']['Spec'] = Builder(action=compile_spec_on_wannier)
 
@@ -160,4 +173,6 @@ Depends(empty_bode, full_library)
 
 interface = env.Spec('dist/interface.exe', 'scripts/interface.spec')
 Depends(interface, full_library)
+
+env.Alias('test', ['.scons_file/test'])
 
