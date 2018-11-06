@@ -1,5 +1,3 @@
-
-
 class Instrument(object):
     def __init__(self, inst):
         """ Initialise the instrument
@@ -80,3 +78,5 @@ class FakeSCPI(object):
         return out
 
 
+class TimeoutException(Exception):
+    pass
