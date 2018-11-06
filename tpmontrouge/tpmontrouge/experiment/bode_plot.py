@@ -6,12 +6,13 @@ from ..analyse.Bode import BodePoint, BodePlot
 
 class BodeExperiment(object):
     _wait_time = 1.5
-    def __init__(self, gbf, scope, input_channel, reference_channel, disp=True, wait_time=None):
+    def __init__(self, gbf, scope, input_channel, reference_channel, disp=True, wait_time=None, amplitude=1):
         self.gbf = gbf
         self.scope = scope
         self.input_channel = input_channel
         self.reference_channel = reference_channel
         self._disp = disp
+        self.amplitude = amplitude
         if wait_time is not None:
            self._wait_time = wait_time 
         self.configure_default_scope()
@@ -27,7 +28,7 @@ class BodeExperiment(object):
             setattr(self.gbf, key, elm)
 
     def configure_default_gbf(self):
-        self.set_gbf_property(amplitude=1, function='Sinusoid', offset=0)
+        self.set_gbf_property(amplitude=self.amplitude, function='Sinusoid', offset=0)
         sleep(.5)
         
     def configure_default_scope(self):

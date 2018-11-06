@@ -41,6 +41,7 @@ params = [{'name':'Start', 'type':'float', 'value':100, 'suffix': 'Hz', 'siPrefi
         {'name':'log', 'type':'bool', 'value':True},
         {'name':'Ref. chan.', 'type':'list', 'values':[1, 2, 3, 4], 'value':1},
         {'name':'Sig. chan.', 'type':'list', 'values':[1, 2, 3, 4], 'value':2},
+        {'name':'Ref. amp', 'type':'float', 'value':1, 'suffix': 'V', 'limits':(0.001, 10), 'dec':True, 'step':.5, 'siPrefix': True,},
 ]
 
 
@@ -139,7 +140,8 @@ class BodeThread(ExpThread):
                                 disp=True, wait_time=0,
                                 scope_figure=self.parent_windows.plot1, 
                                 bode_figure=self.parent_windows.plot2,
-                                log_scale = self.parameters['log'], thread=self)
+                                log_scale = self.parameters['log'], thread=self,
+                                amplitude = self.parameters['Ref. amp'])
 
     def get_iterator(self):
         p = self.parameters
