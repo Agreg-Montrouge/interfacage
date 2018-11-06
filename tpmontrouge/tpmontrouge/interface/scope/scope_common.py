@@ -27,14 +27,17 @@ class ScopeExperiment(object):
         self.mem = {}
         self.thread = thread
 
-    def loop(self, iterator, delay=.5):
+    def loop(self, iterator, delay=None):
+        if delay is None:
+            delay = self.scope.horizontal.offset + 5*self.scope.horizontal.scale
+            delay = max(delay, 0.5)
         t0 = time()
         for val in iterator:
             self.mem = {}
             for i in range(2):
                 try:
                     if val is not Single:
-                        self.scope.stop_acquisition()
+                        self.scope.stop_after_acquisition()
                     for channel in self.scope.list_of_active_channel:
                         wfm = channel.get_waveform()
                         self.mem[channel.key] = wfm

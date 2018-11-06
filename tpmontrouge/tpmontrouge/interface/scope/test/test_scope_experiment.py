@@ -16,7 +16,7 @@ class ScopeExperiment(_ScopeExperiment):
         
 
 class TestScopeExperiment(unittest.TestCase):
-    def test(self):
+    def testA(self):
         scope = Scope(RootScope())
         exp = ScopeExperiment(scope)
 
@@ -24,6 +24,16 @@ class TestScopeExperiment(unittest.TestCase):
     
         filename = os.path.join(tempfile.gettempdir(), 'test_scope.txt')
         exp.save(filename)
+    def testB(self):
+        scope = Scope(RootScope())
+        exp = ScopeExperiment(scope)
+
+        exp.loop([1,2], delay=None)
+    
+        filename = os.path.join(tempfile.gettempdir(), 'test_scope.txt')
+        exp.save(filename)
+
+
 #        print(filename)
 
 class TestScopeExperimentWindows(unittest.TestCase):
