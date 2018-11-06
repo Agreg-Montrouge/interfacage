@@ -5,6 +5,9 @@ pkg/
 *.*~
 *~
 
+.sconsign.dblite
+.scons_file/
+
 ######################
 ####Generic for Python
 ######################

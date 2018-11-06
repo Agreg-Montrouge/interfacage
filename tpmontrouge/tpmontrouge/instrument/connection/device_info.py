@@ -23,7 +23,9 @@ class AllDevices(object):
                 model_class = device.model_class
             except Exception:
                 continue
-            if kind_of_model is None or (model_class is not None and issubclass(model_class, kind_of_model)):
+            if kind_of_model is None: 
+                yield device
+            elif (model_class is not None) and isinstance(model_class, type) and issubclass(model_class, kind_of_model):
                 yield device
 
     def get_all_connected_devices(self, kind_of_model=None):
