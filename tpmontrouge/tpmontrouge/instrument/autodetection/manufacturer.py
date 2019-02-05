@@ -73,3 +73,6 @@ hewlett_packard.add_to_list_of_manufacturer()
 metrix = Manufacturer('Metrix')
 metrix.add_to_list_of_manufacturer()
 
+national_instrument = Manufacturer('National Instrument')
+national_instrument.add_to_list_of_manufacturer()
+

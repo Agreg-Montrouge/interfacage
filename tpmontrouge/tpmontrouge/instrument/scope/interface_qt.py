@@ -1,5 +1,4 @@
 from ..connection import interface_qt
-from . import scope_factory, get_all_scopes
 
 from ...instrument.scope.scope import Scope
 from ...experiment.test.virtual_instrument_for_bode_plot import RootScope

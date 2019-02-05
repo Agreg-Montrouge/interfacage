@@ -5,6 +5,7 @@ from .interface import main as full_main
 from .interface.scope import main as scope_main
 from .interface.bode_plot import main as bode_main
 from .interface.plotter import main as plotter_main
+from .interface.analog_input import main as ai_main
 
 parser = argparse.ArgumentParser()
 
@@ -68,8 +69,13 @@ bode_main.create_parser(bode_parser)
 bode_parser.set_defaults(func=bode_main.main)
 
 plotter_parser = subparsers.add_parser('plotter', help='Plotter GUI')
-bode_main.create_parser(plotter_parser)
+plotter_main.create_parser(plotter_parser)
 plotter_parser.set_defaults(func=plotter_main.main)
+
+ai_parser = subparsers.add_parser('analog_input', help='AI GUI')
+ai_main.create_parser(ai_parser)
+ai_parser.set_defaults(func=ai_main.main)
+
 
 def main():
 #    if len(sys.argv) > 1 and not sys.argv[1].startswith('-'):
@@ -81,7 +87,7 @@ def main():
         return
 
 #    try:
-    args.func(args)
+    getattr(args, 'func', full_main.main)(args)
 #    except AttributeError:
 #        print(parser.parse_args(['--help']))
 #        return

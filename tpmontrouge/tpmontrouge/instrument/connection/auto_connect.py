@@ -2,6 +2,7 @@ from .usbtmc import USBTMCDeviceInfo
 from .visa import VISADeviceInfo
 #from serial import Serial
 from .serial import SerialDeviceInfo
+from .daqmx import DAQmxDeviceInfo
 
 def auto_connect(info):
     if 'usbtmc' in info.lower():

@@ -28,6 +28,7 @@ info="""
 <h2>Liste des enregistreurs compatibles</h2>
 {voltmeter_html}
 
+<h2>Carte d'acquisition National Instrumen</h2>
 
 <h2>Crédits / Licence </h2>
 <p> Application créée par Pierre Cladé pour le Département de Physique de l'École Normale Supérieure. </p>
@@ -60,7 +61,6 @@ for name, liste in voltmeters.items():
     for elm in liste:
         voltmeter_html += '<li>{name} : {elm}*</li>\n'.format(**locals())
 voltmeter_html += '</ul>'
-
 
 info = info.format(**locals())
 

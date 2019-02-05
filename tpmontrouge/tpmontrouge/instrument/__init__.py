@@ -8,3 +8,4 @@ from .connection import auto_connect
 from .scope import Scope
 from .gbf import GBF
 from .voltmeter import Voltmeter
+from .analog_input import AnalogInput
