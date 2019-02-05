@@ -17,6 +17,9 @@ class HewlettPackard(Agilent):
 
 Agilent.add_class_to_manufacturer('34450A')
 Agilent.add_class_to_manufacturer('34401A')
+Agilent.add_class_to_manufacturer('34461A')
+
+
 
 HewlettPackard.add_class_to_manufacturer('34450A')
 HewlettPackard.add_class_to_manufacturer('34401A')
