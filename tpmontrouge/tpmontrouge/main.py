@@ -87,7 +87,7 @@ def main():
         return
 
 #    try:
-    getattr(args, 'func', full_main.main)(args)
+    args.func(args)
 #    except AttributeError:
 #        print(parser.parse_args(['--help']))
 #        return
