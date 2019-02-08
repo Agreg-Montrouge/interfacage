@@ -2,8 +2,7 @@ from .utils import unable_to_open
 
 try:
     from ._daqmx import *
-
-except ImportError:
+except ImportError or NotImplementedError:
     def open_resource(*args, **kwd):
         raise Exception('Visa not installed on your computer') 
     PyDAQmx = None
