@@ -15,6 +15,9 @@ class Test(unittest.TestCase):
         self.assertIn('AGILENT', str(get_all_connected_devices('Scope')))
         self.assertIn('AGILENT', str(get_all_connected_devices(Scope)))
 
+    def test_doc(self):
+        self.assertIn('GBF', get_all_connected_devices.__doc__)
+
 if __name__=='__main__':
     all_devices = AllDevices()
     print(all_devices.list_of_devices)

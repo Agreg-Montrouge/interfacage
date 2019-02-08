@@ -9,6 +9,22 @@ def get_all_connected_devices(kind_of_model=None):
             raise Exception('Unkown kind of model "%s"'%kind_of_model)
     return list(AllDevices().get_all_connected_devices(kind_of_model=kind_of_model)) 
 
+def _make_doc(instrument_list):
+    doc = """List all the connected devices
+
+The model can be precised either as an instrument class or a string. 
+
+Possible instrument are : {}
+
+Example : 
+
+    from tpmontrouge.instrument mport get_all_connected_devices
+    scope_list = get_all_connected_devices('Scope')
+    print(scope_list)
+    my_scope = scope_list[0]
+"""
+    get_all_connected_devices.__doc__ = doc.format(', '.join(instrument_list))
+
 if __name__=="__main__":
     all_devices = AllDevices()
     print(all_devices.list_of_devices)
