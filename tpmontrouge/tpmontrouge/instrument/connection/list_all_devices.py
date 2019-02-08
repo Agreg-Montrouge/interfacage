@@ -1,7 +1,7 @@
-from ... import instrument
 from .device_info import AllDevices
 
 def get_all_connected_devices(kind_of_model=None):
+    from ... import instrument
     if isinstance(kind_of_model, str):
         try:
              kind_of_model=getattr(instrument, kind_of_model)
