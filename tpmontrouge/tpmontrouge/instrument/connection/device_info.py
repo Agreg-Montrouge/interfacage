@@ -23,7 +23,7 @@ class AllDevices(object):
                 model_class = device.model_class
             except Exception:
                 continue
-            print(device)
+#            print(device)
             if kind_of_model is None: 
                 yield device
             elif (model_class is not None) and isinstance(model_class, type) and issubclass(model_class, kind_of_model):
