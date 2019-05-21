@@ -46,7 +46,7 @@ class DAQmxDeviceInfo(object):
 
     @property
     def ai_physical_chann(self):
-        print(self._device_str)
+#        print(self._device_str)
         res = _daqmx_str_property(lambda a, b:PyDAQmx.DAQmxGetDevAIPhysicalChans(self._device_str, a, b))
         return [elm.strip() for elm in res.split(',')]
 
@@ -59,14 +59,14 @@ class AIDAQmxDeviceInfo(DAQmxDeviceInfo):
 
 def list_device_str():
     res = _daqmx_str_property(PyDAQmx.DAQmxGetSysDevNames)
-    print(res, type(res))
+#    print(res, type(res))
     for elm in res.split(','):
         elm = elm.strip()
         if DAQmxDeviceInfo(elm).ai_physical_chann!=[]:
             yield AIDAQmxDeviceInfo(elm)
 
 
-def auto_detect():
+def auto_detect_daqmx():
     return list(list_device_str())
 
-AllDevices.add_autodetect_function(auto_detect)
+AllDevices.add_autodetect_function(auto_detect_daqmx)

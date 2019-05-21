@@ -8,11 +8,11 @@ from ...connection.device_info import AllDevices
 list_for_test = ['Agilent Technologies,33220A,0,f.ff-b.bb-aa-p', 
                  ]
 
-def factory():
+def factory_test_gbf():
     return [DeviceInfoIDN(elm) for elm in list_for_test]
 
 
-AllDevices.add_autodetect_function(factory)
+AllDevices.add_autodetect_function(factory_test_gbf)
 
 class TestDetection(unittest.TestCase):
     def test1(self):

@@ -7,8 +7,8 @@ Il est partagé en plusieurs sous package :
 
 * Instrument : qui contient les drivers des differents instruments
 * Analyse : package permettant d'analyser des données
-* Experiment : dépend de analyse et instrument : permet de réaliser une experience, comme un diagramme de Bode
-* Interface : inerface graphique
+* Experiment : dépend de analyse et instrument; permet de réaliser une experience, comme un diagramme de Bode
+* Interface : interface graphique
 
 Installation
 ------------
@@ -20,7 +20,7 @@ Il est possible d'installer le package à l'aide de la commande::
 Interface
 ---------
 
-Il existe une interface graphique pour faire un diagramme de Bode et pour visualiser un oscilloscope. Elle est accessible, après installation, depuis une des commandes suivantes::
+Il existe une interface graphique pour faire un diagramme de Bode, pour visualiser un oscilloscope ou faire un table traçante. Elle est accessible, après installation, depuis une des commandes suivantes::
 
     tpmontrouge all
     tpmontrouge scope
@@ -86,3 +86,15 @@ Par exemple ::
 
     bode_plot.plot()
     draw()
+
+Version
+-------
+
+Principales modifications
+
+* 2019.05 : Ajout d'un installateur windows. Amélioration de la vitesse de démarrage
+* 2019.02 : Support pour les cartes NI et ajout d'une module d'acquisition continue
+
+
+
+

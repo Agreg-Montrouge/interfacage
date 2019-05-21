@@ -1,19 +1,47 @@
+""" Fichier Sconstruct pour compiler la librairire tpmontouge
+
+Le but de ce fichier est de regrouper les commandes permettant
+de créer le .exe sur une machine windows depuis un ordinateur linux
+
+Commandes
+---------
+
+scons test
+scons executable
+scons installer
+
+Remarques
+---------
+
+Ce fichier fonctionne pour moi (Pierre Cladé) et n'a pas d'autres prétentions
+Il a besoin 1/ d'un grand nettoyage et 2/ de mettre tous les paramètres
+dans des variables d'environnement.
+
+Principes
+---------
+
+On installe un serveur SSH sur la machine windows ainsi que anaconda. La librairie
+est ensuite synchronisé sur la machine windows. Pyinstaller est utilisé pour faire 
+un executable et Inno Setup pour faire une programme d'installation.
+
+"""
+
+
 import os
 import subprocess
 from SCons.Script import Builder
 from string import Template
 import pkgutil
+from time import time
 
 import unittest
 
 import tpmontrouge
+import fnmatch
+
 
 env = Environment(ENV=os.environ)
 
-#for importer, modname, ispkg in pkgutil.iter_modules(tpmontrouge.__path__):
-#    print("Found submodule %s (is a package: %s)" % (modname, ispkg))
-
-import fnmatch
 def find_file_generator(rootDirectory, ext='.py', rec=True):
     """ Liste un repertoire recursivement
     
@@ -36,7 +64,8 @@ def make_the_test(target, source, env):
     subprocess.call(['rm', '-f', str(target[0])])
     out = subprocess.call(['python', '-m', 'unittest', 'discover'])
     if out==0:
-        subprocess.call(['touch', str(target[0])])
+        with open(target[0].path, 'w') as f:
+                f.write(str(time()))
 
 env['BUILDERS']['Unittest'] = Builder(action=make_the_test)
 
@@ -46,21 +75,35 @@ env.Unittest('.scons_file/test', full_library)
 #################################################
 
 
-from subprocess import call, check_output
+from subprocess import call, check_output, check_call
 import os
 
 class RemoteSSHCommand(object):
+    """ Remote SSH commands
+
+    Easy way to performe SSH command on a remote host
+
+    The context manager is used to merge many command un a single one
+
+    get_output parameters : whether or not return the output 
+
+"""
     _in_context = False
-    def __init__(self, machine_name, encoding='cp858'):
+    def __init__(self, machine_name, encoding='cp858', get_output=True):
         self._machine_name = machine_name
         self._encoding = encoding
+        self._get_output = get_output
 
     def call(self, command):
         if not self._in_context:
             command = '"{}"'.format(command)
             l = ['ssh', self._machine_name]
             l.append(command)
-            return check_output(l).decode(self._encoding)
+            print(l)
+            if self._get_output:
+                return check_output(l).decode(self._encoding)
+            else:
+                return check_call(l)
         else:
             self._context_list.append(command)
 
@@ -102,6 +145,7 @@ class LFTP(object):
             cmd = list(cmd)
 #        cmd.insert(0, 'connect '+self.connection_str)
         cmd_str = " ; ".join(cmd)
+        print(' '.join(['lftp', '-c', cmd_str]))
         return check_output(['lftp', '-c', cmd_str])
 
     def mirror_R(self, source, destination, exclude=[]):
@@ -125,17 +169,26 @@ class LFTP(object):
             cmd.insert(0, 'set xfer:clobber on') 
         self.exec_command(cmd)
 
+def mirror_on_wannier(target, source, env):
+    target_path, target_name = os.path.split(target[0].path)
+
+    lftp = LFTP('wannier.hsurm.lan')
+    lftp.mirror_R('.', 'c:/noms/pierre/tmp/tmp_build/', exclude=['*.exe', '*.pyc', '*.py~'])
+
+#    subprocess.call(['echo', '$(date)', '>', str(target[0])])
+    with open(target[0].path, 'w') as f:
+        f.write(str(time()))
 
 
 def compile_spec_on_wannier(target, source, env):
     target_path, target_name = os.path.split(target[0].path)
     source_path, source_name = os.path.split(source[0].path)
 
-    assert target_path=='dist'
+    assert target_path=='dist' or target_path=='.scons_file'
     assert source_path=='scripts'
 
-    lftp = LFTP('wannier.hsurm.lan')
-    lftp.mirror_R('.', 'c:/noms/pierre/tmp/tmp_build/', exclude=['*.exe', '*.pyc', '*.py~'])
+#    lftp = LFTP('wannier.hsurm.lan')
+#    lftp.mirror_R('.', 'c:/noms/pierre/tmp/tmp_build/', exclude=['*.exe', '*.pyc', '*.py~'])
 
     ssh_client = RemoteSSHCommand('wannier.hsurm.lan')
 
@@ -144,16 +197,32 @@ def compile_spec_on_wannier(target, source, env):
         ssh_client.cd(r'c:\noms\pierre\tmp\tmp_build\tpmontrouge\scripts')
         ssh_client.call(r'pyinstaller -y {}'.format(source_name))
 
+    if target_path=='dist':
+        lftp = LFTP('wannier.hsurm.lan')
+        lftp.get_file(r'c:/noms/pierre/tmp/tmp_build/tpmontrouge/scripts/'+target[0].path, target[0].path)
+    else:
+        with open(target[0].path, 'w') as f:
+            f.write(str(time()))
 
-    #with ssh_client:
-    #    ssh_client.call(r'd:\noms\pierre\anaconda3\Scripts\activate tmp_env')
-    #    ssh_client.cd(r'c:\noms\pierre\tmp\tmp_build\tpmontrouge\scripts')
-    #    ssh_client.call(r'pyinstaller --onefile bode.spec')
+def compile_iss_on_wannier(target, source, env):
+    target_path, target_name = os.path.split(target[0].path)
+    source_path, source_name = os.path.split(source[0].path)
 
-#    if 'empty_bode' in source_name:
-#        print(ssh_client.call(r'c:\noms\pierre\tmp\tmp_build\tpmontrouge\scripts\dist\empty_bode.exe'))
+    assert target_path=='dist'
+    assert source_path=='scripts'
 
+#    lftp = LFTP('wannier.hsurm.lan')
+#    lftp.mirror_R('.', 'c:/noms/pierre/tmp/tmp_build/', exclude=['*.exe', '*.pyc', '*.py~'])
+
+    ssh_client = RemoteSSHCommand('wannier.hsurm.lan', get_output=False)
+
+    with ssh_client:
+        ssh_client.cd(r'c:\noms\pierre\tmp\tmp_build\tpmontrouge\scripts')
+        ssh_client.call(r'"C:\Program Files (x86)\Inno Setup 5\ISCC.exe" {}'.format(source_name))
+
+    lftp = LFTP('wannier.hsurm.lan')
     lftp.get_file(r'c:/noms/pierre/tmp/tmp_build/tpmontrouge/scripts/'+target[0].path, target[0].path)
+
 
 def test_empty_bode(target, source, env):
     subprocess.call(['rm', '-f', str(target[0])])
@@ -162,17 +231,50 @@ def test_empty_bode(target, source, env):
     out = ssh_client.call(r'c:\noms\pierre\tmp\tmp_build\tpmontrouge\scripts\dist\empty_bode.exe')
     assert tpmontrouge.__version__ in out
     assert "successfully" in out
-    subprocess.call(['touch', str(target[0])])
+    with open(target[0].path, 'w') as f:
+            f.write(str(time()))
 
 env.Command('.scons_file/test_empty_bode', 'dist/empty_bode.exe', test_empty_bode)
 
+env['BUILDERS']['Mirror'] = Builder(action=mirror_on_wannier)
 env['BUILDERS']['Spec'] = Builder(action=compile_spec_on_wannier)
+env['BUILDERS']['Iss'] = Builder(action=compile_iss_on_wannier)
+
+full_library_and_script = (list(find_file_generator('tpmontrouge')) + 
+                            list(find_file_generator('scripts',ext='spec')) + 
+                            list(find_file_generator('scripts',ext='iss')))
+
+full_library_and_script =[elm for elm in full_library_and_script if 'test' not in elm]
+
+mirror = env.Mirror('.scons_file/mirror_on_wannier', full_library_and_script)
+#Depends(mirror, full_library)
 
 empty_bode = env.Spec('dist/empty_bode.exe', 'scripts/empty_bode.spec')
-Depends(empty_bode, full_library)
+Depends(empty_bode, mirror)
 
 interface = env.Spec('dist/interface.exe', 'scripts/interface.spec')
-Depends(interface, full_library)
+Depends(interface, mirror)
+executable_with_version = Command('dist/interface-{}.exe'.format(tpmontrouge.__version__), 'dist/interface.exe', Copy("$TARGET", "$SOURCE"))
+env.Alias('executable', executable_with_version)
+
+interface_folder = env.Spec('.scons_file/interface_folder', 'scripts/interface_folder.spec')
+Depends(interface_folder, mirror)
+
+from string import Template
+def make_iss(target, source, env):
+    text = Template(open(source[0].path).read())
+    with open(target[0].path, 'w') as f:
+        f.write(text.substitute(version=tpmontrouge.__version__))
+
+iss = env.Command('scripts/interface_gui.iss', 'scripts/interface_gui.iss.tpl', make_iss)
+Depends(iss, full_library)
+
+installer = env.Iss('dist/interface_agreg_setup.exe', 'scripts/interface_gui.iss')
+Depends(installer, interface_folder)
+
+installer_with_version = Command('dist/interface_agreg_setup-{}.exe'.format(tpmontrouge.__version__), 'dist/interface_agreg_setup.exe', Copy("$TARGET", "$SOURCE"))
+env.Alias('installer', installer_with_version)
+
 
 env.Alias('test', ['.scons_file/test'])
 

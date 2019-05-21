@@ -9,10 +9,6 @@ def get_all_voltmeter():
     all_devices = AllDevices()
     return all_devices.get_all_connected_devices(Voltmeter)
 
-
-
-
-
 #def gbf_factory(info):
 #    """ Factory function to create a Voltmeter instance
 

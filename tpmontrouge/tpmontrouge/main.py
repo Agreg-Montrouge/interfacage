@@ -87,9 +87,11 @@ def main():
         return
 
 #    try:
-    args.func(args)
+    if hasattr(args, 'func'):
+        args.func(args)
+    else:
 #    except AttributeError:
-#        print(parser.parse_args(['--help']))
-#        return
+        print(parser.parse_args(['--help']))
+        return
 
 

@@ -1,5 +1,6 @@
 from cached_property import cached_property
 from ..autodetection.manufacturer import list_of_manufacturer
+from time import time
 
 class AllDevices(object):
     list_of_autodetect_function = []
@@ -11,7 +12,10 @@ class AllDevices(object):
     def __init__(self):
         self._list_of_devices = []
         for factory_function in self.list_of_autodetect_function:
-            self._list_of_devices.extend(factory_function())
+            t0 = time()
+            new_devices = factory_function()
+            print('Detection :', factory_function.__name__, time()-t0)
+            self._list_of_devices.extend(new_devices)
 
     @property
     def list_of_devices(self):

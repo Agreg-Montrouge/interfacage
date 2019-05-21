@@ -15,12 +15,12 @@ class Agilent(Voltmeter, Instrument):
 class HewlettPackard(Agilent):
     manufacturer = hewlett_packard
 
-Agilent.add_class_to_manufacturer('34450A')
-Agilent.add_class_to_manufacturer('34401A')
-Agilent.add_class_to_manufacturer('34461A')
+#Agilent.add_class_to_manufacturer('34450A')
+#Agilent.add_class_to_manufacturer('34401A')
+#Agilent.add_class_to_manufacturer('34461A')
 
+#HewlettPackard.add_class_to_manufacturer('34450A')
+#HewlettPackard.add_class_to_manufacturer('34401A')
 
-
-HewlettPackard.add_class_to_manufacturer('34450A')
-HewlettPackard.add_class_to_manufacturer('34401A')
-
+Agilent.add_class_to_manufacturer('34450|34401|34461')
+HewlettPackard.add_class_to_manufacturer('34450|34401')

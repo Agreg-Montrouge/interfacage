@@ -47,10 +47,10 @@ def _auto_detect():
             continue
         yield elm
 
-def auto_detect():
+def auto_detect_serial():
     return list(_auto_detect())
 
-AllDevices.add_autodetect_function(auto_detect)
+AllDevices.add_autodetect_function(auto_detect_serial)
 
 
 if __name__=='__main__':

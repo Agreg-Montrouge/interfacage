@@ -38,10 +38,10 @@ def list_device_str():
     tout = os.listdir('/dev')
     return ['/dev/'+elm for elm in tout if elm.startswith('usbtmc')]
 
-def auto_detect():
+def auto_detect_usbtmc():
     return [USBTMCDeviceInfo(elm) for elm in list_device_str()]
 
-AllDevices.add_autodetect_function(auto_detect)
+AllDevices.add_autodetect_function(auto_usbtmc_detect)
 
 if __name__ == "__main__":
     inst = USBTMC()

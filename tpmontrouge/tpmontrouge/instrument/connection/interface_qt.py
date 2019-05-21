@@ -4,6 +4,8 @@ from ...interface.utils.start_stop_pause import ExpThread, StateMachine
 
 from .device_info import AllDevices
 
+all_devices = None # This is a global variable that can be changed by reload_devices
+
 class Connection(StateMachine):
     name = ""
     _device = None
@@ -31,7 +33,7 @@ class Connection(StateMachine):
 #        self.refresh_btn.setFixedHeight(20)
 #        self.refresh_btn.setIcon(QtGui.QIcon(pixmaps.getPixmap('default')))
         self.refresh_btn.clicked.connect(self.refresh)
-        self.refresh()
+        self.refresh(init=True)
 
         if self._with_enable_button:
             self.set_state('Disabled')
@@ -92,8 +94,9 @@ class Connection(StateMachine):
         layout.addWidget(self.refresh_btn, row=1, col=2, colspan=2)
         return layout
 
-    def refresh(self):
+    def refresh(self, init=False):
         self.choices.clear()
+        self.reload_devices(init=init)
         list_of_device = self.get_list_of_devices()
 #        self.choices.addItem('Default')
 #        self.choices.insertSeparator(10000)
@@ -114,8 +117,15 @@ class Connection(StateMachine):
             raise Exception('No device connected')
         return device
 
+    def reload_devices(self, init=False):
+        global all_devices
+        if init is True : 
+            if all_devices is None:
+                all_devices = AllDevices()
+        else:
+            all_devices = AllDevices()
+
     def get_list_of_devices(self):
-        all_devices = AllDevices()
         all_devices_given_model = all_devices.get_all_connected_devices(kind_of_model=self.kind_of_model)
         dct = {}
         lst = []

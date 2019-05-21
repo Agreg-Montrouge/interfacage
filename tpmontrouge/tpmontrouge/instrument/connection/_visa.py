@@ -35,7 +35,8 @@ def _auto_detect():
             continue
         yield elm
 
-def auto_detect():
+def auto_detect_visa():
     return list(_auto_detect())
 
-AllDevices.add_autodetect_function(auto_detect)
+AllDevices.add_autodetect_function(auto_detect_visa)
+

@@ -46,20 +46,20 @@ voltmeters = list_of_manufacturer.get_all_models(Voltmeter)
 scope_html = """<ul>\n"""
 for name, liste in scopes.items():
     for elm in liste:
-        scope_html += '<li>{name} : {elm}*</li>\n'.format(**locals())
+        scope_html += '<li>{name} : {elm}</li>\n'.format(**locals())
 scope_html += '</ul>'
 
 
 gbf_html = """<ul>\n"""
 for name, liste in gbf.items():
     for elm in liste:
-        gbf_html += '<li>{name} : {elm}*</li>\n'.format(**locals())
+        gbf_html += '<li>{name} : {elm}</li>\n'.format(**locals())
 gbf_html += '</ul>'
 
 voltmeter_html = """<ul>\n"""
 for name, liste in voltmeters.items():
     for elm in liste:
-        voltmeter_html += '<li>{name} : {elm}*</li>\n'.format(**locals())
+        voltmeter_html += '<li>{name} : {elm}</li>\n'.format(**locals())
 voltmeter_html += '</ul>'
 
 info = info.format(**locals())

@@ -1,6 +1,5 @@
 from ..constant import function
 
-
 from ..gbf import GBF
 from ...utils.instrument import Instrument
 from ...autodetection.manufacturer import agilent_technologies
@@ -56,8 +55,14 @@ class Agilent(GBF, Instrument):
         val = function.convert(val)
         self.scpi_write('FUNC', self.func_to_scpi[val])
 
-Agilent.add_class_to_manufacturer('32303')
-Agilent.add_class_to_manufacturer('33220')
-Agilent.add_class_to_manufacturer('33210')
+#Agilent.add_class_to_manufacturer('32303')
+#Agilent.add_class_to_manufacturer('33220')
+#Agilent.add_class_to_manufacturer('33210')
+#Agilent.add_class_to_manufacturer('33500')
+#Agilent.add_class_to_manufacturer('33120')
+#Agilent.add_class_to_manufacturer('32210')
+Agilent.add_class_to_manufacturer('32210|32303|33120|33210|33220')
+Agilent.add_class_to_manufacturer('33500')
+
 
 

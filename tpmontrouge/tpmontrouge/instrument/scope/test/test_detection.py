@@ -9,11 +9,11 @@ list_for_test = ['TEKTRONIX,TDS2000,234234,V.34.123',
                  'AGILENT TECHNOLOGIES,DSO-X 2002A,MY57235663,02.42.2017032900', 
                 'TEKTRONIX,MSO3014,234234,V.34.123', 'TEKTRONIX,NOTEXISTING2000,234234,V.34.123',  ]
 
-def factory():
+def factory_scope_test():
     return [DeviceInfoIDN(elm) for elm in list_for_test]
 
 
-AllDevices.add_autodetect_function(factory)
+AllDevices.add_autodetect_function(factory_scope_test)
 
 class TestDetection(unittest.TestCase):
     def test1(self):
