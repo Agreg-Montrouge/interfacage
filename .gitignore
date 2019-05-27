@@ -8,6 +8,8 @@ pkg/
 .sconsign.dblite
 .scons_file/
 
+tpmontrouge/scripts/interface_gui.iss
+
 ######################
 ####Generic for Python
 ######################

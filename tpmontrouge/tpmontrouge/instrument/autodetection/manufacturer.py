@@ -65,7 +65,10 @@ tektronix.add_to_list_of_manufacturer()
 
 agilent_technologies = Manufacturer('Agilent')
 agilent_technologies.add_to_list_of_manufacturer('Agilent Technologies')
-keysight = agilent_technologies
+keysight_agilent = agilent_technologies
+
+keysight = Manufacturer('Keysight')
+keysight.add_to_list_of_manufacturer('Keysight Technologies')
 
 hewlett_packard = Manufacturer('HEWLETT-PACKARD')
 hewlett_packard.add_to_list_of_manufacturer()

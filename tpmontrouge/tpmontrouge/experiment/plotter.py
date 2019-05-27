@@ -1,4 +1,5 @@
 from time import time, sleep
+import logging
 
 import numpy as np
 import pyqtgraph as pg
@@ -40,11 +41,14 @@ class PlotterExperiment(object):
 
     def loop(self, iterator):
         next_t = self.initial_time = time()
-        for _ in iterator:
+        for i in iterator:
             t0 = time()
             if t0<next_t:
                 sleep(next_t-t0)
                 t0 = time()
+            else:
+                if i>2:
+                    logging.warning("Le taux d'échantillonage est plus faible que celui demandé")
             next_t = t0 + self._dt
             self.record_new_point()
 

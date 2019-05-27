@@ -10,7 +10,7 @@ from time import time, sleep
 import numpy as np
 
 from ...utils.instrument import Instrument, TimeoutException
-from ...autodetection.manufacturer import keysight
+from ...autodetection.manufacturer import keysight_agilent
 from ...scope.scope import Scope
 from ...utils.scpi import is_equal
 
@@ -21,7 +21,7 @@ from ..waveform import Waveform
 
 
 class Keysight(Scope, Instrument):
-    manufacturer = keysight
+    manufacturer = keysight_agilent
     def __init__(self, *args, **kwd):
         Instrument.__init__(self, *args, **kwd)
         Scope.__init__(self, root=self)

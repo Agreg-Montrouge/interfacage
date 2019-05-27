@@ -2,9 +2,11 @@ import os
 import unittest
 import tempfile
 
-from ...test.utils import ProcessApp
 
+from tpmontrouge.instrument.connection.device_info import AllDevices
+from ...test.utils import ProcessApp
 from ..plotter import PlotterWindow
+
 
 class TestScopeExperimentWindows(unittest.TestCase):
 #    def test_mpl(self):

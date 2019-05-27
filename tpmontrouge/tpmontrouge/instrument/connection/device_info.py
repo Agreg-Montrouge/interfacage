@@ -9,12 +9,16 @@ class AllDevices(object):
     def add_autodetect_function(cls, func):
         cls.list_of_autodetect_function.append(func)
 
+    @classmethod
+    def clear_autodetect_functions_list(cls):
+        cls.list_of_autodetect_function = []        
+
     def __init__(self):
         self._list_of_devices = []
         for factory_function in self.list_of_autodetect_function:
             t0 = time()
             new_devices = factory_function()
-            print('Detection :', factory_function.__name__, time()-t0)
+#            print('Detection :', factory_function.__name__, time()-t0)
             self._list_of_devices.extend(new_devices)
 
     @property
