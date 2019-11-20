@@ -49,3 +49,6 @@ class Waveform(object):
 #        plt.setLabel('bottom', self.x_label)
         return plt
 
+    def __repr__(self):
+        return "{self.__class__.__name__}({self.data}, t0={self.t0}, dt={self.dt})".format(self=self)
+
