@@ -23,6 +23,8 @@ class Instrument(object):
         return self._inst.write(cmd)
 
     def ask(self, cmd):
+        if hasattr(self._inst, 'query'):
+            return self._inst.query(cmd)
         return self._inst.ask(cmd)
 
     def ask_raw(self, cmd):
