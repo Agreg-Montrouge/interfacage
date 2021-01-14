@@ -12,7 +12,7 @@ from .analog_input import AnalogInput
 
 instrument_str = ['Scope', 'GBF', 'Voltmeter', 'AnalogInput']
 
-from .connection.list_all_devices import get_all_connected_devices
+from .connection.list_all_devices import get_all_connected_devices, get_first_device
 
 from .connection import list_all_devices
 list_all_devices._make_doc(instrument_str)

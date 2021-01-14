@@ -1,4 +1,5 @@
 class WithIndex(object):
+    __slots__ = ['_parent', '_node_class', '_index_range']
     def __init__(self, parent, node_class, index_range=None):
         self._parent = parent
         self._node_class = node_class
@@ -12,6 +13,7 @@ class WithIndex(object):
 
 
 class Node(object):
+    __slots__ = ['_parent']
     def __init__(self, parent):
         self._parent = parent
 
@@ -19,10 +21,18 @@ class Node(object):
     def root(self):
         return self._parent.root
 
+    def __repr__(self):
+        return "{self.__class__.__name__}(...)".format(self=self)
+
 class RootNode(object):
+    __slots__ = ['_root']
     @property
     def root(self):
         return self._root
+
+    def __repr__(self):
+        return "{self.__class__.__name__}(...)".format(self=self)
+
 
 class Property(object):
     def __init__(self, name):
@@ -35,6 +45,9 @@ class Property(object):
 
     def __set__(self, instance, value):
         getattr(instance.root, 'set_'+self._name)(value)
+
+    def __repr__(self):
+        return '{self.__class__.__name__}({self._name})'.format(self=self)
 
 
 class IndexableProperty(object):

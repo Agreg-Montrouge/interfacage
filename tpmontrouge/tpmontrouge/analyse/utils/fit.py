@@ -31,7 +31,7 @@ def fit_sinusoid(t, y, freq=None, postfix=''):
     amplitude = y.max() - y.min()
     phase = 0
     offset = y.mean()
-    p = offset, amplitude, freq, phase
+    p = offset, amplitude, float(freq), phase
     popt, _ = curve_fit(sinusoid, t, y, p)
     out = dict(zip(['offset', 'amplitude', 'frequency', 'phase'], popt))
     if out['amplitude']<0:

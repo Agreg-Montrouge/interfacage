@@ -2,6 +2,7 @@ from ..utils.command_tree import Node, RootNode, WithIndex, Property, IndexableP
 
 
 class ChannelNode(Node):
+    __slots__ = ['channel_name', 'key']
     def __init__(self, parent, key):
         self.channel_name = key
         self.key = key
@@ -35,6 +36,10 @@ class ChannelNode(Node):
     def get_waveform(self, **kwd):
         return self.root.get_channel_waveform(self.channel_name, **kwd)
 
+    def __repr__(self):
+        return "{self.__class__.__name__}(key={self.key})".format(self=self)
+
+
 
 class Trigger(Node):
     slope = Property('trigger_slope')
@@ -46,6 +51,11 @@ class Horizontal(Node):
     scale = Property('horizontal_scale')
 
 class Scope(RootNode):
+    @classmethod
+    def get_simulated_device(cls):
+        from .test.simu_scope import ScopeSimulation
+        return cls(root = ScopeSimulation())
+
     def __init__(self, root=None):
         if root is None:
             root=self
@@ -86,7 +96,6 @@ class Scope(RootNode):
 
     def is_active(self, channel):
         return self.root.get_channel_state(channel)
-    
 
     @property
     def channel1(self):

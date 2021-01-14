@@ -3,7 +3,7 @@ from ..device_info import AllDevices
 from .deviceinfotest import DeviceInfoIDN
 
 
-from ..list_all_devices import get_all_connected_devices
+from ..list_all_devices import get_all_connected_devices, get_first_device
 
 #from ...scope.test import test_detection
 #from ...gbf.test import test_detection
@@ -35,6 +35,10 @@ class Test(unittest.TestCase):
     def test_function(self):
         self.assertIn('AGILENT', str(get_all_connected_devices('Scope')))
         self.assertIn('AGILENT', str(get_all_connected_devices(Scope)))
+        self.assertIn('TEKTRONIX', str(get_first_device('Scope')))
+        self.assertIn('TEKTRONIX', str(get_first_device(Scope)))
+
+
 
     def test_doc(self):
         self.assertIn('GBF', get_all_connected_devices.__doc__)

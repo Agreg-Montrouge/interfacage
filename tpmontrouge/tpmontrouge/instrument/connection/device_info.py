@@ -37,6 +37,11 @@ class AllDevices(object):
             elif (model_class is not None) and isinstance(model_class, type) and issubclass(model_class, kind_of_model):
                 yield device
 
+    def get_first_device(self, kind_of_model):
+        for elm in self._get_all_connected_devices(kind_of_model):
+            return elm
+        return None
+
     def get_all_connected_devices(self, kind_of_model=None):
         return list(self._get_all_connected_devices(kind_of_model=kind_of_model))
 
@@ -64,9 +69,14 @@ class DeviceInfo(object):
         model_name = self.idn[1]
         return manuf.get_model_class(model_name)
 
+    def get_interface(self):
+        return self.model_class(self.get_connection())
+
+    # Kept for compatibility
     @property
     def instrument(self):
-        return self.model_class(self.get_connection())
+        return self.get_interface()
+
 
     def __str__(self):
         return self._device_str
