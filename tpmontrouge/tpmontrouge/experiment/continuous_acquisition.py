@@ -67,12 +67,13 @@ class AIExperiment(object):
         if fig is None:
             from matplotlib.pyplot import figure
             fig = figure()
-        for ch_name, ai_line in self._acquisition_lines.items():
-            axe = fig.add_subplot(self.number_of_lines, 1, i+1)
+        number_of_lines = len(self._acquisition_lines)
+        for i, (ch_name, ai_line) in enumerate(self._acquisition_lines.items()):
+            axe = fig.add_subplot(number_of_lines, 1, i+1)
             axe.plot(ai_line.times, ai_line.data)
             axe.grid(True)
-            axe.set_ylabel(plotter_line.y_label)
-            axe.set_title(plotter_line.name)
+            axe.set_ylabel(ai_line.y_label)
+            axe.set_title(ai_line.name)
 #        axe = fig.add_subplot(1, 1, 1)
 #        axe.plot(self._acquisition_line.times, self._acquisition_line.data)
 #        axe.grid(True)
