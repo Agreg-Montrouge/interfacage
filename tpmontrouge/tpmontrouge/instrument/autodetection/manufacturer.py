@@ -79,3 +79,6 @@ metrix.add_to_list_of_manufacturer()
 national_instrument = Manufacturer('National Instrument')
 national_instrument.add_to_list_of_manufacturer()
 
+rigol = Manufacturer('Rigol Technologies')
+rigol.add_to_list_of_manufacturer()
+
