@@ -9,7 +9,10 @@ def get_all_connected_devices(kind_of_model=None):
              kind_of_model=getattr(instrument, kind_of_model)
         except AttributeError:
             raise Exception('Unkown kind of model "%s"'%kind_of_model)
-    return list(AllDevices().get_all_connected_devices(kind_of_model=kind_of_model)) 
+    return list(AllDevices().get_all_connected_devices(kind_of_model=kind_of_model))
+
+def get_all_connected_instruments(kind_of_model=None):
+    return [elm.get_interface() for elm in get_all_connected_devices(kind_of_model)]
 
 def get_first_device(kind_of_model):
     from ... import instrument
@@ -25,6 +28,9 @@ def get_first_device(kind_of_model):
         return FakeDevice(kind_of_model.get_simulated_device())
     raise Exception('No device of class {}. Use SIMUMONTROUGE env variable to return simulated instrument'.format(kind_of_model))
 
+def get_first_instrument(kind_of_model):
+    return get_first_device(kind_of_model).get_interface()
+    
 class FakeDevice(object):
     def __init__(self, instrument):
         """ Create a Fake device 

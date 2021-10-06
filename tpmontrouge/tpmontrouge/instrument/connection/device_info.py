@@ -55,7 +55,7 @@ class DeviceInfo(object):
     @cached_property
     def idn(self):
         conn = self.get_connection()
-        out = conn.ask('*IDN?')
+        out = conn.query('*IDN?')
         return out.strip().split(',')
 
     @property

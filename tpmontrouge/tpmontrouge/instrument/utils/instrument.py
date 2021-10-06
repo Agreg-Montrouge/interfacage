@@ -1,3 +1,5 @@
+from cached_property import cached_property
+
 class Instrument(object):
     def __init__(self, inst):
         """ Initialise the instrument
@@ -47,7 +49,7 @@ class Instrument(object):
     def add_class_to_manufacturer(cls, model_name):
         cls.manufacturer.add_model(model_name, cls)
 
-    @property
+    @cached_property
     def idn(self):
         out = self.ask('*IDN?')
         return out.strip().split(',')

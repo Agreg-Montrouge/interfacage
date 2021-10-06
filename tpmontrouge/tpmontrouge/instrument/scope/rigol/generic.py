@@ -26,7 +26,7 @@ class Rigol(Scope, Instrument):
         Scope.__init__(self, root=self)
 
     def autoset_command(self):
-        self.write('AUToscale')
+        self.write(':AUTO')
 
     def start_acquisition_command(self):
         self.write(':RUN')
@@ -55,13 +55,13 @@ class Rigol(Scope, Instrument):
 #            raise TimeoutException('Scope was not triggered before timeout ({}s)'.format(timeout))
 
     def scpi_channel_write(self, channel, cmd, *args):
-        self.scpi_write('CHAN{channel}:{cmd}'.format(channel=channel, cmd=cmd), *args)
+        self.scpi_write(':CHANNEL{channel}:{cmd}'.format(channel=channel, cmd=cmd), *args)
 
     def scpi_channel_ask(self, channel, cmd):
-        return self.scpi_ask('CHAN{channel}:{cmd}'.format(channel=channel, cmd=cmd))
+        return self.scpi_ask(':CHANNEL{channel}:{cmd}'.format(channel=channel, cmd=cmd))
 
     def scpi_channel_ask_for_float(self, channel, cmd):
-        return self.scpi_ask_for_float('CHAN{channel}:{cmd}'.format(channel=channel, cmd=cmd))
+        return self.scpi_ask_for_float(':CHANNEL{channel}:{cmd}'.format(channel=channel, cmd=cmd))
 
 
     def set_channel_impedance(self, val, channel=None):
@@ -129,28 +129,34 @@ class Rigol(Scope, Instrument):
 #    def get_out_waveform_vertical_offset(self):
 #        return float(self.ask('WFMPre:YOFf?'))
 
-    def set_data_source(self, channel):
-        self.write(':WAVeform:SOURce CHANnel{}'.format(channel))
+#    def set_data_source(self, channel):
+#        self.write(':WAVeform:SOURce CHANnel{}'.format(channel))
 
-    def get_preamble(self):
-        # Format, Type, Points, Count, XIncrement, XOrigin, XReference, YIncrement, YOrigin, YReference
-        out = self.scpi_ask(':WAV:PRE')
-        return list(map(eval, out.strip().split(',')))
+#    def get_preamble(self):
+#        # Format, Type, Points, Count, XIncrement, XOrigin, XReference, YIncrement, YOrigin, YReference
+#        out = self.scpi_ask(':WAV:PRE')
+#        return list(map(eval, out.strip().split(',')))
 
     def ask_array(self, cmd):
         self.write(cmd)
-        out = self._inst.read_raw()[:-1]
-        return out[int(out[1])+2:]
+        out = self._inst.read_raw()
+        return out[int(out[1:2])+2:]
 
-    def get_channel_waveform(self, channel=1, **kwd):
-        self.set_data_source(channel)
-        self.write(':WAV:FORMAT BYTE')
-        Format, Type, Points, Count, XIncrement, XOrigin, XReference, YIncrement, YOrigin, YReference = self.get_preamble()
-
-        buff = self.ask_array(':WAV:DATA?')
+    def get_channel_waveform(self, channel=1, raw_data=False, **kwd):
+#        self.set_data_source(channel)
+#        self.write(':WAV:FORMAT BYTE')
+#        Format, Type, Points, Count, XIncrement, XOrigin, XReference, YIncrement, YOrigin, YReference = self.get_preamble()
+#
+        buff = self.ask_array(':WAV:DATA? CHAN{channel}'.format(channel=channel))
         res = np.array(np.frombuffer(buff, dtype = np.dtype('uint8')), dtype=int)
-        data = (res - YReference)*YIncrement
-        return Waveform(data=data, t0=XOrigin, dt=XIncrement) 
+        if raw_data is True:
+            return res
+        data = (256-res-132)/200*8*self.get_channel_vertical_scale(channel)-self.get_channel_vertical_offset(channel)
+        horiz_offset = self.horizontal.offset
+        horiz_scale = self.horizontal.scale
+        dt = horiz_scale/600*12
+        t0 = horiz_offset - 6*horiz_scale
+        return Waveform(data=data, t0=t0, dt=dt) 
 
 
     def set_channel_state(self, val, channel):
@@ -160,58 +166,59 @@ class Rigol(Scope, Instrument):
         return self.scpi_channel_ask(channel, 'DISPlay') == '1'
 
     def set_horizontal_scale(self, scale):
-        self.scpi_write("TIMebase:SCAle", scale)
+        self.scpi_write(":TIMebase:SCAle", scale)
 
     def get_horizontal_scale(self):
-        return self.scpi_ask_for_float("TIMebase:SCAle")
+        return self.scpi_ask_for_float(":TIMebase:SCAle")
 
 
     def set_horizontal_offset(self, offset):
-        self.scpi_write("TIMebase:POSition", offset)
+        self.scpi_write(":TIMebase:OFFSet", offset)
 
     def get_horizontal_offset(self):
 #        print('HORIZ', self.scpi_ask("HORizontal:MAin:POSition"))
-        return self.scpi_ask_for_float("TIMebase:POSition")
+        return self.scpi_ask_for_float(":TIMebase:OFFSet")
 
-
+    def get_horizontal_samplig_rate(self):
+        return self.scpi_ask_for_float(':ACQuire:SAMPlingrate?')
 
     def set_trigger_source(self, source):
         if isinstance(source, numbers.Number):
             source = 'CHAN{}'.format(source)
         if source.startswith('CH') or source in ['EXT', 'LINE', 'WGEN']:
-            self.scpi_write('TRIGger:EDGE:SOUrce', source)
+            self.scpi_write(':TRIGger:EDGE:SOUrce', source)
         else:
             raise Exception('Unkwown value {} for trigger source'.format(source))
 
     def get_trigger_source(self):
-        out = self.scpi_ask('TRIGger:EDGE:SOUrce').strip()
+        out = self.scpi_ask(':TRIGger:EDGE:SOUrce').strip()
         if out.startswith('CHAN'):
             return int(out[-1:])
         return out
 
     def set_trigger_level(self, value):
-        self.scpi_write('TRIGger:EDGE:LEVel', value)
+        self.scpi_write(':TRIGger:EDGE:LEVel', value)
 
     def get_trigger_level(self):
-        return self.scpi_ask_for_float('TRIGger:EDGE:LEVel')
+        return self.scpi_ask_for_float(':TRIGger:EDGE:LEVel')
 
     def set_trigger_slope(self, value):
         value = slope.convert(value)
         value_as_str = {slope.PositiveEdge:'POS', slope.NegativeEdge:'NEG'}.get(value, None)
         if value_as_str is None:
             raise Exception('Slope {} is not allowed'.format(value))
-        self.scpi_write('TRIGger:EDGE:SLOPe', value_as_str)
+        self.scpi_write(':TRIGger:EDGE:SLOPe', value_as_str)
     
     def get_trigger_slope(self):
-        out = self.scpi_ask('TRIGger:EDGE:Slope')
+        out = self.scpi_ask(':TRIGger:EDGE:Slope')
         return slope.PositiveEdge if is_equal(out, 'POS') else slope.NegativeEdge
 
     def set_trigger_mode(self, value):
         assert is_equal(value, 'AUTO') or is_equal(value, 'NORMal')
-        self.scpi_write('TRIGger:SWEep', value)
+        self.scpi_write(':TRIGger:SWEep', value)
     
     def get_trigger_mode(self):
-        self.scpi_ask('TRIGger:SWEep')
+        self.scpi_ask(':TRIGger:SWEep')
         
     @property
     def number_of_channel(self):
@@ -220,5 +227,5 @@ class Rigol(Scope, Instrument):
         return 2
 
 
-Rigol.add_class_to_manufacturer('MSO')
-Rigol.add_class_to_manufacturer('DS')
+#Rigol.add_class_to_manufacturer('MSO')
+Rigol.add_class_to_manufacturer('DS1')

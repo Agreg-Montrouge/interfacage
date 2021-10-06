@@ -45,6 +45,8 @@ class Rigol(GBF, Instrument):
 
     def get_function(self):
         out = self.scpi_ask('FUNC')
+        if out.startswith('CH'):
+            out = out[4:]
         for key, elm in self.func_to_scpi.items():
             if is_equal(out, elm):
                 return key

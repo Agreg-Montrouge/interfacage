@@ -21,6 +21,14 @@ open_resource = rm.open_resource
 
 class VISADeviceInfo(DeviceInfo):
     def get_connection(self):
+        device_str = self._device_str
+        if device_str.lower().startswith('asrl'):
+            raise Exception('Unsupported')
+
+        if device_str.lower().startswith('usb'):
+            sp_str = device_str.split('::')
+            if len(sp_str)>=4 and sp_str[1]=='0x1AB1' and sp_str[3].lower().startswith('dg'):
+                return rm.open_resource(self._device_str, query_delay=0.001) 
         return rm.open_resource(self._device_str)
 
 def list_device_str():
