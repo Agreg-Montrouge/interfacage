@@ -23,8 +23,14 @@ pre = ', '.join([str(elm) for elm in pre])
 
 class FakeSCPIRigol(FakeSCPI):
     _record = {':WAV:DATA':buf,
-        ':WAV:PRE': pre,
-        '*IDN':'RIGOL TECHNOLOGIES,MSO1104Z,DS1ZA160801111,00.04.01.'}
+#        ':WAV:PRE': pre,
+        ':CHANNEL2:SCALe':'0',
+        ':CHANNEL2:OFFSet':'0',        
+        ':CHANNEL1:SCALe':'0',
+        ':CHANNEL1:OFFSet':'0',
+        ':TIMebase:OFFSet':'0',
+        '*IDN':'RIGOL TECHNOLOGIES,MSO1104Z,DS1ZA160801111,00.04.01.',
+        }
 
     def read_raw(self):
         return self._record[':WAV:DATA']

@@ -25,6 +25,15 @@ class Rigol(Scope, Instrument):
         Instrument.__init__(self, *args, **kwd)
         Scope.__init__(self, root=self)
 
+    def scpi_write(self, cmd, *args):
+        args_str = []
+        for elm in args:
+            if isinstance(elm, float):
+                args_str.append('{:.9f}'.format(elm))
+            else:
+                args_str.append(str(elm))            
+        return self.write(cmd + ' '+','.join(args_str))
+
     def autoset_command(self):
         self.write(':AUTO')
 
