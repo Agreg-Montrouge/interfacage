@@ -27,7 +27,7 @@ class VISADeviceInfo(DeviceInfo):
 
         if device_str.lower().startswith('usb'):
             sp_str = device_str.split('::')
-            if len(sp_str)>=4 and (sp_str[1]=='0x1AB1' or sp_str[1]=='0x0A00') and sp_str[3].lower().startswith('dg'):
+            if len(sp_str)>=4 and (sp_str[1]=='0x1AB1' or sp_str[1]=='0x0400') and sp_str[3].lower().startswith('dg'):
                 return rm.open_resource(self._device_str, query_delay=0.001) 
         return rm.open_resource(self._device_str)
 
