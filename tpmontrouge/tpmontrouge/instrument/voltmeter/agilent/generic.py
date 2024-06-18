@@ -27,4 +27,5 @@ class Keysight(Agilent):
 
 Keysight.add_class_to_manufacturer('34450|34401|34461')
 Agilent.add_class_to_manufacturer('34450|34401|34461')
+Agilent.add_class_to_manufacturer('34405')
 HewlettPackard.add_class_to_manufacturer('34450|34401')
