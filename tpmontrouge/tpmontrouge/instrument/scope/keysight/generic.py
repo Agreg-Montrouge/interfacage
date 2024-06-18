@@ -219,4 +219,4 @@ class Keysight(Scope, Instrument):
 
 Keysight.add_class_to_manufacturer('[DM]SO-X 2')
 
-
+Keysight.add_class_to_manufacturer('DSO5032')
