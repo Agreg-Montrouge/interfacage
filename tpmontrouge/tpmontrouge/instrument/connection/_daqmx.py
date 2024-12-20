@@ -1,3 +1,8 @@
+import os
+
+if os.environ.get('WITH_DAQMX')=='NO':
+    raise ImportError
+
 import PyDAQmx
 from ctypes import create_string_buffer
 
@@ -6,6 +11,8 @@ from .device_info import DeviceInfo, AllDevices
 
 #rm = pyvisa.ResourceManager()
 #open_resource = rm.open_resource
+
+
 
 def _daqmx_str_property(function):
     n = function(None, 0)
