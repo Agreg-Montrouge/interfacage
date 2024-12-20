@@ -94,7 +94,8 @@ Principales modifications
 
 * 2019.05 : Ajout d'un installateur windows. Amélioration de la vitesse de démarrage
 * 2019.02 : Support pour les cartes NI et ajout d'une module d'acquisition continue
-
+* 2024.10 : corrections de quelques bugs
+* 2024.12 : update de la version de PyDAQmx dans la création de l'exe
 
 
 
