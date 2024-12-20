@@ -39,6 +39,7 @@ import unittest
 import tpmontrouge
 import fnmatch
 
+wannier_hostname = 'wannier.hsurm.lan'
 
 env = Environment(ENV=os.environ)
 
@@ -172,7 +173,7 @@ class LFTP(object):
 def mirror_on_wannier(target, source, env):
     target_path, target_name = os.path.split(target[0].path)
 
-    lftp = LFTP('wannier.hsurm.lan')
+    lftp = LFTP(wannier_hostname)
     lftp.mirror_R('.', 'c:/noms/pierre/tmp/tmp_build/', exclude=['*.exe', '*.pyc', '*.py~'])
 
 #    subprocess.call(['echo', '$(date)', '>', str(target[0])])
@@ -190,7 +191,7 @@ def compile_spec_on_wannier(target, source, env):
 #    lftp = LFTP('wannier.hsurm.lan')
 #    lftp.mirror_R('.', 'c:/noms/pierre/tmp/tmp_build/', exclude=['*.exe', '*.pyc', '*.py~'])
 
-    ssh_client = RemoteSSHCommand('wannier.hsurm.lan')
+    ssh_client = RemoteSSHCommand(wannier_hostname)
 
     with ssh_client:
         ssh_client.call(r'd:\noms\pierre\anaconda3\Scripts\activate tmp_env')
@@ -198,7 +199,7 @@ def compile_spec_on_wannier(target, source, env):
         ssh_client.call(r'pyinstaller -y {}'.format(source_name))
 
     if target_path=='dist':
-        lftp = LFTP('wannier.hsurm.lan')
+        lftp = LFTP(wannier_hostname)
         lftp.get_file(r'c:/noms/pierre/tmp/tmp_build/tpmontrouge/scripts/'+target[0].path, target[0].path)
     else:
         with open(target[0].path, 'w') as f:
@@ -214,20 +215,20 @@ def compile_iss_on_wannier(target, source, env):
 #    lftp = LFTP('wannier.hsurm.lan')
 #    lftp.mirror_R('.', 'c:/noms/pierre/tmp/tmp_build/', exclude=['*.exe', '*.pyc', '*.py~'])
 
-    ssh_client = RemoteSSHCommand('wannier.hsurm.lan', get_output=False)
+    ssh_client = RemoteSSHCommand(wannier_hostname, get_output=False)
 
     with ssh_client:
         ssh_client.cd(r'c:\noms\pierre\tmp\tmp_build\tpmontrouge\scripts')
         ssh_client.call(r'"C:\Program Files (x86)\Inno Setup 5\ISCC.exe" {}'.format(source_name))
 
-    lftp = LFTP('wannier.hsurm.lan')
+    lftp = LFTP(wannier_hostname)
     lftp.get_file(r'c:/noms/pierre/tmp/tmp_build/tpmontrouge/scripts/'+target[0].path, target[0].path)
 
 
 def test_empty_bode(target, source, env):
     subprocess.call(['rm', '-f', str(target[0])])
 
-    ssh_client = RemoteSSHCommand('wannier.hsurm.lan')
+    ssh_client = RemoteSSHCommand(wannier_hostname)
     out = ssh_client.call(r'c:\noms\pierre\tmp\tmp_build\tpmontrouge\scripts\dist\empty_bode.exe')
     assert tpmontrouge.__version__ in out
     assert "successfully" in out
