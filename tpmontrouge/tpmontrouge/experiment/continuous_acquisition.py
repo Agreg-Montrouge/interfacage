@@ -100,7 +100,10 @@ class AIExperiment(object):
     def save(self, fname):
         tout = []
         header = ''
-        for ch_name, ai_line in self._acquisition_lines.items():
+        for i, (ch_name, ai_line) in enumerate(self._acquisition_lines.items()):
+            if i==0:
+                tout.append(ai_line.times)
+                header += '{:24s}'.format('Time')
             tout.append(ai_line.data)
             header += '{:25s}'.format(ai_line.name)
         tout = np.array(tout).T
