@@ -47,6 +47,7 @@ class Test(unittest.TestCase):
 #        print('File written to ', filename)
         fig.savefig(filename)
 
+    @skip_if_ci("GUI test - skipped on CI")
     def testB(self):
         BodePlotTest().test()
 
