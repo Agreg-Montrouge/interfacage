@@ -3,6 +3,7 @@ import unittest
 from ...test.utils import ProcessApp
 
 from .. import get_bode_window
+from ....test_utils import skip_if_ci
 
 
 class Test(unittest.TestCase):

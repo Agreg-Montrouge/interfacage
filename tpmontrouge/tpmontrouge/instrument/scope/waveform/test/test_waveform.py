@@ -17,6 +17,7 @@ import pyqtgraph.exporters
 
 from ..waveform import Waveform
 from .....interface.test.pyqt_graph_test_helper import PyQtPlotGraphicsTestBis
+from .....test_utils import skip_if_ci
 
 
 dt = 1E-6

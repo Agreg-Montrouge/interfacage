@@ -17,6 +17,7 @@ from .virtual_instrument_for_bode_plot import RootGBF, RootScope
 import pyqtgraph as pg
 import pyqtgraph.exporters
 from ...interface.test.pyqt_graph_test_helper import PyQtPlotGraphicsTest, PyQtPlotGraphicsTestBis
+from ...test_utils import skip_if_ci
 
 class BodePlotTest(PyQtPlotGraphicsTestBis):
     def plot(self):

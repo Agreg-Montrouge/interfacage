@@ -6,6 +6,7 @@ import tempfile
 from tpmontrouge.instrument.connection.device_info import AllDevices
 from ...test.utils import ProcessApp
 from ..plotter import PlotterWindow
+from ....test_utils import skip_if_ci
 
 
 class TestScopeExperimentWindows(unittest.TestCase):

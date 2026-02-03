@@ -2,6 +2,7 @@ import unittest
 
 from ..main import MainWindow
 from .utils import ProcessApp
+from ...test_utils import skip_if_ci
 
 
 #class MyApp(Process):

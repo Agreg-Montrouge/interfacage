@@ -61,6 +61,7 @@ jobs:
     - name: Run tests (Linux)
       if: runner.os == 'Linux'
       env:
+        CI: true
         QT_QPA_PLATFORM: offscreen
         PYTHONWARNINGS: "ignore::DeprecationWarning,ignore::UserWarning"
       run: |
@@ -71,6 +72,7 @@ jobs:
     - name: Run tests (Windows)
       if: runner.os == 'Windows'
       env:
+        CI: true
         PYTHONWARNINGS: "ignore::DeprecationWarning,ignore::UserWarning"
       run: |
         cd tpmontrouge

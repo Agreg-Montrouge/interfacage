@@ -8,6 +8,7 @@ from ...test.utils import ProcessApp
 from .. import get_scope_window
 from ....experiment.test.virtual_instrument_for_bode_plot import RootScope
 from ....instrument.scope.scope import Scope
+from ....test_utils import skip_if_ci
 
 
 class ScopeExperiment(_ScopeExperiment):

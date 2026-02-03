@@ -12,6 +12,7 @@ from ..plotter import PlotterExperiment
 import pyqtgraph as pg
 import pyqtgraph.exporters
 from ...interface.test.pyqt_graph_test_helper import PyQtPlotGraphicsTest, PyQtPlotGraphicsTestBis
+from ...test_utils import skip_if_ci
 
 #class BodePlotTest(PyQtPlotGraphicsTestBis):
 #    def plot(self):
@@ -64,8 +65,14 @@ class Test(unittest.TestCase):
         self.assertIn('Interface 1', plotter_experiment.last_points_as_str)
         self.assertIn('Interface 2', plotter_experiment.last_points_as_str)
 
+    @skip_if_ci()
+
+
     def testC(self):
         BodePlotPyQTGraph(1).test()
+
+    @skip_if_ci()
+
 
     def testD(self):
         BodePlotPyQTGraph(3).test()

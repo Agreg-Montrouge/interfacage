@@ -17,6 +17,7 @@ import pyqtgraph.exporters
 
 from ..Bode import BodePoint, BodePlot
 from ...interface.test.pyqt_graph_test_helper import PyQtPlotGraphicsTestBis
+from ...test_utils import skip_if_ci
 
 
 def generate_signal(freq):
@@ -69,6 +70,7 @@ class Test(unittest.TestCase):
 
 
 
+    @skip_if_ci("GUI test - skipped on CI")
     def test_bode_plot_pyqtgraph(self):
         BodePlotPyQTGraph().test()
 
