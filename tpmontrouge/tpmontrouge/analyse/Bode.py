@@ -1,5 +1,5 @@
 import numpy as np
-from cached_property import cached_property
+from functools import cached_property
 
 
 from .utils.fit import fit_sinusoid
@@ -73,11 +73,11 @@ class BodePlot(object):
             view.setCentralItem(l)
             view.show()
             p0 = l.addPlot(0, 0, labels={'left':'Gain (dB)', 'bottom':'Fréquence (Hz)'})
-            p0.showGrid(x = True, y = True, alpha = 0.3)
+            p0.showGrid(x = True, y = True, alpha = int(0.3 * 255))
             p1 = l.addPlot(1, 0, labels={'left':'Phase (deg)', 'bottom':'Fréquence (Hz)'})
             ax = p1.getAxis('left')
             ax.setTickSpacing(90, 45)
-            p1.showGrid(x = True, y = True, alpha = 0.3) 
+            p1.showGrid(x = True, y = True, alpha = int(0.3 * 255)) 
             self.c1 = p0.plot(symbol='o')
             self.c2 = p1.plot(symbol='o')
         #        p1.setXLink(p0)
@@ -164,9 +164,9 @@ class BodePoint(object):
         view.setCentralItem(l)
         view.show()
         p0 = l.addPlot(0, 0, labels={'left':'Signal (V)', 'bottom':'Temps (s)'})
-        p0.showGrid(x = True, y = True, alpha = 0.3)
+        p0.showGrid(x = True, y = True, alpha = int(0.3 * 255))
         p1 = l.addPlot(1, 0, labels={'left':'Référence (V)', 'bottom':'Temps (s)'})
-        p1.showGrid(x = True, y = True, alpha = 0.3) 
+        p1.showGrid(x = True, y = True, alpha = int(0.3 * 255)) 
         p0.plot(self.t, self.y)
         p1.plot(self.t, self.y_ref)
         l.layout.setSpacing(0.)

@@ -2,10 +2,20 @@ from setuptools import setup, find_packages
 
 from codecs import open
 from os import path
-
-from tpmontrouge import __version__
+import re
 
 here = path.abspath(path.dirname(__file__))
+
+# Lire la version sans importer le module (pour éviter les problèmes de dépendances)
+def get_version():
+    version_file = path.join(here, 'tpmontrouge', '__init__.py')
+    with open(version_file, encoding='utf-8') as f:
+        version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", f.read(), re.M)
+        if version_match:
+            return version_match.group(1)
+        raise RuntimeError("Unable to find version string.")
+
+__version__ = get_version()
 
 # Get the long description from the README file
 with open(path.join(here, 'README.rst'), encoding='utf-8') as f:

@@ -1,4 +1,4 @@
-from cached_property import cached_property
+from functools import cached_property
 from ..autodetection.manufacturer import list_of_manufacturer
 from time import time
 

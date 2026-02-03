@@ -102,8 +102,25 @@ Installation
 
 Créer un environnement conda. Par exemple ::
 
-    conda create -n tpmontrouge python=3.12 matplotlib scipy cached-property
+    conda create -n tpmontrouge python=3.12 matplotlib scipy
     conda activate tpmontrouge
     pip install PyQt5
     pip install pyqtgraph==0.11
+
+Installation en mode développement ::
+
+    pip install -e .
+
+Tests
+-----
+
+Pour exécuter les tests unitaires ::
+
+    python -m unittest discover
+
+Ou avec le script helper qui supprime les warnings non critiques ::
+
+    ./run_tests.sh
+
+Note : Le package inclut des patches automatiques pour PyQtGraph afin d'assurer la compatibilité avec les versions récentes de NumPy et Qt.
 

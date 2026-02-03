@@ -92,7 +92,7 @@ class AIExperiment(object):
 #            p0.plot(plotter_line.times, plotter_line.data)
         for i, (ch_name, ai_line) in enumerate(self._acquisition_lines.items()):
             p0 = l.addPlot(i, 0, title=ai_line.name, labels={'left':ai_line.y_label, 'bottom':'Temps (s)'})
-            p0.showGrid(x = True, y = True, alpha = 0.3)
+            p0.showGrid(x = True, y = True, alpha = int(0.3 * 255))
             p0.plot(ai_line.times, ai_line.data)
         l.layout.setSpacing(0.)
         l.setContentsMargins(0., 0., 0., 0.)  

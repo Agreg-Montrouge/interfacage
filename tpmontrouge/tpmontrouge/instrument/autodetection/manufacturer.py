@@ -47,7 +47,7 @@ class Manufacturer(object):
         for model_name, model_class in self._list_of_model:
             if re.match(model_name, val, re.IGNORECASE):
                 return model_class
-        warn('Unkwnown model {} for {}'.format(val, self))
+        warn('Unknown model {} for {}'.format(val, self))
         def error(*args, **kwd):
             raise(Exception('Unknown model {} for {}. Are you sure that the model class was loaded ?'.format(val, self)))
         return error
