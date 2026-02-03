@@ -63,7 +63,7 @@ jobs:
       shell: pwsh
       run: |
         cd tpmontrouge
-        $version = python -c "import tpmontrouge; print(tpmontrouge.__version__)"
+        $version = python -W ignore -c "import tpmontrouge; print(tpmontrouge.__version__)" 2>&1 | Select-Object -Last 1
         cd ..
         $template = Get-Content tpmontrouge/scripts/interface_gui.iss.tpl -Raw
         $output = $template -replace '\$version', $version
@@ -87,7 +87,7 @@ jobs:
       shell: pwsh
       run: |
         cd tpmontrouge
-        $version = python -c "import tpmontrouge; print(tpmontrouge.__version__)"
+        $version = python -W ignore -c "import tpmontrouge; print(tpmontrouge.__version__)" 2>&1 | Select-Object -Last 1
         cd ..
         echo "VERSION=$version" >> $env:GITHUB_OUTPUT
         echo "Version: $version"
