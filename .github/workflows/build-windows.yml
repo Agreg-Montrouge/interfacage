@@ -36,23 +36,24 @@ jobs:
     
     - name: Install package
       run: |
+        cd tpmontrouge
         pip install -e .
     
     - name: Build empty_bode.exe
       run: |
-        cd scripts
+        cd tpmontrouge/scripts
         pyinstaller -y empty_bode.spec
-        cd ..
+        cd ../..
     
     - name: Test empty_bode.exe
       run: |
-        .\scripts\dist\empty_bode.exe
+        .\tpmontrouge\scripts\dist\empty_bode.exe
     
     - name: Build interface.exe
       run: |
-        cd scripts
+        cd tpmontrouge/scripts
         pyinstaller -y interface.spec
-        cd ..
+        cd ../..
     
     - name: Install Inno Setup
       run: |
@@ -62,21 +63,21 @@ jobs:
       shell: pwsh
       run: |
         $version = python -c "import tpmontrouge; print(tpmontrouge.__version__)"
-        $template = Get-Content scripts/interface_gui.iss.tpl -Raw
+        $template = Get-Content tpmontrouge/scripts/interface_gui.iss.tpl -Raw
         $output = $template -replace '\$version', $version
-        $output | Set-Content scripts/interface_gui.iss -Encoding UTF8
+        $output | Set-Content tpmontrouge/scripts/interface_gui.iss -Encoding UTF8
         Write-Host "Generated interface_gui.iss with version: $version"
     
     - name: Build interface_folder (needed for installer)
       run: |
-        cd scripts
+        cd tpmontrouge/scripts
         pyinstaller -y interface_folder.spec
-        cd ..
+        cd ../..
     
     - name: Build installer with Inno Setup
       shell: cmd
       run: |
-        "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" scripts\interface_gui.iss
+        "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" tpmontrouge\scripts\interface_gui.iss
     
     - name: Get version for artifact naming
       id: version
@@ -97,12 +98,12 @@ jobs:
         }
         
         # Copier et renommer les executables
-        Copy-Item scripts\dist\interface.exe dist\interface-$version-win64.exe
-        Copy-Item scripts\dist\empty_bode.exe dist\empty_bode-$version-win64.exe
+        Copy-Item tpmontrouge\scripts\dist\interface.exe dist\interface-$version-win64.exe
+        Copy-Item tpmontrouge\scripts\dist\empty_bode.exe dist\empty_bode-$version-win64.exe
         
         # Copier l'installateur s'il existe
-        if (Test-Path scripts\dist\interface_agreg_setup.exe) {
-          Copy-Item scripts\dist\interface_agreg_setup.exe dist\interface_agreg_setup-$version.exe
+        if (Test-Path tpmontrouge\scripts\dist\interface_agreg_setup.exe) {
+          Copy-Item tpmontrouge\scripts\dist\interface_agreg_setup.exe dist\interface_agreg_setup-$version.exe
         }
         
         Write-Host "Artifacts renamed with version $version"
