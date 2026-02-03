@@ -62,7 +62,9 @@ jobs:
     - name: Generate Inno Setup script with version
       shell: pwsh
       run: |
+        cd tpmontrouge
         $version = python -c "import tpmontrouge; print(tpmontrouge.__version__)"
+        cd ..
         $template = Get-Content tpmontrouge/scripts/interface_gui.iss.tpl -Raw
         $output = $template -replace '\$version', $version
         $output | Set-Content tpmontrouge/scripts/interface_gui.iss -Encoding UTF8
@@ -83,7 +85,9 @@ jobs:
       id: version
       shell: pwsh
       run: |
+        cd tpmontrouge
         $version = python -c "import tpmontrouge; print(tpmontrouge.__version__)"
+        cd ..
         echo "VERSION=$version" >> $env:GITHUB_OUTPUT
         echo "Version: $version"
     
