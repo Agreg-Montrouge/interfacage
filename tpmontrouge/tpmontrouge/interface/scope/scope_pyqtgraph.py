@@ -1,4 +1,4 @@
-from pyqtgraph.Qt import QtCore, QtGui
+from pyqtgraph.Qt import QtCore, QtGui, QtWidgets
 import pyqtgraph as pg
 
 
@@ -7,7 +7,7 @@ from . import scope_common
 class ScopeWindows(scope_common.ScopeWindows):
     def add_plot_widgets(self):
         plot1 = pg.GraphicsView() 
-        tmp_layout = QtGui.QVBoxLayout()
+        tmp_layout = QtWidgets.QVBoxLayout()
         tmp_layout.addWidget(plot1)
         tmp_layout.addStretch(1)
         self.main_layout.addLayout(tmp_layout)
@@ -29,7 +29,7 @@ class ScopeWindows(scope_common.ScopeWindows):
 
 if __name__=='__main__':
     import pyqtgraph as pg
-    app = pg.QtGui.QApplication([])
+    app = pg.Qt.QtWidgets.QApplication([])
     win = ScopeWindows()
     win.show()
     app.exec_()

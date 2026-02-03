@@ -1,4 +1,4 @@
-from pyqtgraph.Qt import QtCore, QtGui
+from pyqtgraph.Qt import QtCore, QtGui, QtWidgets
 
 from ..instrument.autodetection.manufacturer import list_of_manufacturer
 from ..instrument.scope import Scope
@@ -66,6 +66,6 @@ info = info.format(**locals())
 
 
 def get_info():
-    box = QtGui.QTextEdit(info)
+    box = QtWidgets.QTextEdit(info)
     box.setReadOnly(True)
     return box

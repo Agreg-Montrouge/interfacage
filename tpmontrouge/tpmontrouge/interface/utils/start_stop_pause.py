@@ -2,7 +2,7 @@ import os
 
 import pyqtgraph as pg
 from time import sleep
-from pyqtgraph.Qt import QtCore, QtGui
+from pyqtgraph.Qt import QtCore, QtGui, QtWidgets
 
 
 def _infinite_range():
@@ -127,10 +127,10 @@ class StartStopPause(StateMachine):
 #    new_state = pg.QtCore.Signal(str)
     def __init__(self, layout=None, thread_class=None, *args, **kwd):
         super(StartStopPause, self).__init__(states=['Stopped', 'Paused', 'Running', 'WaitingForStop'], *args, **kwd)
-        on_off_btn = pg.QtGui.QPushButton("Start")
+        on_off_btn = pg.Qt.QtWidgets.QPushButton("Start")
         on_off_btn.clicked.connect(self.start_stop)
         self.on_off_btn = on_off_btn
-        pause_btn = pg.QtGui.QPushButton("Pause")
+        pause_btn = pg.Qt.QtWidgets.QPushButton("Pause")
         pause_btn.clicked.connect(self.pause_resume)
         pause_btn.setEnabled(False)
         self.pause_btn = pause_btn
@@ -181,7 +181,7 @@ class StartStopPause(StateMachine):
 class StartStopPauseSave(StartStopPause):
     def __init__(self, layout=None, thread_class=None, *args, **kwd):
         super(StartStopPauseSave, self).__init__(layout, thread_class, *args, **kwd)
-        save_btn = pg.QtGui.QPushButton("Save")
+        save_btn = pg.Qt.QtWidgets.QPushButton("Save")
         save_btn.setEnabled(False)
         self.save_btn = save_btn
         if layout is not None:
@@ -192,7 +192,7 @@ class StartStopPauseSave(StartStopPause):
 
     _initial_dir = os.getenv('HOME') or ''
     def save_gui(self):
-        file_name = QtGui.QFileDialog.getSaveFileName(self.save_btn, 'Save file', 
+        file_name = QtWidgets.QFileDialog.getSaveFileName(self.save_btn, 'Save file', 
                         self._initial_dir, "Data file (*.txt)")
         if isinstance(file_name, tuple): # depends on the version ...
             file_name = file_name[0]
@@ -217,7 +217,7 @@ class StartStopPauseSave(StartStopPause):
 class StartStopPauseSaveSingle(StartStopPauseSave):
     def __init__(self, layout=None, thread_class=None, *args, **kwd):
         super(StartStopPauseSaveSingle, self).__init__(layout, thread_class, *args, **kwd)
-        single_btn = pg.QtGui.QPushButton("Single")
+        single_btn = pg.Qt.QtWidgets.QPushButton("Single")
         single_btn.setEnabled(True)
         self.single_btn = single_btn
         if layout is not None:

@@ -1,18 +1,18 @@
 import os
 import tempfile
-from pyqtgraph.Qt import QtGui, QtCore                                              
+from pyqtgraph.Qt import QtGui, QtCore, QtWidgets
 import pyqtgraph as pg 
 
 class PyQtPlotGraphicsTest(object):
     def __init__(self):
-        self.app = QtGui.QApplication([])  
+        self.app = QtWidgets.QApplication([])  
         self.view = pg.GraphicsView() 
 
     def exec_and_save(self, filename):
         def tick():
 #            print(self.view.items())
 #            self.view.scene().clear()
-            p = QtGui.QApplication.primaryScreen().grabWindow(self.view.winId())
+            p = QtWidgets.QApplication.primaryScreen().grabWindow(self.view.winId())
 #            filename = os.path.join(tempfile.gettempdir(), 'bode_test.jpg')
             p.save(filename, 'jpg')
             self.app.exit()    
@@ -35,13 +35,13 @@ class PyQtPlotGraphicsTestBis(Process):
         super(PyQtPlotGraphicsTestBis, self).__init__()
 
     def run(self):
-        app = QtGui.QApplication([])
+        app = QtWidgets.QApplication([])
         self.view = pg.GraphicsView()
 
         self.plot()
 
         def tick():
-            p = QtGui.QApplication.primaryScreen().grabWindow(self.view.winId())
+            p = QtWidgets.QApplication.primaryScreen().grabWindow(self.view.winId())
             if self.filename is not None:
                 p.save(os.path.join(tempfile.gettempdir(), self.filename), 'jpg')
             app.exit()    

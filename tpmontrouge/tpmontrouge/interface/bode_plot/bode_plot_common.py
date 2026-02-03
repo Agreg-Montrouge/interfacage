@@ -1,6 +1,6 @@
 import pyqtgraph as pg
 from time import sleep
-from pyqtgraph.Qt import QtCore, QtGui
+from pyqtgraph.Qt import QtCore, QtGui, QtWidgets
 import pyqtgraph.widgets.MatplotlibWidget
 import numpy as np
 import os
@@ -54,20 +54,20 @@ class BodeStartStopPauseSave(StartStopPauseSave):
 class MyMPLWidget(pyqtgraph.widgets.MatplotlibWidget.MatplotlibWidget):
     def __init__(self, *args, **kwd):
         super(MyMPLWidget, self).__init__()
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHeightForWidth(True)
         self.setSizePolicy(sizePolicy)
 
     def heightForWidth(self, width):
         return width * 0.7
 
-class BodeWindows(QtGui.QWidget):
+class BodeWindows(QtWidgets.QWidget):
     bode_experiment = BodeExperiment
     def __init__(self, **kwd):
         super(BodeWindows, self).__init__(**kwd)
-        self.main_layout = main_layout = QtGui.QHBoxLayout()
+        self.main_layout = main_layout = QtWidgets.QHBoxLayout()
         self.setLayout(main_layout)
-        btn_layout = QtGui.QVBoxLayout()
+        btn_layout = QtWidgets.QVBoxLayout()
 
         main_layout.addLayout(btn_layout)
 
@@ -93,7 +93,7 @@ class BodeWindows(QtGui.QWidget):
         self.scope = ScopeConnection()
         btn_layout.addWidget(self.scope.make_layout())
         btn_layout.addStretch(1)
-#        btn_layout.setSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
+#        btn_layout.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
 
         self.start_stop_buttons.connect(self.new_state_tree)
         if self.parent():
@@ -157,7 +157,7 @@ class BodeThread(ExpThread):
 
 
 if __name__=='__main__':
-    app = pg.QtGui.QApplication([])
+    app = pg.Qt.QtWidgets.QApplication([])
     win = BodeWindows()
     win.show()
     app.exec_()

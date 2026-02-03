@@ -1,7 +1,7 @@
 from time import sleep, time
 
 import pyqtgraph as pg
-from pyqtgraph.Qt import QtCore, QtGui
+from pyqtgraph.Qt import QtCore, QtGui, QtWidgets
 
 from ...experiment.continuous_acquisition import AIExperiment as _AIExperiment
 from ..utils.start_stop_pause import ExpThread
@@ -24,29 +24,29 @@ class PlotterStartStopPauseSave(StartStopPauseSave):
         self._thread = AIThread(parent_windows=self.parent())
         self._thread.start()
 
-class AIWindow(QtGui.QWidget):
+class AIWindow(QtWidgets.QWidget):
     experiment = AIExperiment
     def __init__(self, **kwd):
         super(AIWindow, self).__init__(**kwd)
-        self.main_layout = main_layout = QtGui.QHBoxLayout()
+        self.main_layout = main_layout = QtWidgets.QHBoxLayout()
         self.setLayout(main_layout)
-        btn_layout = QtGui.QVBoxLayout()
+        btn_layout = QtWidgets.QVBoxLayout()
         main_layout.addLayout(btn_layout)
 
-        start_stop_save_layout = QtGui.QHBoxLayout()
+        start_stop_save_layout = QtWidgets.QHBoxLayout()
         btn_layout.addLayout(start_stop_save_layout)
 
         self.start_stop_buttons = PlotterStartStopPauseSave(layout=start_stop_save_layout, parent=self)
 
         self.sample_rate = pg.SpinBox(value=1000, step=1, dec=True, int=True, siPrefix=True, bounds=[1, 100000], suffix='S/s')
         tmp = pg.LayoutWidget()
-        tmp.addWidget(pg.QtGui.QLabel('Sample rate'), col=0)
+        tmp.addWidget(pg.Qt.QtWidgets.QLabel('Sample rate'), col=0)
         tmp.addWidget(self.sample_rate, col=1)
         btn_layout.addWidget(tmp)
 
         self.duration = pg.SpinBox(value=10, dec=True, step=1, bounds=[1, 10000], suffix=' s')
         tmp = pg.LayoutWidget()
-        tmp.addWidget(pg.QtGui.QLabel('Acquisition duration'), col=0)
+        tmp.addWidget(pg.Qt.QtWidgets.QLabel('Acquisition duration'), col=0)
         tmp.addWidget(self.duration, col=1)
         btn_layout.addWidget(tmp)
 
@@ -78,7 +78,7 @@ class AIWindow(QtGui.QWidget):
 
     def add_plot_widgets(self):
         plot1 = pg.GraphicsView()
-        tmp_layout = QtGui.QVBoxLayout()
+        tmp_layout = QtWidgets.QVBoxLayout()
         tmp_layout.addWidget(plot1)
         tmp_layout.addStretch(1)
         self.main_layout.addLayout(tmp_layout)

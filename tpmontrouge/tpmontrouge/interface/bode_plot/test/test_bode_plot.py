@@ -21,7 +21,7 @@ class Test(unittest.TestCase):
 
 
 if __name__=='__main__':
-    app = pg.QtGui.QApplication([])
+    app = pg.Qt.QtWidgets.QApplication([])
     win = BodeWindows()
     win.show()
     app.exec_()

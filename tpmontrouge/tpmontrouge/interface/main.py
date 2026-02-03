@@ -1,7 +1,7 @@
 import sys
 import argparse
 
-from pyqtgraph.Qt import QtCore, QtGui
+from pyqtgraph.Qt import QtCore, QtGui, QtWidgets
 from .scope import get_scope_window
 from .bode_plot import get_bode_window
 from .plotter import get_plotter_window
@@ -11,7 +11,7 @@ from .analog_input import get_ai_window
 from .. import plot_engine
 from .utils.display_exception import activate_error_dialog
 
-class MainWindow(QtGui.QTabWidget):
+class MainWindow(QtWidgets.QTabWidget):
     plot_engine=plot_engine
     def __init__(self, plot_engine=None):
         super().__init__()
@@ -56,7 +56,7 @@ def main(args=None):
             from ..instrument.scope.test import test_detection
             from ..instrument.gbf.test import test_detection
     activate_error_dialog()
-    app = QtGui.QApplication([])
+    app = QtWidgets.QApplication([])
     win = MainWindow(args.plot_engine)
     win.show()
     app.exec_()

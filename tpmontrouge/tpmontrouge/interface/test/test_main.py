@@ -13,11 +13,11 @@ from ...test_utils import skip_if_ci
 #        super(MyApp, self).__init__()
 
 #    def run(self):
-#        app = pg.QtGui.QApplication([])
+#        app = pg.Qt.QtWidgets.QApplication([])
 #        win = self.main_windows_class()
 
 #        def tick():
-#            p = pg.Qt.QtGui.QApplication.primaryScreen().grabWindow(win.winId())
+#            p = pg.Qt.QtWidgets.QApplication.primaryScreen().grabWindow(win.winId())
 #            if self.filename is not None:
 #                p.save(os.path.join(tempfile.gettempdir(), self.filename), 'jpg')
 #            app.exit()    

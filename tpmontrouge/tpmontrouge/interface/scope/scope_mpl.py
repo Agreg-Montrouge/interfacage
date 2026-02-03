@@ -1,6 +1,6 @@
 import pyqtgraph as pg
 import pyqtgraph
-from pyqtgraph.Qt import QtCore, QtGui
+from pyqtgraph.Qt import QtCore, QtGui, QtWidgets
 
 from . import scope_common
 
@@ -32,7 +32,7 @@ class ScopeExperiment(scope_common.ScopeExperiment):
 class MyMPLWidget(pyqtgraph.widgets.MatplotlibWidget.MatplotlibWidget):
     def __init__(self, *args, **kwd):
         super(MyMPLWidget, self).__init__()
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHeightForWidth(True)
         self.setSizePolicy(sizePolicy)
 
@@ -44,14 +44,14 @@ class ScopeWindows(scope_common.ScopeWindows):
 
     def add_plot_widgets(self):
         plot1 = MyMPLWidget()
-        tmp_layout = QtGui.QVBoxLayout()
+        tmp_layout = QtWidgets.QVBoxLayout()
         tmp_layout.addWidget(plot1)
         tmp_layout.addStretch(1)
         self.main_layout.addLayout(tmp_layout)
         self.plot1 = plot1        
 
 if __name__=='__main__':
-    app = pg.QtGui.QApplication([])
+    app = pg.Qt.QtWidgets.QApplication([])
     win = ScopeWindows()
     win.show()
     app.exec_()

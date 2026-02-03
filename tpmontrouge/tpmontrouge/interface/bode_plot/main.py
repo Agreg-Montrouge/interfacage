@@ -1,7 +1,7 @@
 import argparse
 
 import pyqtgraph as pg
-from pyqtgraph.Qt import QtCore, QtGui
+from pyqtgraph.Qt import QtCore, QtGui, QtWidgets
 
 
 from . import get_bode_window
@@ -23,7 +23,7 @@ def main(args=None):
             from ..instrument.scope.test import test_detection
             from ..instrument.gbf.test import test_detection
     activate_error_dialog()
-    app = QtGui.QApplication([])
+    app = QtWidgets.QApplication([])
     win = get_bode_window(args.plot_engine)
     win.show()
     app.exec_()

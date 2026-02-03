@@ -1,6 +1,6 @@
 import pyqtgraph
 import pyqtgraph as pg
-from pyqtgraph.Qt import QtCore, QtGui
+from pyqtgraph.Qt import QtCore, QtGui, QtWidgets
 from time import sleep
 
 from . import bode_plot_common
@@ -24,12 +24,12 @@ class BodeWindows(bode_plot_common.BodeWindows):
     bode_experiment = BodeExperiment
     def add_plot_widgets(self):
         plot1 = pg.GraphicsView() 
-        tmp_layout = QtGui.QVBoxLayout()
+        tmp_layout = QtWidgets.QVBoxLayout()
         tmp_layout.addWidget(plot1)
         tmp_layout.addStretch(1)
         self.main_layout.addLayout(tmp_layout)
         plot2 = pg.GraphicsView() 
-        tmp_layout = QtGui.QVBoxLayout()
+        tmp_layout = QtWidgets.QVBoxLayout()
         tmp_layout.addWidget(plot2)
         tmp_layout.addStretch(1)
         self.main_layout.addLayout(tmp_layout)
@@ -59,7 +59,7 @@ class BodeThread(bode_plot_common.BodeThread):
                                 log_scale = self.parameters['log'])
 
 if __name__=='__main__':
-    app = pg.QtGui.QApplication([])
+    app = pg.Qt.QtWidgets.QApplication([])
     win = BodeWindows()
     win.show()
     app.exec_()

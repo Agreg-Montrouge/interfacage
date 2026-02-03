@@ -1,7 +1,7 @@
 import os
 import tempfile
 import pyqtgraph as pg
-from pyqtgraph.Qt import QtGui, QtCore
+from pyqtgraph.Qt import QtGui, QtCore, QtWidgets
 
 from multiprocessing import Queue, Process
 
@@ -16,11 +16,11 @@ class ProcessApp(Process):
         super(ProcessApp, self).__init__()
 
     def run(self):
-        app = QtGui.QApplication([])
+        app = QtWidgets.QApplication([])
         win = self.main_windows_class(**self.kwd)
 
         def tick():
-            p = QtGui.QApplication.primaryScreen().grabWindow(win.winId())
+            p = QtWidgets.QApplication.primaryScreen().grabWindow(win.winId())
             if self.filename is not None:
                 p.save(os.path.join(tempfile.gettempdir(), self.filename), 'jpg')
             app.exit()

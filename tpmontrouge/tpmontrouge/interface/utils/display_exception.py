@@ -3,7 +3,7 @@ import io
 import traceback
 
 
-from pyqtgraph.Qt import QtGui
+from pyqtgraph.Qt import QtGui, QtWidgets
 
 import sys
 
@@ -37,7 +37,7 @@ via email to <pierre.clade@upmc.fr>
     sections = [separator, timeString, separator, errmsg, separator, tbinfo]
     msg = '\n'.join(sections)
 
-    errorbox = QtGui.QMessageBox()
+    errorbox = QtWidgets.QMessageBox()
     errorbox.setText(str(notice)+str(msg))
     errorbox.exec_()
     sys.exit(1)

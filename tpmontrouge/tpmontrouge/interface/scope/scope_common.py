@@ -1,6 +1,6 @@
 import pyqtgraph as pg
 from time import sleep, time
-from pyqtgraph.Qt import QtCore, QtGui
+from pyqtgraph.Qt import QtCore, QtGui, QtWidgets
 import pyqtgraph.widgets.MatplotlibWidget
 import numpy as np
 import os
@@ -109,13 +109,13 @@ class ScopeStartStopPauseSave(StartStopPauseSaveSingle):
         self._thread = ScopeThread(parent_windows=self.parent(), single=True)
         self._thread.start()
 
-class ScopeWindows(QtGui.QWidget):
+class ScopeWindows(QtWidgets.QWidget):
     experiment = ScopeExperiment
     def __init__(self, **kwd):
         super().__init__(**kwd)
-        self.main_layout = main_layout = QtGui.QHBoxLayout()
+        self.main_layout = main_layout = QtWidgets.QHBoxLayout()
         self.setLayout(main_layout)
-        btn_layout = QtGui.QVBoxLayout()
+        btn_layout = QtWidgets.QVBoxLayout()
 
         main_layout.addLayout(btn_layout)
         self.start_stop_buttons = ScopeStartStopPauseSave(layout=btn_layout, parent=self)
@@ -143,7 +143,7 @@ class ScopeWindows(QtGui.QWidget):
         self.start_stop_buttons.on_off_btn.click()
 
 if __name__=='__main__':
-    app = pg.QtGui.QApplication([])
+    app = pg.Qt.QtWidgets.QApplication([])
     win = ScopeWindows()
     win.show()
     app.exec_()
