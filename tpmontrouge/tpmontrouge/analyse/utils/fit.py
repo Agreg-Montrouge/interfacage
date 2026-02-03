@@ -16,7 +16,7 @@ def find_frequency(t, y):
         return res
     initial_trials = array(list(map(f_to_optimize, Tfreq)))
     k_opt = initial_trials.argmin()
-    return fmin(f_to_optimize, Tfreq[k_opt], disp=0)
+    return fmin(f_to_optimize, Tfreq[k_opt], disp=0)[0]
 
 
 def fit_sinusoid(t, y, freq=None, postfix=''):
