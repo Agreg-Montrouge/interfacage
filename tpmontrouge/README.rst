@@ -97,5 +97,13 @@ Principales modifications
 * 2024.10 : corrections de quelques bugs
 * 2024.12 : update de la version de PyDAQmx dans la création de l'exe
 
+Installation
+------------
 
+Créer un environnement conda. Par exemple ::
+
+    conda create -n tpmontrouge python=3.12 matplotlib scipy cached-property
+    conda activate tpmontrouge
+    pip install PyQt5
+    pip install pyqtgraph==0.11
 
