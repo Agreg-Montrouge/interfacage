@@ -104,12 +104,12 @@ if __name__=='__main__':
 #    l.setContentsMargins(0., 0., 0., 0.)                                                
 
     def tick():
-        p = pg.Qt.QtGui.QApplication.primaryScreen().grabWindow(view.winId())
+        p = QtGui.QApplication.primaryScreen().grabWindow(view.winId())
         filename = os.path.join(tempfile.gettempdir(), 'bode_test.jpg')
         p.save(filename, 'jpg')
         app.exit()    
 
-    timer = pg.Qt.QtCore.QTimer()
+    timer = QtCore.QTimer()
     timer.timeout.connect(tick)
     timer.start(100)
 
