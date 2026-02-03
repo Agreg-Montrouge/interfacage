@@ -116,11 +116,71 @@ Tests
 
 Pour exécuter les tests unitaires ::
 
+    # Linux/macOS
+    ./run_tests.sh
+    
+    # Windows (PowerShell)
+    .\run_tests.ps1
+    
+    # Ou directement
     python -m unittest discover
 
-Ou avec le script helper qui supprime les warnings non critiques ::
-
-    ./run_tests.sh
-
 Note : Le package inclut des patches automatiques pour PyQtGraph afin d'assurer la compatibilité avec les versions récentes de NumPy et Qt.
+
+CI/CD et builds automatiques
+-----------------------------
+
+Le projet utilise GitHub Actions pour automatiser les tests et la compilation des exécutables Windows.
+
+**Tests automatiques**
+
+À chaque push sur ``dev2026`` ou ``main``, les tests sont automatiquement exécutés sur :
+
+* Linux (Ubuntu latest) avec Python 3.10, 3.11, 3.12
+* Windows (latest) avec Python 3.10, 3.11, 3.12
+
+Voir les résultats : https://github.com/PrepaAgregMontrouge/interfacage/actions
+
+**Builds Windows automatiques**
+
+Pour créer les exécutables Windows (.exe) et l'installateur :
+
+1. Créer et pousser un tag de version ::
+
+    git tag v2025.02.0
+    git push origin v2025.02.0
+
+2. GitHub Actions compile automatiquement :
+   
+   * ``interface-{version}-win64.exe`` : Interface graphique principale
+   * ``empty_bode-{version}-win64.exe`` : Utilitaire de test
+   * ``interface_agreg_setup-{version}.exe`` : Installateur Windows (Inno Setup)
+
+3. Les exécutables sont disponibles :
+   
+   * **Artifacts** : Onglet Actions > Build > Download artifacts (conservés 90 jours)
+   * **Release** : Onglet Releases avec notes de version automatiques
+
+**Build manuel (déclenchement depuis GitHub)**
+
+Aller sur : Actions > Build Windows Executables > Run workflow
+
+**Développement local**
+
+Pour compiler les .exe localement sur Windows ::
+
+    # Installer PyInstaller et Inno Setup
+    pip install pyinstaller
+    choco install innosetup
+    
+    # Build interface.exe
+    cd scripts
+    pyinstaller -y interface.spec
+    
+    # Build installateur
+    iscc interface_gui.iss
+
+**Migration depuis Sconstruct**
+
+L'ancien système de build via ``scons`` et la machine ``wannier`` est progressivement remplacé par GitHub Actions. Les deux systèmes cohabitent temporairement pour assurer la transition.
 
