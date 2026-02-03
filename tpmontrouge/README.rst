@@ -1,6 +1,10 @@
 Package Python pour les TPs de Montrouge
 ========================================
 
+.. image:: https://github.com/Agreg-Montrouge/interfacage/workflows/Tests/badge.svg?branch=dev2026
+   :target: https://github.com/Agreg-Montrouge/interfacage/actions
+   :alt: Tests Status
+
 Ce package contient les librairies python pour le matériel de Montrouge
 
 Il est partagé en plusieurs sous package : 
