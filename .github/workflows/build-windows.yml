@@ -79,7 +79,8 @@ jobs:
     - name: Build installer with Inno Setup
       shell: cmd
       run: |
-        "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" tpmontrouge\scripts\interface_gui.iss
+        cd tpmontrouge\scripts
+        "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" interface_gui.iss
     
     - name: Get version for artifact naming
       id: version

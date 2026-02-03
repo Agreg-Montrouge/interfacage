@@ -11,7 +11,7 @@ AppVersion=$version
 AppPublisher=Ecole Normale Superieure
 DefaultDirName={pf}\Interface Agreg
 DisableProgramGroupPage=yes
-OutputDir=C:\noms\pierre\tmp\tmp_build\tpmontrouge\scripts\dist
+OutputDir=dist
 OutputBaseFilename=interface_agreg_setup
 Compression=lzma
 SolidCompression=yes
@@ -23,7 +23,7 @@ Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\noms\pierre\tmp\tmp_build\tpmontrouge\scripts\dist\interface_gui\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "dist\interface_gui\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
@@ -32,4 +32,5 @@ Name: "{commondesktop}\Interface Agreg"; Filename: "{app}\interface_gui.exe"; Ta
 
 [Run]
 Filename: "{app}\interface_gui.exe"; Description: "{cm:LaunchProgram,Interface Agreg}"; Flags: nowait postinstall skipifsilent
+
 
