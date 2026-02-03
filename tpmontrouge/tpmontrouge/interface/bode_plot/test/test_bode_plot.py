@@ -7,12 +7,14 @@ from ....test_utils import skip_if_ci
 
 
 class Test(unittest.TestCase):
+    @skip_if_ci("GUI test - skipped on CI")
     def test_mpl(self):
         app = ProcessApp(get_bode_window, filename='test_bode_app_mpl.jpg', plot_engine='mpl', shut_down_delay=2000)
         app.start()
         app.join()
         self.assertEqual(app.queue.get(), None)
 
+    @skip_if_ci("GUI test - skipped on CI")
     def test_pyqtgraph(self):
         app = ProcessApp(get_bode_window, filename='test_bode_app_pyqtgraph.jpg', plot_engine='pyqtgraph', shut_down_delay=2000)
         app.start()

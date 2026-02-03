@@ -1,5 +1,5 @@
 import pyqtgraph as pg
-from pyqtgraph import QtGui
+from pyqtgraph.Qt import QtGui, QtWidgets
 from ...interface.utils.start_stop_pause import ExpThread, StateMachine
 
 from .device_info import AllDevices
@@ -14,21 +14,21 @@ class Connection(StateMachine):
 
         self._with_enable_button = with_enable_button
 
-        self.button = pg.QtGui.QPushButton("")
-        self.choices = pg.QtGui.QComboBox()
+        self.button = QtWidgets.QPushButton("")
+        self.choices = QtWidgets.QComboBox()
         self.choices.addItems([])
 
-        self.label = pg.QtGui.QLabel(self.name)
+        self.label = QtWidgets.QLabel(self.name)
 
 
 
         self.button.clicked.connect(self.connect_button_pressed)
 
         if self._with_enable_button:
-            self.enable_button = pg.QtGui.QCheckBox()
+            self.enable_button = QtWidgets.QCheckBox()
             self.enable_button.stateChanged.connect(self.enable_button_changed)
 
-        self.refresh_btn = QtGui.QPushButton("Reload")
+        self.refresh_btn = QtWidgets.QPushButton("Reload")
 #        self.refresh_btn.setFixedWidth(20)
 #        self.refresh_btn.setFixedHeight(20)
 #        self.refresh_btn.setIcon(QtGui.QIcon(pixmaps.getPixmap('default')))
@@ -87,7 +87,7 @@ class Connection(StateMachine):
         if self._with_enable_button:
 #            tmp = pg.LayoutWidget()
             layout.addWidget(self.enable_button, col=2)
-            layout.addWidget(pg.QtGui.QLabel('enable'), col=3)
+            layout.addWidget(QtWidgets.QLabel('enable'), col=3)
             #layout.addWidget(tmp, col=2)
         layout.addWidget(self.button, row=1, col=0)
         layout.addWidget(self.choices, row=1, col=1)
